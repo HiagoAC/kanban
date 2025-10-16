@@ -21,13 +21,24 @@ services:
     depends_on:
       - db
 
-
   db:
     image: postgres:18-bookworm
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     env_file:
       - ./.env
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - DEV=true
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/app:/app
+    command:
+      sh -c "npm run dev -- --host=0.0.0.0 --port 5173"
 
 volumes:
   dev-db-data:
