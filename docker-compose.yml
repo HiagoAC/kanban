@@ -10,6 +10,6 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/app:/app
-    command: ./entrypoint.sh
+    command: ./scripts/entrypoint.sh
     env_file:
       - ./.env
