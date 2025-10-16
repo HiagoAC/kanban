@@ -9,7 +9,6 @@ EXPOSE 8000
 # Copy project
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
-COPY ./scripts /scripts
 
 # Install dependencies
 RUN apt-get update \
@@ -30,9 +29,8 @@ fi
 RUN useradd --system django-user && \
     mkdir -p /vol/web/media && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol && \
-    chmod -R +x /scripts
+    chmod -R 755 /vol
 
-ENV PATH="/scripts:$PATH"
+ENV PATH="/py/bin:$PATH"
 
 USER django-user
