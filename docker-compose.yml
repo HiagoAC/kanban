@@ -11,7 +11,10 @@ services:
     volumes:
       - ./backend/app:/app
     command:  >
-      sh -c "python manage.py migrate &&
+      sh -c "echo 'Waiting for db...' &&
+             wait-for-it --service $DB_HOST:$DB_PORT --timeout 0 &&
+             echo 'DB is ready.' && 
+             python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     env_file:
       - ./.env
@@ -20,7 +23,7 @@ services:
 
 
   db:
-    image: postgres:18-alpine
+    image: postgres:18-bookworm
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     env_file:
