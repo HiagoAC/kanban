@@ -1,0 +1,18 @@
+{
+	"files": {
+		"includes": [
+			"src/**/*.ts",
+			"src/**/*.tsx",
+			"src/**/*.js",
+			"src/**/*.jsx",
+			"!**/dist/**",
+			"!**/build/**",
+			"!**/*.gen.ts",
+			"!**/vite.config.ts.timestamp-*.mjs",
+			"!**/src/codegen"
+		]
+	},
+	"vcs": {
+		"useIgnoreFile": true
+	}
+}
