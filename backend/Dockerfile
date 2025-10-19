@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1 \
 WORKDIR /app
 EXPOSE 8000
 
-# Copy project
+# Copy requirements files
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 
@@ -34,5 +34,7 @@ RUN useradd --system django-user && \
     chmod -R 755 /vol
 
 ENV PATH="/py/bin:$PATH"
+
+COPY ./app /app
 
 USER django-user
