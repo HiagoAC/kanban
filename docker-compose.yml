@@ -12,12 +12,18 @@ services:
       - ./backend/app:/app
     command:  >
       sh -c "echo 'Waiting for db...' &&
-             wait-for-it --service $DB_HOST:$DB_PORT --timeout 0 &&
+             wait-for-it --service db:5432 --timeout 0 &&
              echo 'DB is ready.' && 
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     env_file:
       - ./.env
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=pass
+      - DEBUG=1
     depends_on:
       - db
 
@@ -25,8 +31,10 @@ services:
     image: postgres:18-bookworm
     volumes:
       - dev-db-data:/var/lib/postgresql/data
-    env_file:
-      - ./.env
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=pass
 
   frontend:
     build:
