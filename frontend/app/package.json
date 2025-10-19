@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "biome check .",
+    "lint": "biome check --diagnostic-level=error .",
+    "lint:complete": "biome check .",
     "format": "biome format --write .",
+    "fix": "biome check --write .",
     "preview": "vite preview"
   },
   "dependencies": {
