@@ -10,7 +10,7 @@
     "lint:complete": "biome check .",
     "format": "biome format --write .",
     "fix": "biome check --write .",
-    "test": "vitest",
+    "test": "vitest run --passWithNoTests",
     "preview": "vite preview"
   },
   "dependencies": {
