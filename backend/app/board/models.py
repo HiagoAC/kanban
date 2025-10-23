@@ -11,3 +11,11 @@ class Board(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'title'],
+                name='unique_board_title_per_user'
+            )
+        ]
