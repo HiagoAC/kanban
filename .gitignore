@@ -355,3 +355,5 @@ vite.config.ts.timestamp-*
 # Docker
 .docker
 
+# VS Code
+.vscode/
