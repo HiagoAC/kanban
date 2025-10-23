@@ -27,14 +27,6 @@ else \
     rm -rf /tmp/requirements.dev.txt ; \
 fi
 
-# Create django user and set permissions
-RUN useradd --system django-user && \
-    mkdir -p /vol/web/media && \
-    chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol
-
 ENV PATH="/py/bin:$PATH"
 
 COPY ./app /app
-
-USER django-user
