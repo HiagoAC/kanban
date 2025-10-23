@@ -28,7 +28,7 @@ jobs:
           EOF
 
       - name: Test
-        run: docker compose run -u root --rm backend sh -c "wait-for-it --service db:5432 --timeout 60 -- python manage.py test"
+        run: docker compose run -u root --rm backend sh -c "wait-for-it --service db:5432 --timeout 0 -- python manage.py test"
 
       - name: Lint
         run: docker compose run --rm backend sh -c "flake8"
