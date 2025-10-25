@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from board.models import Board
+from board.models import Board, Column
 
 User = get_user_model()
 BOARD_URL = reverse('api:boards')
@@ -44,3 +44,32 @@ class PrivateBoardsApiTests(TestCase):
             for b in (board1, board2)
         ]
         self.assertEqual(content, expected)
+
+    def test_create_board(self):
+        """Test creating a new board with columns."""
+        payload = {
+            'title': 'New Board',
+            'columns': ['To Do', 'In Progress', 'Done']
+        }
+        res = self.client.post(
+            BOARD_URL,
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 201)
+        board = Board.objects.get(user=self.user, title=payload['title'])
+        created_columns = set(
+            Column.objects.filter(board=board).values_list('title', flat=True)
+        )
+        self.assertEqual(created_columns, set(payload['columns']))
+
+    def test_create_board_duplicate_title(self):
+        """Test creating a board with a duplicate title fails."""
+        Board.objects.create(user=self.user, title='Duplicate Title')
+        payload = {'title': 'Duplicate Title', 'columns': ['To Do']}
+        res = self.client.post(
+            BOARD_URL,
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 400)
