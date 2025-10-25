@@ -20,10 +20,11 @@ def list_boards(request):
 @board_router.post('/', response={201: BoardOut})
 def create_board(request, payload: BoardIn):
     """Create a new board."""
-    board = Board.objects.create(
+    board_model = Board.objects.create(
         user=request.auth,
         title=payload.title,
     )
     for column_title in payload.columns:
-        Column.objects.create(board=board, title=column_title)
-    return 201, board
+        Column.objects.create(board=board_model, title=column_title)
+    board_out = BoardOut.from_orm_with_columns(board_model)
+    return 201, board_out
