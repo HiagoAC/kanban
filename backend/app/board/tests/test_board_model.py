@@ -1,11 +1,9 @@
-
 from django.db import IntegrityError
 from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from board.models import Board
-
 
 User = get_user_model()
 
