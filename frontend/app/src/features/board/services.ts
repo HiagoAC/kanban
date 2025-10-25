@@ -7,7 +7,6 @@ interface CreateBoardPayload {
 	columns: string[];
 }
 
-
 export const fetchBoards = async () => {
 	const res = await apiClient.get(BOARD_URL);
 	return res.data;

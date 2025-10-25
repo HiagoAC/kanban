@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import apiClient from "../../../services/apiClient";
-import { fetchBoards, createBoard } from "../services";
+import { createBoard, fetchBoards } from "../services";
 
 vi.mock("../../../services/apiClient");
 
@@ -21,9 +21,12 @@ describe("fetchBoards", () => {
 
 describe("createBoard", () => {
 	it("should create a new board", async () => {
-		const newBoard = { title: "New Board", columns: ["To Do", "In Progress", "Done"] };
+		const newBoard = {
+			title: "New Board",
+			columns: ["To Do", "In Progress", "Done"],
+		};
 		const mockResponse = {
-			id: 3, 
+			id: 3,
 			title: "New Board",
 			created_at: "2024-01-01T00:00:00Z",
 			columns: [
