@@ -24,7 +24,9 @@ class Board(OrderedModel):
 
 
 class Column(OrderedModel):
-    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    board = models.ForeignKey(
+        Board, on_delete=models.CASCADE, related_name="columns"
+    )
     title = models.CharField(max_length=255)
     order_with_respect_to = 'board'
 
