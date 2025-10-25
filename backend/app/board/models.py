@@ -19,3 +19,21 @@ class Board(models.Model):
                 name='unique_board_title_per_user'
             )
         ]
+
+
+class Column(models.Model):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    position = models.DecimalField(max_digits=10, decimal_places=5)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['position']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['board', 'title'],
+                name='unique_column_title_per_board'
+            )
+        ]
