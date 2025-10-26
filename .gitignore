@@ -357,3 +357,6 @@ vite.config.ts.timestamp-*
 
 # VS Code
 .vscode/
+
+# Local scripts
+local-scripts/

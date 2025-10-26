@@ -4,13 +4,16 @@ services:
       context: ./backend
       args:
         - DEV=true
+        - "UID=${UID:-1000}"
+        - "GID=${GID:-1000}"
     ports:
       - "8000:8000"
     volumes:
       - ./backend/app:/app
+      - dev-static-data:/vol/web
     command:  >
       sh -c "echo 'Waiting for db...' &&
-             wait-for-it --service db:5432 --timeout 0 &&
+             wait-for-it --service db:5432 --timeout 60 &&
              echo 'DB is ready.' && 
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
@@ -23,22 +26,27 @@ services:
       - DB_PASS=pass
       - DEBUG=1
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy
+  
   db:
-    image: postgres:18-bookworm
+    image: postgres:17-bookworm
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=pass
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "devdb", "-U", "devuser"]
 
   frontend:
     build:
       context: ./frontend
       args:
         - DEV=true
+        - "UID=${UID:-1000}"
+        - "GID=${GID:-1000}"
     ports:
       - "5173:5173"
     volumes:
@@ -49,3 +57,4 @@ services:
 
 volumes:
   dev-db-data:
+  dev-static-data:
