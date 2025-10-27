@@ -1,7 +1,11 @@
+import { Layout } from "../components/Layout";
+
 export function HomePage() {
 	return (
-		<div>
-			<h1>Home Page</h1>
-		</div>
+		<Layout isHomePage={true}>
+			<div>
+				<h1>Home Page</h1>
+			</div>
+		</Layout>
 	);
 }
