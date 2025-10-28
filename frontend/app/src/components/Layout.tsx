@@ -1,5 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { Navbar } from "./Navbar";
+import { SideBar } from "./SideBar";
 
 export interface Props {
 	children: React.ReactNode;
@@ -29,7 +30,7 @@ export function Layout({ children, isHomePage = false }: Props) {
 					sx={sideBarStyle}
 					data-testid="sidebar-grid"
 				>
-					<h1>Sidebar</h1>
+					<SideBar />
 				</Grid>
 				<Grid
 					size={{ md: 9, lg: 9.5, xs: contentXsSize }}
