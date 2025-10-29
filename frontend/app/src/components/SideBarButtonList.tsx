@@ -1,12 +1,7 @@
+import { List, ListItem } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import {
-	List,
-	ListItem,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { SideBarListButton } from "./SideBarListButton";
 
 export function SideBarButtonList() {
 	const navigate = useNavigate();
@@ -14,23 +9,11 @@ export function SideBarButtonList() {
 	return (
 		<List>
 			<ListItem disablePadding>
-				<ListItemButton onClick={() => navigate("/new-board")}>
-					<ListItemIcon sx={{ minWidth: "32px", marginRight: "4px" }}>
-						<AddIcon />
-					</ListItemIcon>
-					<ListItemText
-						primary="CREATE NEW KANBAN BOARD"
-						slotProps={{
-							primary: {
-								style: {
-									fontSize: "14px",
-									fontWeight: 500,
-									color: "#333",
-								},
-							},
-						}}
-					/>
-				</ListItemButton>
+				<SideBarListButton
+					onClick={() => navigate("/new-board")}
+					text="Create New Board"
+					icon={<AddIcon />}
+				/>
 			</ListItem>
 		</List>
 	);
