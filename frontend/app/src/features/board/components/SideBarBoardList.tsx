@@ -1,11 +1,9 @@
 import { Divider, List, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useFetchBoards } from "../hooks/useFetchBoards";
 import { SideBarListButton } from "../../../components/SideBarListButton";
-
+import { useFetchBoards } from "../hooks/useFetchBoards";
 
 export function SideBarBoardList() {
-
 	const navigate = useNavigate();
 	const query = useFetchBoards();
 
@@ -19,7 +17,7 @@ export function SideBarBoardList() {
 
 	return (
 		<List>
-			{query.data!.map((board) => (
+			{query.data?.map((board) => (
 				<ListItem key={board.id} disablePadding>
 					<SideBarListButton
 						onClick={() => navigate(`/boards/${board.id}`)}

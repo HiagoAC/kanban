@@ -1,4 +1,5 @@
 import { Box, Divider } from "@mui/material";
+import { SideBarBoardList } from "../features/board/components/SideBarBoardList";
 import { SideBarButtonList } from "./SideBarButtonList";
 
 export function SideBar() {
@@ -13,7 +14,9 @@ export function SideBar() {
 		>
 			<SideBarButtonList />
 			<Divider />
-			<Box sx={{ flexGrow: 1, overflowY: "auto", m: 2 }}>Board List</Box>
+			<Box sx={{ flexGrow: 1, overflowY: "auto", m: 2 }}>
+				<SideBarBoardList />
+			</Box>
 		</Box>
 	);
 }
