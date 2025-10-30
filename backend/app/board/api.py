@@ -1,12 +1,11 @@
 from typing import List
 from ninja import Router
-from ninja.security import django_auth
 
 from board.schemas import BoardIn, BoardOut, BoardListSchema
 from board.models import Board, Column
 
 
-board_router = Router(auth=django_auth)
+board_router = Router()
 
 
 @board_router.get('/', response=List[BoardListSchema],

@@ -1,10 +1,11 @@
 from django.db import IntegrityError
 from ninja import NinjaAPI
 
+from ninja.security import django_auth
 from board.api import board_router
 
 
-api = NinjaAPI(urls_namespace='api')
+api = NinjaAPI(urls_namespace='api', auth=django_auth)
 
 api.add_router('boards/', board_router)
 
