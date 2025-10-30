@@ -1,11 +1,13 @@
+import { Box } from "@mui/material";
 import { Layout } from "../components/Layout";
+import { CreateBoardForm } from "../features/board/components/CreateBoardForm";
 
 export function NewBoardPage() {
 	return (
 		<Layout>
-			<div>
-				<h1>New Board Page</h1>
-			</div>
+			<Box p={4}>
+				<CreateBoardForm />
+			</Box>
 		</Layout>
 	);
 }
