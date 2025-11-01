@@ -1,4 +1,6 @@
+// @ts-ignore
 import AddIcon from "@mui/icons-material/Add";
+// @ts-ignore
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import {
 	Box,
@@ -90,10 +92,15 @@ export function CreateBoardForm() {
 				onChange={(e) => setColumnInput(e.target.value)}
 				variant="outlined"
 				slotProps={{
+					htmlInput: { "data-testid": "column-input" },
 					input: {
 						endAdornment: (
 							<InputAdornment position="end">
-								<IconButton edge="end" onClick={addColumn}>
+								<IconButton
+									data-testid="add-column-button"
+									edge="end"
+									onClick={addColumn}
+								>
 									<AddIcon />
 								</IconButton>
 							</InputAdornment>
@@ -121,7 +128,11 @@ export function CreateBoardForm() {
 									{column}
 								</TableCell>
 								<TableCell align="right" sx={{ pr: 0, py: 0.5 }}>
-									<Button onClick={() => removeColumn(index)} size="small">
+									<Button
+										data-testid={`delete-column-button-${column}`}
+										onClick={() => removeColumn(index)}
+										size="small"
+									>
 										<CloseOutlinedIcon color="action" fontSize="small" />
 									</Button>
 								</TableCell>
