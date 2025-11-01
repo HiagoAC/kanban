@@ -1,6 +1,6 @@
-// @ts-ignore
+// @ts-expect-error
 import AddIcon from "@mui/icons-material/Add";
-// @ts-ignore
+// @ts-expect-error
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import {
 	Box,

@@ -24,13 +24,13 @@ export function NewBoardPage() {
 				<Paper
 					elevation={3}
 					sx={{
-					p: 4,
-					width: "100%",
-					maxWidth: 600,
-					borderRadius: 2,
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
+						p: 4,
+						width: "100%",
+						maxWidth: 600,
+						borderRadius: 2,
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
 					}}
 				>
 					<CreateBoardForm />

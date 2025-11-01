@@ -1,5 +1,4 @@
 import { Box, Grid } from "@mui/material";
-import { Navbar } from "./Navbar";
 import { SideBar } from "./SideBar";
 
 export interface Props {
