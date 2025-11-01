@@ -23,7 +23,6 @@ export function Layout({ children, isHomePage = false }: Props) {
 
 	return (
 		<Box sx={{ flexGrow: 1, m: 0, p: 0 }}>
-			<Navbar />
 			<Grid container spacing={2}>
 				<Grid
 					size={{ md: 3, lg: 2.5, xs: sideBarXsSize }}
