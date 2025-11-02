@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'ordered_model',
     'board',
+    'card',
 ]
 
 MIDDLEWARE = [
