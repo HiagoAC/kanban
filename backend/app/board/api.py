@@ -27,3 +27,11 @@ def create_board(request, payload: BoardIn):
         Column.objects.create(board=board_model, title=column_title)
     board_out = BoardOut.from_orm_with_columns(board_model)
     return 201, board_out
+
+
+@board_router.get('/{board_id}/', response=BoardOut, url_name='board-detail')
+def retrieve_board(request, board_id: int):
+    """Retrieve a board."""
+    board_model = Board.objects.get(id=board_id, user=request.auth)
+    board_out = BoardOut.from_orm_with_columns(board_model)
+    return board_out

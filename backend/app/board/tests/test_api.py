@@ -10,6 +10,11 @@ User = get_user_model()
 BOARD_URL = reverse('api:boards')
 
 
+def board_detail_url(board_id: int) -> str:
+    """Return the detail URL for a board."""
+    return reverse('api:board-detail', args=[board_id])
+
+
 class PublicBoardsApiTests(TestCase):
     """Test unauthenticated requests to the boards API."""
 
@@ -73,3 +78,17 @@ class PrivateBoardsApiTests(TestCase):
             content_type='application/json',
         )
         self.assertEqual(res.status_code, 400)
+
+    def test_retrieve_board(self):
+        """Test retrieving a board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        Column.objects.create(board=board, title='To Do')
+        Column.objects.create(board=board, title='Done')
+        url = board_detail_url(board.id)
+        res = self.client.get(url)
+        self.assertEqual(res.status_code, 200)
+        content = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(content['id'], board.id)
+        self.assertEqual(content['title'], board.title)
+        column_titles = {col['title'] for col in content['columns']}
+        self.assertEqual(column_titles, {'To Do', 'Done'})
