@@ -34,11 +34,13 @@ class PrivateCardsApiTests(TestCase):
 
         self.board = Board.objects.create(title='Test Board', user=self.user)
         self.column = Column.objects.create(board=self.board, title='To Do')
+        self.another_column = Column.objects.create(board=self.board, title='Done')
 
     def test_list_cards(self):
         """Test retrieving a list of cards."""
         card1 = Card.objects.create(title='Card 1', column=self.column)
         card2 = Card.objects.create(title='Card 2', column=self.column)
+        Card.objects.create(title='Card 3', column=self.another_column)
         res = self.client.get(CARDS_URL)
         content = json.loads(res.content.decode('utf-8'))
         self.assertEqual(res.status_code, 200)
@@ -50,10 +52,9 @@ class PrivateCardsApiTests(TestCase):
 
     def test_filter_cards_by_column(self):
         """Test filtering cards by column."""
-        another_column = Column.objects.create(board=self.board, title='Done')
         card1 = Card.objects.create(title='Card 1', column=self.column)
         card2 = Card.objects.create(title='Card 2', column=self.column)
-        Card.objects.create(title='Card 3', column=another_column)
+        Card.objects.create(title='Card 3', column=self.another_column)
         res = self.client.get(CARDS_URL, {'column': self.column.id})
         content = json.loads(res.content.decode('utf-8'))
         self.assertEqual(res.status_code, 200)
