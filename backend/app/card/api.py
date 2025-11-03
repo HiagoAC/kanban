@@ -7,6 +7,7 @@ from card.models import Card
 
 card_router = Router()
 
+
 @card_router.get('/', response=List[CardListSchema],
                  url_name='cards')
 def list_cards(request, filters: CardFilter = Query(...)):
