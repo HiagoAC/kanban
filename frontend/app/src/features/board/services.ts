@@ -19,3 +19,8 @@ export const createBoard = async (
 	const res = await apiClient.post(BOARD_URL, boardData);
 	return res.data;
 };
+
+export const getBoard = async (id: string): Promise<Board> => {
+	const res = await apiClient.get(`${BOARD_URL}${id}/`);
+	return res.data;
+};
