@@ -1,6 +1,15 @@
-import { Box, Button, Divider, IconButton, Link, Typography } from "@mui/material";
-import { DarkMode as DarkModeIcon } from "@mui/icons-material";
-import {Settings as SettingsIcon}  from "@mui/icons-material";
+import {
+	DarkMode as DarkModeIcon,
+	Settings as SettingsIcon,
+} from "@mui/icons-material";
+import {
+	Box,
+	Button,
+	Divider,
+	IconButton,
+	Link,
+	Typography,
+} from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { SideBarBoardList } from "../features/board/components/SideBarBoardList";
 import { SideBarButtonList } from "./SideBarButtonList";

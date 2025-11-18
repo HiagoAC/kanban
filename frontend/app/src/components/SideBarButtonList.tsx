@@ -1,4 +1,8 @@
-import { Add as AddIcon, Search as SearchIcon, Home as HomeIcon } from "@mui/icons-material";
+import {
+	Add as AddIcon,
+	Home as HomeIcon,
+	Search as SearchIcon,
+} from "@mui/icons-material";
 import { List, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { SideBarListButton } from "./SideBarListButton";
@@ -17,7 +21,7 @@ export function SideBarButtonList() {
 			</ListItem>
 			<ListItem disablePadding>
 				<SideBarListButton
-					onClick = {() => {}}
+					onClick={() => {}}
 					text="Search"
 					icon={<SearchIcon />}
 				/>
