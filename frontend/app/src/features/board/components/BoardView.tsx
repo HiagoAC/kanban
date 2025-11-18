@@ -1,9 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useGetBoard } from "../hooks/useGetBoard";
+import { BoardActionBar } from "./BoardActionBar";
 
 export function BoardView({ id }: { id: string }) {
 	const { data: board, isLoading } = useGetBoard(id);
 
+	console.log("Board data:", board);
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
@@ -16,6 +18,7 @@ export function BoardView({ id }: { id: string }) {
 				minHeight: "100%",
 			}}
 		>
+			{board && <BoardActionBar board={board} />}
 			<Box
 				sx={{
 					display: "flex",
@@ -37,13 +40,20 @@ export function BoardView({ id }: { id: string }) {
 					flexGrow: 1,
 					minWidth: "100%",
 					boxSizing: "border-box",
-					p: 2
+					p: 2,
 				}}
 			>
-				{ board?.columns.map((column) => (
+				{board?.columns.map((column) => (
 					<Box
 						key={column.id}
-						sx={{ border: "2px solid black", borderRadius: 2, minWidth: 250, alignSelf: "stretch", p: 2, mr: 2 }}
+						sx={{
+							border: "2px solid black",
+							borderRadius: 2,
+							minWidth: 250,
+							alignSelf: "stretch",
+							p: 2,
+							mr: 2,
+						}}
 					>
 						<Typography variant="h4" fontWeight="bold" mb={1}>
 							{column.title}
