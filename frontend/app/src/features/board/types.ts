@@ -10,5 +10,6 @@ export interface BoardListItem {
 
 export interface Board extends BoardListItem {
 	createdAt: string;
+	updatedAt: string;
 	columns: Column[];
 }
