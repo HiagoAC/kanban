@@ -1,4 +1,6 @@
-import { Box, Divider, Link, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, Link, Typography } from "@mui/material";
+import { DarkMode as DarkModeIcon } from "@mui/icons-material";
+import {Settings as SettingsIcon}  from "@mui/icons-material";
 import { Link as RouterLink } from "react-router-dom";
 import { SideBarBoardList } from "../features/board/components/SideBarBoardList";
 import { SideBarButtonList } from "./SideBarButtonList";
@@ -22,6 +24,30 @@ export function SideBar() {
 			<Divider />
 			<Box sx={{ flexGrow: 1, overflowY: "auto", m: 2 }}>
 				<SideBarBoardList />
+			</Box>
+			<Divider />
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-between",
+					p: 2,
+					alignItems: "center",
+				}}
+			>
+				<Box>
+					<Button variant="contained" sx={{ bgcolor: "dimgrey" }}>
+						SIGN IN
+					</Button>
+				</Box>
+				<Box sx={{ display: "flex", alignItems: "right" }}>
+					<IconButton>
+						<DarkModeIcon />
+					</IconButton>
+					<IconButton>
+						<SettingsIcon />
+					</IconButton>
+				</Box>
 			</Box>
 		</Box>
 	);
