@@ -24,11 +24,12 @@ class BoardOut(ModelSchema):
     id: int
     title: str
     created_at: datetime
+    updated_at: datetime
     columns: List[ColumnSchema]
 
     class Meta:
         model = Board
-        fields = ("id", "title", "created_at")
+        fields = ("id", "title", "created_at", "updated_at")
 
     @classmethod
     def from_orm_with_columns(cls, board: Board):

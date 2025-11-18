@@ -32,6 +32,16 @@ class BoardModelTests(TestCase):
         end_time = timezone.now()
         self.assertTrue(start_time <= board.created_at <= end_time)
 
+    def test_updated_at_is_auto_set(self):
+        """Test that updated_at is automatically set on creation."""
+        start_time = timezone.now()
+        board = Board.objects.create(
+            user=self.user,
+            title='Test Board',
+        )
+        end_time = timezone.now()
+        self.assertTrue(start_time <= board.updated_at <= end_time)
+
     def test_str_representation(self):
         """Test the string representation of the Board model."""
         title = 'Test Board'

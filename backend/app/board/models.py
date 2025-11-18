@@ -9,6 +9,7 @@ class Board(OrderedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     order_with_respect_to = 'user'
 
     def __str__(self):
