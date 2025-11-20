@@ -9,7 +9,7 @@ export interface BoardListItem {
 }
 
 export interface Board extends BoardListItem {
-	createdAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date;
 	columns: Column[];
 }

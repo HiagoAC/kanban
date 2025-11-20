@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import apiClient from "../../../services/apiClient";
-import { createBoard, fetchBoards } from "../services";
+import { createBoard, fetchBoards, getBoard } from "../services";
 
 vi.mock("../../../services/apiClient");
 
@@ -39,5 +39,32 @@ describe("createBoard", () => {
 		const res = await createBoard(newBoard);
 		expect(apiClient.post).toHaveBeenCalledWith("boards/", newBoard);
 		expect(res).toEqual(mockResponse);
+	});
+});
+
+describe("getBoard", () => {
+	it("should fetch a board by id", async () => {
+		const boardId = "1";
+		const mockResponse = {
+			id: 1,
+			title: "Board 1",
+			createdAt: "2024-01-01T00:00:00Z",
+			updatedAt: "2024-01-02T00:00:00Z",
+			columns: [
+				{ id: 1, title: "To Do" },
+				{ id: 2, title: "In Progress" },
+				{ id: 3, title: "Done" },
+			],
+		};
+		(apiClient.get as vi.Mock).mockResolvedValue({ data: mockResponse });
+
+		const res = await getBoard(boardId);
+
+		expect(apiClient.get).toHaveBeenCalledWith(`boards/${boardId}/`);
+		expect(res).toEqual({
+			...mockResponse,
+			createdAt: new Date(mockResponse.createdAt),
+			updatedAt: new Date(mockResponse.updatedAt),
+		});
 	});
 });

@@ -22,5 +22,8 @@ export const createBoard = async (
 
 export const getBoard = async (id: string): Promise<Board> => {
 	const res = await apiClient.get(`${BOARD_URL}${id}/`);
-	return res.data;
+	const board = res.data;
+	board.createdAt = new Date(board.createdAt);
+	board.updatedAt = new Date(board.updatedAt);
+	return board;
 };
