@@ -1,10 +1,8 @@
-import {
-	Edit as EditIcon,
-	StarBorderOutlined as StarBorderOutlinedIcon,
-} from "@mui/icons-material";
+import { StarBorderOutlined as StarBorderOutlinedIcon } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Typography } from "@mui/material";
-import TimeAgo from 'react-timeago';
+import TimeAgo from "react-timeago";
 import type { Board } from "../types";
+import { BoardOptionsMenu } from "./BoardOptionsMenu";
 
 interface BoardActionBarProps {
 	board: Board;
@@ -42,11 +40,9 @@ export function BoardActionBar({ board }: BoardActionBarProps) {
 						Edited <TimeAgo date={board.updatedAt} />
 					</Typography>
 					<IconButton>
-						<EditIcon />
-					</IconButton>
-					<IconButton>
 						<StarBorderOutlinedIcon />
 					</IconButton>
+					<BoardOptionsMenu />
 				</Box>
 			</Box>
 		</AppBar>
