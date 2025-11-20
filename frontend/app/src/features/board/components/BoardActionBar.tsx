@@ -3,6 +3,7 @@ import {
 	StarBorderOutlined as StarBorderOutlinedIcon,
 } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Typography } from "@mui/material";
+import TimeAgo from 'react-timeago';
 import type { Board } from "../types";
 
 interface BoardActionBarProps {
@@ -38,7 +39,7 @@ export function BoardActionBar({ board }: BoardActionBarProps) {
 					sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
 				>
 					<Typography variant="body1" component="div">
-						Edited {board.updatedAt} ago
+						Edited <TimeAgo date={board.updatedAt} />
 					</Typography>
 					<IconButton>
 						<EditIcon />
