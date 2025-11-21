@@ -92,3 +92,17 @@ class PrivateBoardsApiTests(TestCase):
         self.assertEqual(content['title'], board.title)
         column_titles = {col['title'] for col in content['columns']}
         self.assertEqual(column_titles, {'To Do', 'Done'})
+
+    def test_update_board(self):
+        """Test updating a board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        url = board_detail_url(board.id)
+        payload = {'title': 'Updated Board'}
+        res = self.client.patch(
+            url,
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 200)
+        board.refresh_from_db()
+        self.assertEqual(board.title, payload['title'])

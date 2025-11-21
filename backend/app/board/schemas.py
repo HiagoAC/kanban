@@ -20,6 +20,10 @@ class BoardIn(Schema):
     columns: List[str]
 
 
+class BoardUpdate(Schema):
+    title: str | None = None
+
+
 class BoardOut(ModelSchema):
     id: int
     title: str
