@@ -3,11 +3,17 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useId, useState } from "react";
+import { RenameBoardDialogue } from "./RenameBoardDialogue";
 
-export function BoardOptionsMenu() {
+interface BoardOptionsMenuProps {
+	boardId: string;
+}
+
+export function BoardOptionsMenu({ boardId }: BoardOptionsMenuProps) {
 	const buttonId = useId();
 	const menuId = useId();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [renameOpen, setRenameOpen] = useState(false);
 	const open = Boolean(anchorEl);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,10 +45,15 @@ export function BoardOptionsMenu() {
 					},
 				}}
 			>
-				<MenuItem onClick={handleClose}>Rename Board</MenuItem>
+				<MenuItem onClick={() => setRenameOpen(true)}>Rename Board</MenuItem>
 				<MenuItem onClick={handleClose}>Add Column</MenuItem>
 				<MenuItem onClick={handleClose}>Delete Column</MenuItem>
 			</Menu>
+			<RenameBoardDialogue
+				open={renameOpen}
+				onClose={() => setRenameOpen(false)}
+				boardId={boardId}
+			/>
 		</div>
 	);
 }
