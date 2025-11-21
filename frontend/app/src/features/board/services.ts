@@ -1,5 +1,5 @@
 import apiClient from "../../services/apiClient";
-import type { Board, BoardListItem } from "./types";
+import type { Board, BoardListItem, UpdateBoardSchema } from "./types";
 
 const BOARD_URL = "boards/";
 
@@ -22,6 +22,17 @@ export const createBoard = async (
 
 export const getBoard = async (id: string): Promise<Board> => {
 	const res = await apiClient.get(`${BOARD_URL}${id}/`);
+	const board = res.data;
+	board.createdAt = new Date(board.createdAt);
+	board.updatedAt = new Date(board.updatedAt);
+	return board;
+};
+
+export const updateBoard = async ({
+	id,
+	boardData,
+}: UpdateBoardSchema): Promise<Board> => {
+	const res = await apiClient.patch(`${BOARD_URL}${id}/`, boardData);
 	const board = res.data;
 	board.createdAt = new Date(board.createdAt);
 	board.updatedAt = new Date(board.updatedAt);

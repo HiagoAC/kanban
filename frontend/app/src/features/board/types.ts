@@ -13,3 +13,8 @@ export interface Board extends BoardListItem {
 	updatedAt: Date;
 	columns: Column[];
 }
+
+export interface UpdateBoardSchema {
+	id: string;
+	boardData: Partial<Omit<Board, "id" | "createdAt" | "updatedAt">>;
+}
