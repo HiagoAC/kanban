@@ -15,6 +15,10 @@ def board_detail_url(board_id: int) -> str:
     return reverse('api:board-detail', args=[board_id])
 
 
+def column_url(board_id: int) -> str:
+    return reverse('api:columns', args=[board_id])
+
+
 class PublicBoardsApiTests(TestCase):
     """Test unauthenticated requests to the boards API."""
 
@@ -106,3 +110,23 @@ class PrivateBoardsApiTests(TestCase):
         self.assertEqual(res.status_code, 200)
         board.refresh_from_db()
         self.assertEqual(board.title, payload['title'])
+
+    def test_add_column_to_board(self):
+        """Test adding a column to an existing board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        col1 = Column.objects.create(board=board, title='To Do')
+        col2 = Column.objects.create(board=board, title='In Progress')
+        payload = {
+            'title': 'Done'
+        }
+        res = self.client.post(
+            column_url(board.id),
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 200)
+        all_columns = Column.objects.filter(board=board)
+        self.assertEqual(
+            list(all_columns.values_list('title', flat=True)),
+            [col1.title, col2.title, payload['title']]
+        )

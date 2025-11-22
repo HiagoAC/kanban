@@ -1,7 +1,13 @@
 from typing import List
 from ninja import Router
 
-from board.schemas import BoardIn, BoardOut, BoardListSchema, BoardUpdate
+from board.schemas import (
+    ColumnIn,
+    BoardIn,
+    BoardOut,
+    BoardListSchema,
+    BoardUpdate,
+)
 from board.models import Board, Column
 
 
@@ -44,5 +50,15 @@ def update_board(request, board_id: int, payload: BoardUpdate):
     for field, value in payload.dict(exclude_unset=True).items():
         setattr(board, field, value)
     board.save()
+    board_out = BoardOut.from_orm_with_columns(board)
+    return board_out
+
+
+@board_router.post('/{board_id}/columns/', response=BoardOut,
+                   url_name='columns')
+def add_column(request, board_id: int, payload: ColumnIn):
+    """Add a new column to a board."""
+    board = Board.objects.get(id=board_id, user=request.auth)
+    Column.objects.create(board=board, title=payload.title)
     board_out = BoardOut.from_orm_with_columns(board)
     return board_out

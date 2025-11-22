@@ -5,9 +5,12 @@ from typing import List
 from board.models import Board
 
 
-class ColumnSchema(Schema):
-    id: int
+class ColumnIn(Schema):
     title: str
+
+
+class ColumnSchema(ColumnIn):
+    id: int
 
 
 class BoardListSchema(Schema):
