@@ -42,7 +42,7 @@ export function BoardActionBar({ board }: BoardActionBarProps) {
 					<IconButton>
 						<StarBorderOutlinedIcon />
 					</IconButton>
-					<BoardOptionsMenu boardId={board.id} />
+					<BoardOptionsMenu board={board} />
 				</Box>
 			</Box>
 		</AppBar>

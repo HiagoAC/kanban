@@ -3,18 +3,22 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useId, useState } from "react";
+import type { Board } from "../types";
+import { AddColumnDialogue } from "./AddColumnDialogue";
 import { RenameBoardDialogue } from "./RenameBoardDialogue";
 
 interface BoardOptionsMenuProps {
-	boardId: string;
+	board: Board;
 }
 
-export function BoardOptionsMenu({ boardId }: BoardOptionsMenuProps) {
+export function BoardOptionsMenu({ board }: BoardOptionsMenuProps) {
 	const buttonId = useId();
 	const menuId = useId();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [renameOpen, setRenameOpen] = useState(false);
 	const open = Boolean(anchorEl);
+
+	const [renameOpen, setRenameOpen] = useState(false);
+	const [addColumnOpen, setAddColumnOpen] = useState(false);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -46,13 +50,18 @@ export function BoardOptionsMenu({ boardId }: BoardOptionsMenuProps) {
 				}}
 			>
 				<MenuItem onClick={() => setRenameOpen(true)}>Rename Board</MenuItem>
-				<MenuItem onClick={handleClose}>Add Column</MenuItem>
+				<MenuItem onClick={() => setAddColumnOpen(true)}>Add Column</MenuItem>
 				<MenuItem onClick={handleClose}>Delete Column</MenuItem>
 			</Menu>
 			<RenameBoardDialogue
 				open={renameOpen}
 				onClose={() => setRenameOpen(false)}
-				boardId={boardId}
+				boardId={board.id}
+			/>
+			<AddColumnDialogue
+				open={addColumnOpen}
+				onClose={() => setAddColumnOpen(false)}
+				board={board}
 			/>
 		</div>
 	);
