@@ -38,3 +38,16 @@ export const updateBoard = async ({
 	board.updatedAt = new Date(board.updatedAt);
 	return board;
 };
+
+export const addColumnToBoard = async (
+	boardId: string,
+	columnTitle: string,
+): Promise<Board> => {
+	const res = await apiClient.post(`${BOARD_URL}${boardId}/columns/`, {
+		title: columnTitle,
+	});
+	const board = res.data;
+	board.createdAt = new Date(board.createdAt);
+	board.updatedAt = new Date(board.updatedAt);
+	return board;
+};
