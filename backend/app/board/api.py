@@ -54,6 +54,14 @@ def update_board(request, board_id: int, payload: BoardUpdate):
     return board_out
 
 
+@board_router.delete('/{board_id}/', response={204: None})
+def delete_board(request, board_id: int):
+    """Delete a board."""
+    board = Board.objects.get(id=board_id, user=request.auth)
+    board.delete()
+    return 204, None
+
+
 @board_router.post('/{board_id}/columns/', response=BoardOut,
                    url_name='columns')
 def add_column(request, board_id: int, payload: ColumnIn):

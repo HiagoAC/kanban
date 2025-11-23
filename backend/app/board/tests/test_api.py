@@ -111,6 +111,15 @@ class PrivateBoardsApiTests(TestCase):
         board.refresh_from_db()
         self.assertEqual(board.title, payload['title'])
 
+    def test_delete_board(self):
+        """Test deleting a board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        url = board_detail_url(board.id)
+        res = self.client.delete(url)
+        self.assertEqual(res.status_code, 204)
+        exists = Board.objects.filter(id=board.id).exists()
+        self.assertFalse(exists)
+
     def test_add_column_to_board(self):
         """Test adding a column to an existing board."""
         board = Board.objects.create(user=self.user, title='A Board')
