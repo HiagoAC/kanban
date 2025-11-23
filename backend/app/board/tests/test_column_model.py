@@ -65,3 +65,43 @@ class ColumnModelTests(TestCase):
         )
         self.assertEqual(column1.title, column2.title)
         self.assertNotEqual(column1.board, column2.board)
+
+    def test_board_updated_at_on_column_creation(self):
+        """Test that creating a column updates the board's updated_at field."""
+        original_updated_at = self.board.updated_at
+        Column.objects.create(
+            board=self.board,
+            title='New Column',
+        )
+        self.board.refresh_from_db()
+
+        self.assertGreater(self.board.updated_at, original_updated_at)
+
+    def test_board_updated_at_on_column_modification(self):
+        """Test that updating a column updates the board's updated_at field."""
+        column = Column.objects.create(
+            board=self.board,
+            title='Initial Title',
+        )
+        self.board.refresh_from_db()
+        original_updated_at = self.board.updated_at
+
+        column.title = 'Updated Title'
+        column.save()
+        self.board.refresh_from_db()
+
+        self.assertGreater(self.board.updated_at, original_updated_at)
+
+    def test_board_updated_at_on_column_deletion(self):
+        """Test that deleting a column updates the board's updated_at field."""
+        column = Column.objects.create(
+            board=self.board,
+            title='To Be Deleted',
+        )
+        self.board.refresh_from_db()
+        original_updated_at = self.board.updated_at
+
+        column.delete()
+        self.board.refresh_from_db()
+
+        self.assertGreater(self.board.updated_at, original_updated_at)

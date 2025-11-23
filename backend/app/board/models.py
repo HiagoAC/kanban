@@ -34,6 +34,17 @@ class Column(OrderedModel):
     def __str__(self):
         return self.title
 
+    def _touch_board(self):
+        self.board.save(update_fields=['updated_at'])
+
+    def save(self, *args, **kwargs):
+        self._touch_board()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self._touch_board()
+        super().delete(*args, **kwargs)
+
     class Meta(OrderedModel.Meta):
         constraints = [
             models.UniqueConstraint(
