@@ -10,9 +10,16 @@ const apiClient = axios.create({
 	},
 	transformResponse: [
 		(data) => {
-			const parsed = JSON.parse(data);
-
-			return camelcaseKeys(parsed, { deep: true });
+			if (!data || data === "") {
+				return null;
+			}
+			try {
+				const parsed = JSON.parse(data);
+				return camelcaseKeys(parsed, { deep: true });
+			} catch (error) {
+				console.error("Error parsing response data:", error);
+				return data;
+			}
 		},
 	],
 });
