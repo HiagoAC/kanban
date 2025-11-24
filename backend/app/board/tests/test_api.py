@@ -19,6 +19,10 @@ def column_url(board_id: int) -> str:
     return reverse('api:columns', args=[board_id])
 
 
+def column_detail_url(board_id: int, column_id: int) -> str:
+    return reverse('api:column-detail', args=[board_id, column_id])
+
+
 class PublicBoardsApiTests(TestCase):
     """Test unauthenticated requests to the boards API."""
 
@@ -139,3 +143,18 @@ class PrivateBoardsApiTests(TestCase):
             list(all_columns.values_list('title', flat=True)),
             [col1.title, col2.title, payload['title']]
         )
+
+    def test_delete_column_from_board(self):
+        """Test deleting a column from a board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        col1 = Column.objects.create(board=board, title='To Do')
+        col2 = Column.objects.create(board=board, title='In Progress')
+        col3 = Column.objects.create(board=board, title='Done')
+
+        res = self.client.delete(
+            column_detail_url(board.id, col2.id)
+        )
+        self.assertEqual(res.status_code, 204)
+
+        remaining_columns = Column.objects.filter(board=board)
+        self.assertEqual(list(remaining_columns), [col1, col3])

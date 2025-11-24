@@ -5,11 +5,11 @@ from typing import List
 from board.models import Board
 
 
-class ColumnIn(Schema):
+class ColumnBase(Schema):
     title: str
 
 
-class ColumnSchema(ColumnIn):
+class ColumnSchema(ColumnBase):
     id: int
 
 

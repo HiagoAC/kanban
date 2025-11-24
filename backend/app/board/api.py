@@ -2,7 +2,7 @@ from typing import List
 from ninja import Router
 
 from board.schemas import (
-    ColumnIn,
+    ColumnBase,
     BoardIn,
     BoardOut,
     BoardListSchema,
@@ -64,9 +64,19 @@ def delete_board(request, board_id: int):
 
 @board_router.post('/{board_id}/columns/', response=BoardOut,
                    url_name='columns')
-def add_column(request, board_id: int, payload: ColumnIn):
+def add_column(request, board_id: int, payload: ColumnBase):
     """Add a new column to a board."""
     board = Board.objects.get(id=board_id, user=request.auth)
     Column.objects.create(board=board, title=payload.title)
     board_out = BoardOut.from_orm_with_columns(board)
     return board_out
+
+
+@board_router.delete('/{board_id}/columns/{column_id}/', response={204: None},
+                     url_name='column-detail')
+def delete_column(request, board_id: int, column_id: int):
+    """Delete a column from a board."""
+    board = Board.objects.get(id=board_id, user=request.auth)
+    column = Column.objects.get(id=column_id, board=board)
+    column.delete()
+    return 204, None
