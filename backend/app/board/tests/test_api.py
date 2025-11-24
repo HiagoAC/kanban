@@ -158,3 +158,22 @@ class PrivateBoardsApiTests(TestCase):
 
         remaining_columns = Column.objects.filter(board=board)
         self.assertEqual(list(remaining_columns), [col1, col3])
+
+    def test_update_column_from_board(self):
+        """Test updating a column from a board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        column = Column.objects.create(board=board, title='To Do')
+
+        payload = {
+            'title': 'Updated To Do'
+        }
+        url = column_detail_url(board.id, column.id)
+        res = self.client.patch(
+            url,
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 200)
+
+        column.refresh_from_db()
+        self.assertEqual(column.title, payload['title'])

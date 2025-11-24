@@ -80,3 +80,16 @@ def delete_column(request, board_id: int, column_id: int):
     column = Column.objects.get(id=column_id, board=board)
     column.delete()
     return 204, None
+
+
+@board_router.patch('/{board_id}/columns/{column_id}/', response=BoardOut,
+                    url_name='column-detail')
+def update_column(request, board_id: int, column_id: int, payload: ColumnBase):
+    """Update a column from a board."""
+    board = Board.objects.get(id=board_id, user=request.auth)
+    column = Column.objects.get(id=column_id, board=board)
+    for field, value in payload.dict(exclude_unset=True).items():
+        setattr(column, field, value)
+    column.save()
+    board_out = BoardOut.from_orm_with_columns(board)
+    return board_out
