@@ -39,6 +39,10 @@ export const updateBoard = async ({
 	return board;
 };
 
+export const deleteBoard = async (id: string): Promise<void> => {
+	await apiClient.delete(`${BOARD_URL}${id}/`);
+};
+
 export const addColumnToBoard = async (
 	boardId: string,
 	columnTitle: string,
