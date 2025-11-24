@@ -5,7 +5,6 @@ import { BoardActionBar } from "./BoardActionBar";
 export function BoardView({ id }: { id: string }) {
 	const { data: board, isLoading } = useGetBoard(id);
 
-	console.log("Board data:", board);
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
