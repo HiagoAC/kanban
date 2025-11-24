@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useId, useState } from "react";
 import type { Board } from "../types";
 import { AddColumnDialogue } from "./AddColumnDialogue";
+import { DeleteBoardDialogue } from "./DeleteBoardDialogue";
 import { RenameBoardDialogue } from "./RenameBoardDialogue";
 
 interface BoardOptionsMenuProps {
@@ -19,6 +20,7 @@ export function BoardOptionsMenu({ board }: BoardOptionsMenuProps) {
 
 	const [renameOpen, setRenameOpen] = useState(false);
 	const [addColumnOpen, setAddColumnOpen] = useState(false);
+	const [deleteOpen, setDeleteOpen] = useState(false);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -51,7 +53,7 @@ export function BoardOptionsMenu({ board }: BoardOptionsMenuProps) {
 			>
 				<MenuItem onClick={() => setRenameOpen(true)}>Rename Board</MenuItem>
 				<MenuItem onClick={() => setAddColumnOpen(true)}>Add Column</MenuItem>
-				<MenuItem onClick={handleClose}>Delete Column</MenuItem>
+				<MenuItem onClick={() => setDeleteOpen(true)}>Delete Board</MenuItem>
 			</Menu>
 			<RenameBoardDialogue
 				open={renameOpen}
@@ -61,6 +63,11 @@ export function BoardOptionsMenu({ board }: BoardOptionsMenuProps) {
 			<AddColumnDialogue
 				open={addColumnOpen}
 				onClose={() => setAddColumnOpen(false)}
+				board={board}
+			/>
+			<DeleteBoardDialogue
+				open={deleteOpen}
+				onClose={() => setDeleteOpen(false)}
 				board={board}
 			/>
 		</div>
