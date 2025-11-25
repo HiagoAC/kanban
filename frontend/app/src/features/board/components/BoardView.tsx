@@ -18,21 +18,28 @@ export function BoardView({ id }: { id: string }) {
 				minHeight: "100%",
 			}}
 		>
-			{board && <BoardActionBar board={board} />}
-			<Box
+			<Stack
+				direction="row"
+				justifyContent="space-between"
 				sx={{
-					display: "flex",
-					justifyContent: "center",
 					width: "100%",
 					height: "auto",
 					boxSizing: "border-box",
-					py: 2,
+					pl: 2,
+					py: 1,
 				}}
 			>
-				<Typography variant="h2" fontWeight="bold" mb={2}>
+				<Typography
+					variant="h4"
+					fontWeight="bold"
+					sx={{ flex: 1, minWidth: 0, alignSelf: "end" }}
+				>
 					{board?.title}
 				</Typography>
-			</Box>
+				<Box sx={{ flexShrink: 0 }}>
+					{board && <BoardActionBar board={board} />}
+				</Box>
+			</Stack>
 			<Stack
 				direction="row"
 				sx={{
