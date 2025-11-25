@@ -1,18 +1,18 @@
 import {
 	Add as AddIcon,
 	DragIndicator as DragIndicatorIcon,
-	MoreHoriz as MoreHorizIcon,
 } from "@mui/icons-material";
 import { IconButton, Stack, Typography } from "@mui/material";
 import { useId } from "react";
 import type { Column } from "../types";
+import { ColumnOptionsMenu } from "./ColumnOptionsMenu";
 
 interface ColumnViewProps {
 	column: Column;
+	boardId: string;
 }
 
-export function ColumnView({ column }: ColumnViewProps) {
-	const moreButtonId = useId();
+export function ColumnView({ column, boardId }: ColumnViewProps) {
 	const addButtonId = useId();
 
 	return (
@@ -44,9 +44,7 @@ export function ColumnView({ column }: ColumnViewProps) {
 					<IconButton id={addButtonId}>
 						<AddIcon fontSize="small" />
 					</IconButton>
-					<IconButton id={moreButtonId}>
-						<MoreHorizIcon fontSize="small" />
-					</IconButton>
+					<ColumnOptionsMenu boardId={boardId} column={column} />
 				</Stack>
 			</Stack>
 		</Stack>
