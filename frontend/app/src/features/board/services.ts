@@ -1,5 +1,5 @@
 import apiClient from "../../services/apiClient";
-import type { Board, BoardListItem, UpdateBoardSchema } from "./types";
+import type { Board, BoardListItem, UpdateBoardSchema, UpdateColumnSchema } from "./types";
 
 const BOARD_URL = "boards/";
 
@@ -50,6 +50,18 @@ export const addColumnToBoard = async (
 	const res = await apiClient.post(`${BOARD_URL}${boardId}/columns/`, {
 		title: columnTitle,
 	});
+	const board = res.data;
+	board.createdAt = new Date(board.createdAt);
+	board.updatedAt = new Date(board.updatedAt);
+	return board;
+};
+
+export const updateColumnInBoard = async ({
+	boardId,
+	columnId,
+	columnData,	
+}: UpdateColumnSchema): Promise<Board> => {
+	const res = await apiClient.patch(`${BOARD_URL}${boardId}/columns/${columnId}/`, columnData);
 	const board = res.data;
 	board.createdAt = new Date(board.createdAt);
 	board.updatedAt = new Date(board.updatedAt);

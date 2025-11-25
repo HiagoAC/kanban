@@ -3,6 +3,12 @@ export interface Column {
 	title: string;
 }
 
+export interface UpdateColumnSchema {
+	boardId: string;
+	columnId: string;
+	columnData: Partial<Omit<Column, "id">>;
+}
+
 export interface BoardListItem {
 	id: string;
 	title: string;
