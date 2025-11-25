@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { OptionsMenu } from "../../../components/OptionsMenu";
+import { RenameDialogue } from "../../../components/RenameDialogue";
+import { useUpdateBoard } from "../hooks/useUpdateBoard";
 import type { Board } from "../types";
 import { AddColumnDialogue } from "./AddColumnDialogue";
 import { DeleteBoardDialogue } from "./DeleteBoardDialogue";
-import { RenameBoardDialogue } from "./RenameBoardDialogue";
 
 interface BoardOptionsMenuProps {
 	board: Board;
@@ -14,6 +15,8 @@ export function BoardOptionsMenu({ board }: BoardOptionsMenuProps) {
 	const [addColumnOpen, setAddColumnOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
 
+	const { mutate: updateBoard } = useUpdateBoard();
+
 	return (
 		<>
 			<OptionsMenu
@@ -23,10 +26,13 @@ export function BoardOptionsMenu({ board }: BoardOptionsMenuProps) {
 					{ label: "Delete Board", onClick: () => setDeleteOpen(true) },
 				]}
 			/>
-			<RenameBoardDialogue
+			<RenameDialogue
 				open={renameOpen}
 				onClose={() => setRenameOpen(false)}
-				boardId={board.id}
+				dialogueTitle="Rename Board"
+				onSubmit={(title) =>
+					updateBoard({ id: board.id, boardData: { title: title } })
+				}
 			/>
 			<AddColumnDialogue
 				open={addColumnOpen}

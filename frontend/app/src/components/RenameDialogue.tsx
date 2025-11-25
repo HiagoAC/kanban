@@ -8,45 +8,48 @@ import {
 	TextField,
 } from "@mui/material";
 import { useId, useState } from "react";
-import { useUpdateBoard } from "../hooks/useUpdateBoard";
 
-interface RenameBoardDialogueProps {
+interface RenameDialogueProps {
 	open: boolean;
 	onClose: () => void;
-	boardId: string;
+	dialogueTitle: string;
+	onSubmit: (newName: string) => void;
+	label?: string;
 }
 
-export function RenameBoardDialogue({
+export function RenameDialogue({
 	open,
 	onClose,
-	boardId,
-}: RenameBoardDialogueProps) {
+	dialogueTitle,
+	onSubmit,
+	label = "New Title",
+}: RenameDialogueProps) {
 	const formId = useId();
-	const titleFieldId = useId();
-	const [title, setTitle] = useState<string>("");
-	const { mutate: updateBoard } = useUpdateBoard();
+	const fieldId = useId();
+	const [value, setValue] = useState<string>("");
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		updateBoard({ id: boardId, boardData: { title } });
+		onSubmit(value);
 		onClose();
+		setValue("");
 	};
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>Rename Board</DialogTitle>
+			<DialogTitle>{dialogueTitle}</DialogTitle>
 			<DialogContent>
 				<Box component="form" onSubmit={handleSubmit} id={formId}>
 					<TextField
 						autoFocus
 						required
-						id={titleFieldId}
-						name="title"
-						label="New Title"
+						id={fieldId}
+						label={label}
 						type="text"
 						fullWidth
 						variant="standard"
-						onChange={(e) => setTitle(e.target.value)}
+						value={value}
+						onChange={(e) => setValue(e.target.value)}
 					/>
 				</Box>
 			</DialogContent>
