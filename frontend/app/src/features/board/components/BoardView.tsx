@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useGetBoard } from "../hooks/useGetBoard";
 import { BoardActionBar } from "./BoardActionBar";
+import { ColumnView } from "./ColumnView";
 
 export function BoardView({ id }: { id: string }) {
 	const { data: board, isLoading } = useGetBoard(id);
@@ -43,21 +44,7 @@ export function BoardView({ id }: { id: string }) {
 				}}
 			>
 				{board?.columns.map((column) => (
-					<Box
-						key={column.id}
-						sx={{
-							border: "2px solid black",
-							borderRadius: 2,
-							minWidth: 250,
-							alignSelf: "stretch",
-							p: 2,
-							mr: 2,
-						}}
-					>
-						<Typography variant="h4" fontWeight="bold" mb={1}>
-							{column.title}
-						</Typography>
-					</Box>
+					<ColumnView key={column.id} column={column} />
 				))}
 			</Stack>
 		</Box>
