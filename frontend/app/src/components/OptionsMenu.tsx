@@ -7,13 +7,15 @@ import { useId, useState } from "react";
 interface OptionsMenuItem {
 	label: string;
 	onClick: () => void;
+	iconSize?: "small" | "medium" | "large";
 }
 
 interface OptionsMenuProps {
 	items: OptionsMenuItem[];
+	iconSize?: "small" | "medium" | "large";
 }
 
-export function OptionsMenu({ items }: OptionsMenuProps) {
+export function OptionsMenu({ items, iconSize = "medium" }: OptionsMenuProps) {
 	const buttonId = useId();
 	const menuId = useId();
 
@@ -35,7 +37,7 @@ export function OptionsMenu({ items }: OptionsMenuProps) {
 				aria-expanded={open ? "true" : undefined}
 				onClick={handleClick}
 			>
-				<MoreHorizIcon />
+				<MoreHorizIcon fontSize={iconSize} />
 			</IconButton>
 
 			<Menu id={menuId} anchorEl={anchorEl} open={open} onClose={handleClose}>
