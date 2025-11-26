@@ -28,7 +28,7 @@ class Card(OrderedModel):
     class Meta(OrderedModel.Meta):
         constraints = [
             models.CheckConstraint(
-                check=models.Q(priority__in=PriorityChoices.values),
+                condition=models.Q(priority__in=PriorityChoices.values),
                 name='valid_priority_choice'
             )
         ]
