@@ -67,3 +67,12 @@ export const updateColumnInBoard = async ({
 	board.updatedAt = new Date(board.updatedAt);
 	return board;
 };
+
+export const deleteColumnFromBoard = async ({
+	boardId,
+	columnId,
+}: { boardId: string; columnId: string }): Promise<void> => {
+	await apiClient.delete(
+		`${BOARD_URL}${boardId}/columns/${columnId}/`,
+	);
+};
