@@ -1,5 +1,10 @@
 import apiClient from "../../services/apiClient";
-import type { Board, BoardListItem, UpdateBoardSchema, UpdateColumnSchema } from "./types";
+import type {
+	Board,
+	BoardListItem,
+	UpdateBoardSchema,
+	UpdateColumnSchema,
+} from "./types";
 
 const BOARD_URL = "boards/";
 
@@ -59,9 +64,12 @@ export const addColumnToBoard = async (
 export const updateColumnInBoard = async ({
 	boardId,
 	columnId,
-	columnData,	
+	columnData,
 }: UpdateColumnSchema): Promise<Board> => {
-	const res = await apiClient.patch(`${BOARD_URL}${boardId}/columns/${columnId}/`, columnData);
+	const res = await apiClient.patch(
+		`${BOARD_URL}${boardId}/columns/${columnId}/`,
+		columnData,
+	);
 	const board = res.data;
 	board.createdAt = new Date(board.createdAt);
 	board.updatedAt = new Date(board.updatedAt);
@@ -71,8 +79,9 @@ export const updateColumnInBoard = async ({
 export const deleteColumnFromBoard = async ({
 	boardId,
 	columnId,
-}: { boardId: string; columnId: string }): Promise<void> => {
-	await apiClient.delete(
-		`${BOARD_URL}${boardId}/columns/${columnId}/`,
-	);
+}: {
+	boardId: string;
+	columnId: string;
+}): Promise<void> => {
+	await apiClient.delete(`${BOARD_URL}${boardId}/columns/${columnId}/`);
 };

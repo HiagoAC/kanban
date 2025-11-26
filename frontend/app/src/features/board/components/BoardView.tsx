@@ -51,7 +51,7 @@ export function BoardView({ id }: { id: string }) {
 				}}
 			>
 				{board?.columns.map((column) => (
-					<ColumnView key={column.id} column={column} board={board}/>
+					<ColumnView key={column.id} column={column} board={board} />
 				))}
 			</Stack>
 		</Box>

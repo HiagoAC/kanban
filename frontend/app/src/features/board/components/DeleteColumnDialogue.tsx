@@ -30,10 +30,12 @@ export function DeleteColumnDialogue({
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>Delete Column '{column.title}' from {board.title}</DialogTitle>
+			<DialogTitle>
+				Delete Column '{column.title}' from {board.title}
+			</DialogTitle>
 			<DialogContent>
-				Are you sure you want to delete this column? This action will
-				 also delete all cards within this column and cannot be undone.
+				Are you sure you want to delete this column? This action will also
+				delete all cards within this column and cannot be undone.
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={onClose}>Cancel</Button>
