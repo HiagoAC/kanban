@@ -60,7 +60,7 @@ class PrivateCardsApiTests(TestCase):
         card1 = Card.objects.create(title='Card 1', column=self.column)
         card2 = Card.objects.create(title='Card 2', column=self.column)
         Card.objects.create(title='Card 3', column=another_column)
-        res = self.client.get(CARDS_URL, {'column': self.column.id})
+        res = self.client.get(CARDS_URL, {'column_id': self.column.id})
         content = json.loads(res.content.decode('utf-8'))
         self.assertEqual(res.status_code, 200)
         expected = [
@@ -68,3 +68,24 @@ class PrivateCardsApiTests(TestCase):
             for c in (card1, card2)
         ]
         self.assertEqual(content, expected)
+
+    def test_create_card_successful(self):
+        """Test creating a new card."""
+        payload = {
+            'title': 'New Card',
+            'body': 'Card body content',
+            'priority': 'high',
+            'column_id': self.column.id
+        }
+        res = self.client.post(
+            CARDS_URL,
+            payload,
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 201)
+        card = Card.objects.get(id=res.json()['id'])
+        for key in payload:
+            if key == 'column':
+                self.assertEqual(card.column.id, payload[key])
+            else:
+                self.assertEqual(getattr(card, key), payload[key])
