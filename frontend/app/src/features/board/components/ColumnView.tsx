@@ -4,15 +4,15 @@ import {
 } from "@mui/icons-material";
 import { IconButton, Stack, Typography } from "@mui/material";
 import { useId } from "react";
-import type { Column } from "../types";
+import type { Board, Column } from "../types";
 import { ColumnOptionsMenu } from "./ColumnOptionsMenu";
 
 interface ColumnViewProps {
 	column: Column;
-	boardId: string;
+	board: Board;
 }
 
-export function ColumnView({ column, boardId }: ColumnViewProps) {
+export function ColumnView({ column, board }: ColumnViewProps) {
 	const addButtonId = useId();
 
 	return (
@@ -44,7 +44,7 @@ export function ColumnView({ column, boardId }: ColumnViewProps) {
 					<IconButton id={addButtonId}>
 						<AddIcon fontSize="small" />
 					</IconButton>
-					<ColumnOptionsMenu boardId={boardId} column={column} />
+					<ColumnOptionsMenu board={board} column={column} />
 				</Stack>
 			</Stack>
 		</Stack>

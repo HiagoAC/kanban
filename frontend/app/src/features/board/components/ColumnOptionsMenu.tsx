@@ -1,15 +1,16 @@
 import { useState } from "react";
-import type { Column } from "../types";
+import type { Board, Column } from "../types";
 import { useUpdateColumnInBoard } from "../hooks/useUpdateColumnInBoard";
-import { RenameDialogue } from "../../../components/RenameDialogue";
+import { DeleteColumnDialogue } from "./DeleteColumnDialogue";
 import { OptionsMenu } from "../../../components/OptionsMenu";
+import { RenameDialogue } from "../../../components/RenameDialogue";
 
 interface ColumnOptionsMenuProps {
-	boardId: string;
+	board: Board;
 	column: Column;
 }
 
-export function ColumnOptionsMenu({ boardId, column }: ColumnOptionsMenuProps) {
+export function ColumnOptionsMenu({ board, column }: ColumnOptionsMenuProps) {
 	const [renameOpen, setRenameOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -28,10 +29,20 @@ export function ColumnOptionsMenu({ boardId, column }: ColumnOptionsMenuProps) {
                 open={renameOpen}
                 onClose={() => setRenameOpen(false)}
                 dialogueTitle="Rename Column"
-                onSubmit={(title) =>
-                    updateColumnInBoard({ boardId, columnId: column.id, columnData: { title: title } })
+                onSubmit={(title: string) =>
+                    updateColumnInBoard({
+						boardId: board.id,
+						columnId: column.id,
+						columnData: { title: title }
+					})
                 }
             />
+			<DeleteColumnDialogue
+				open={deleteOpen}
+				onClose={() => setDeleteOpen(false)}
+				board={board}
+				column={column}
+			/>
 		</>
 	);
 }
