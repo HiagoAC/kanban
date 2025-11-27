@@ -3,7 +3,8 @@ import {
 	DragIndicator as DragIndicatorIcon,
 } from "@mui/icons-material";
 import { IconButton, Stack, Typography } from "@mui/material";
-import { useId } from "react";
+import { useId, useState } from "react";
+import { CreateCardDialogue } from "../../card/components/CreateCardDialogue";
 import type { Board, Column } from "../types";
 import { ColumnOptionsMenu } from "./ColumnOptionsMenu";
 
@@ -13,6 +14,7 @@ interface ColumnViewProps {
 }
 
 export function ColumnView({ column, board }: ColumnViewProps) {
+	const [createCardOpen, setCreateCardOpen] = useState(false);
 	const addButtonId = useId();
 
 	return (
@@ -41,10 +43,19 @@ export function ColumnView({ column, board }: ColumnViewProps) {
 					</Typography>
 				</Stack>
 				<Stack direction="row" alignSelf="center">
-					<IconButton id={addButtonId}>
+					<IconButton id={addButtonId} onClick={() => setCreateCardOpen(true)}>
 						<AddIcon fontSize="small" />
 					</IconButton>
 					<ColumnOptionsMenu board={board} column={column} />
+
+					{createCardOpen && (
+						<CreateCardDialogue
+							open={createCardOpen}
+							onClose={() => setCreateCardOpen(false)}
+							column={column}
+							board={board}
+						/>
+					)}
 				</Stack>
 			</Stack>
 		</Stack>
