@@ -5,7 +5,11 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	MenuItem,
+	FormControl,
+	FormControlLabel,
+	FormLabel,
+	Radio,
+	RadioGroup,
 	TextField,
 } from "@mui/material";
 import { useId, useState } from "react";
@@ -28,12 +32,11 @@ export function CreateCardDialogue({
 	board,
 }: CreateCardDialogueProps) {
 	const [title, setTitle] = useState<string>("");
-	const [priority, setPriority] = useState<Priority | null>(null);
+	const [priority, setPriority] = useState<Priority | null>("medium");
 	const [body, setBody] = useState<string | null>(null);
 
 	const formId = useId();
 	const titleFieldId = useId();
-	const priorityFieldId = useId();
 	const bodyFieldId = useId();
 
 	const { mutate: createCard } = useCreateCard();
@@ -70,19 +73,24 @@ export function CreateCardDialogue({
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 					/>
-					<TextField
-						id={priorityFieldId}
-						select
-						label="Priority"
-						value={priority}
-						onChange={(e) => setPriority(e.target.value as Priority)}
-					>
-						{PRIORITY_OPTIONS.map((option) => (
-							<MenuItem key={option} value={option}>
-								{option}
-							</MenuItem>
-						))}
-					</TextField>
+					<FormControl>
+						<FormLabel>Priority Level</FormLabel>
+						<RadioGroup
+							row
+							value={priority}
+							onChange={(e) => setPriority(e.target.value as Priority)}
+						>
+							{PRIORITY_OPTIONS.map((option) => (
+								<FormControlLabel
+									key={option}
+									value={option}
+									control={<Radio />}
+									label={option}
+								/>
+							))}
+						</RadioGroup>
+					</FormControl>
+
 					<TextField
 						id={bodyFieldId}
 						multiline
