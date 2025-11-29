@@ -4,6 +4,7 @@ import {
 } from "@mui/icons-material";
 import { IconButton, Stack, Typography } from "@mui/material";
 import { useId, useState } from "react";
+import { CardStack } from "../../card/components/CardStack";
 import { CreateCardDialogue } from "../../card/components/CreateCardDialogue";
 import type { Board, Column } from "../types";
 import { ColumnOptionsMenu } from "./ColumnOptionsMenu";
@@ -58,6 +59,7 @@ export function ColumnView({ column, board }: ColumnViewProps) {
 					)}
 				</Stack>
 			</Stack>
+			<CardStack columnId={column.id} />
 		</Stack>
 	);
 }
