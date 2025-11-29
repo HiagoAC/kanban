@@ -12,6 +12,7 @@ class CardIn(Schema):
 
 
 class CardListSchema(Schema):
+    """Schema for listing cards."""
     id: int
     title: str
     priority: str
