@@ -1,5 +1,6 @@
 import CircleIcon from "@mui/icons-material/Circle";
-import { Paper, Stack, Typography } from "@mui/material";
+import { ButtonBase, Paper, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import type { CardListItem } from "../types";
 
 interface CardItemProps {
@@ -7,6 +8,8 @@ interface CardItemProps {
 }
 
 export function CardItem({ card }: CardItemProps) {
+	const navigate = useNavigate();
+
 	const priorityToChipColor = {
 		high: "error",
 		medium: "warning",
@@ -18,7 +21,12 @@ export function CardItem({ card }: CardItemProps) {
 		: "primary";
 
 	return (
-		<Paper elevation={3} sx={{ p: 2, mt: 2, mx: 2, bgcolor: "lightgrey" }}>
+		<Paper
+			component={ButtonBase}
+			onClick={() => navigate(`/cards/${card.id}`)}
+			elevation={3}
+			sx={{ p: 2, mt: 2, mx: 2, bgcolor: "lightgrey" }}
+		>
 			<Stack>
 				<Typography variant="subtitle1" fontWeight="bold">
 					{card.title}
