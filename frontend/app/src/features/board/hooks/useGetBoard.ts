@@ -6,5 +6,6 @@ export function useGetBoard(id: string) {
 	return useQuery<Board>({
 		queryKey: ["board", id],
 		queryFn: () => getBoard(id),
+		enabled: !!id,
 	});
 }
