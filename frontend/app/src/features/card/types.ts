@@ -1,12 +1,6 @@
 export const PRIORITY_OPTIONS = ["low", "medium", "high"] as const;
 export type Priority = (typeof PRIORITY_OPTIONS)[number];
 
-export type CardListItem = {
-	id: string;
-	title: string;
-	priority: Priority;
-};
-
 export type CreateCardSchema = {
 	columnId: string;
 	title: string;
@@ -24,6 +18,8 @@ export interface Card {
 	columnId: string;
 	boardId: string;
 }
+
+export type CardListItem = Pick<Card, "id" | "title" | "priority">;
 
 export interface UpdateCardSchema {
 	id: string;
