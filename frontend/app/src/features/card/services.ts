@@ -20,3 +20,11 @@ export const createCard = async (
 	card.updatedAt = new Date(card.updatedAt);
 	return card;
 };
+
+export const getCard = async (cardId: string): Promise<Card> => {
+	const res = await apiClient.get<Card>(`${CARD_URL}${cardId}/`);
+	const card = res.data;
+	card.createdAt = new Date(card.createdAt);
+	card.updatedAt = new Date(card.updatedAt);
+	return card;
+};

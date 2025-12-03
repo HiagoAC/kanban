@@ -14,8 +14,18 @@ export type CreateCardSchema = {
 	priority: Priority | null;
 };
 
-export interface Card extends CreateCardSchema {
+export interface Card {
 	id: string;
+	title: string;
+	body: string | null;
+	priority: Priority;
 	createdAt: Date;
 	updatedAt: Date;
+	columnId: string;
+	boardId: string;
+}
+
+export interface UpdateCardSchema {
+	id: string;
+	cardData: Partial<Omit<Card, "id" | "createdAt" | "updatedAt">>;
 }
