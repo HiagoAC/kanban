@@ -90,8 +90,8 @@ class PrivateCardsApiTests(TestCase):
         self.assertEqual(res.status_code, 201)
         card = Card.objects.get(id=res.json()['id'])
         for key in payload:
-            if key == 'column':
-                self.assertEqual(card.column.id, payload[key])
+            if key == 'column_id':
+                self.assertEqual(card.column.id, self.column.id)
             else:
                 self.assertEqual(getattr(card, key), payload[key])
 
@@ -108,6 +108,7 @@ class PrivateCardsApiTests(TestCase):
         self.assertEqual(content['body'], card.body)
         self.assertEqual(content['priority'], card.priority.value)
         self.assertEqual(content['column_id'], card.column.id)
+        self.assertEqual(content['board_id'], card.column.board.id)
 
     def test_retrieve_card_not_owned(self):
         """Test that retrieving a card not owned by the user fails."""
@@ -143,7 +144,7 @@ class PrivateCardsApiTests(TestCase):
         card.refresh_from_db()
         self.assertEqual(card.title, payload['title'])
         self.assertEqual(card.body, payload['body'])
-        self.assertEqual(card.column.id, payload['column_id'])
+        self.assertEqual(card.column.id, another_column.id)
         self.assertEqual(card.priority, payload['priority'])
 
     def test_card_non_editable_fields_unchanged(self):

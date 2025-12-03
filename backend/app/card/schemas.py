@@ -20,7 +20,8 @@ class CardListSchema(Schema):
 
 class CardOut(ModelSchema):
     """Base schema for Card model."""
-    column_id: int
+    board_id: int | None = None
+    column_id: int | None = None
 
     class Meta:
         model = Card
@@ -32,6 +33,13 @@ class CardOut(ModelSchema):
             'created_at',
             'updated_at'
         ]
+
+    @classmethod
+    def from_card(cls, card: Card):
+        obj = cls.from_orm(card)
+        obj.board_id = card.column.board.id
+        obj.column_id = card.column.id
+        return obj
 
 
 class CardFilter(FilterSchema):

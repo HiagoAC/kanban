@@ -28,7 +28,7 @@ def list_cards(request, filters: CardFilter = Query(...)):
 def create_card(request, payload: CardIn):
     """Create a new card."""
     card = Card.objects.create(**payload.dict())
-    return 201, CardOut.from_orm(card)
+    return 201, CardOut.from_card(card)
 
 
 @card_router.get('/{card_id}/', response={200: CardOut, 404: dict},
@@ -40,7 +40,7 @@ def retrieve_card(request, card_id: int):
             id=card_id, column__board__user=request.auth)
     except Card.DoesNotExist:
         return 404, {"detail": "Card not found."}
-    return CardOut.from_orm(card)
+    return CardOut.from_card(card)
 
 
 @card_router.patch('/{card_id}/', response={200: CardOut, 404: dict},
@@ -55,4 +55,4 @@ def update_card(request, card_id: int, payload: PatchDict[CardIn]):
     for attr, value in payload.items():
         setattr(card, attr, value)
     card.save()
-    return CardOut.from_orm(card)
+    return CardOut.from_card(card)
