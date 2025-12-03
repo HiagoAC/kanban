@@ -1,5 +1,10 @@
 import apiClient from "../../services/apiClient";
-import type { Card, CardListItem, CreateCardSchema } from "./types";
+import type {
+	Card,
+	CardListItem,
+	CreateCardSchema,
+	UpdateCardSchema,
+} from "./types";
 
 const CARD_URL = "cards/";
 
@@ -23,6 +28,17 @@ export const createCard = async (
 
 export const getCard = async (cardId: string): Promise<Card> => {
 	const res = await apiClient.get<Card>(`${CARD_URL}${cardId}/`);
+	const card = res.data;
+	card.createdAt = new Date(card.createdAt);
+	card.updatedAt = new Date(card.updatedAt);
+	return card;
+};
+
+export const updateCard = async ({
+	id,
+	cardData,
+}: UpdateCardSchema): Promise<Card> => {
+	const res = await apiClient.patch<Card>(`${CARD_URL}${id}/`, cardData);
 	const card = res.data;
 	card.createdAt = new Date(card.createdAt);
 	card.updatedAt = new Date(card.updatedAt);
