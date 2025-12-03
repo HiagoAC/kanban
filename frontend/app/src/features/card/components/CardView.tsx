@@ -1,6 +1,7 @@
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import {
 	Box,
+	Button,
 	ButtonBase,
 	Divider,
 	MenuItem,
@@ -12,6 +13,7 @@ import { useEffect, useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetBoard } from "../../board/hooks/useGetBoard";
 import { useGetCard } from "../hooks/useGetCard";
+import { useUpdateCard } from "../hooks/useUpdateCard";
 import type { Card, Priority } from "../types";
 import { PRIORITY_OPTIONS } from "../types";
 import { PrioritySelectDisplay } from "./PrioritySelectDisplay";
@@ -23,9 +25,12 @@ export function CardView({ id }: { id: string }) {
 	const [cardData, setCardData] = useState<
 		Partial<Omit<Card, "id" | "createdAt" | "updatedAt">>
 	>({});
+	const { mutate: updateCard } = useUpdateCard();
 
+	const titleInputId = useId();
 	const columnSelectId = useId();
 	const prioritySelectId = useId();
+	const bodyInputId = useId();
 
 	const leftEdgeOffset = 4;
 
@@ -47,6 +52,25 @@ export function CardView({ id }: { id: string }) {
 		return <div>Loading...</div>;
 	}
 
+	const handleSave = () => {
+		if (cardData) {
+			updateCard({ id, cardData });
+			navigate(`/boards/${card?.boardId}`);
+		}
+	};
+
+	const handleCancel = () => {
+		if (card) {
+			const {
+				id: _id,
+				createdAt: _createdAt,
+				updatedAt: _updatedAt,
+				...editable
+			} = card;
+			setCardData(editable);
+		}
+	};
+
 	return (
 		<Box
 			sx={{
@@ -54,7 +78,7 @@ export function CardView({ id }: { id: string }) {
 				flexDirection: "column",
 				pl: leftEdgeOffset,
 				gap: 2,
-				minHeight: "100%",
+				minHeight: "100vh",
 			}}
 		>
 			<ButtonBase
@@ -79,8 +103,9 @@ export function CardView({ id }: { id: string }) {
 				</Typography>
 			</ButtonBase>
 			<TextField
+				id={titleInputId}
 				variant="standard"
-				value={card?.title ?? ""}
+				value={cardData.title}
 				onChange={(e) =>
 					setCardData((prev) => ({ ...prev, title: e.target.value }))
 				}
@@ -163,20 +188,46 @@ export function CardView({ id }: { id: string }) {
 			<Divider sx={{ ml: -leftEdgeOffset }} />
 			<Box
 				sx={{
-					mt: 3,
-					mr: 3,
+					display: "flex",
+					flexDirection: "column",
+					flex: 1,
+					overflow: "hidden",
 				}}
 			>
-				<TextField
-					label="Notes"
-					value={cardData.body}
-					onChange={(e) =>
-						setCardData((prev) => ({ ...prev, body: e.target.value }))
-					}
-					multiline
-					minRows={10}
-					fullWidth
-				/>
+				<Box
+					sx={{
+						flex: 1,
+						overflow: "auto",
+						mt: 3,
+						mr: 3,
+						pt: 2,
+					}}
+				>
+					<TextField
+						id={bodyInputId}
+						label="Notes"
+						value={cardData.body}
+						onChange={(e) =>
+							setCardData((prev) => ({ ...prev, body: e.target.value }))
+						}
+						multiline
+						minRows={10}
+						fullWidth
+					/>
+				</Box>
+				<Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
+					<Button
+						variant="contained"
+						color="warning"
+						sx={{ mr: 2 }}
+						onClick={handleCancel}
+					>
+						Cancel
+					</Button>
+					<Button variant="contained" onClick={handleSave}>
+						Save Changes
+					</Button>
+				</Box>
 			</Box>
 		</Box>
 	);
