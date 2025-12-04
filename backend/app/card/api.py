@@ -56,3 +56,16 @@ def update_card(request, card_id: int, payload: PatchDict[CardIn]):
         setattr(card, attr, value)
     card.save()
     return CardOut.from_card(card)
+
+
+@card_router.delete('/{card_id}/', response={204: None, 404: dict},
+                    url_name='card-detail')
+def delete_card(request, card_id: int):
+    """Delete a card by ID."""
+    try:
+        card = Card.objects.get(
+            id=card_id, column__board__user=request.auth)
+    except Card.DoesNotExist:
+        return 404, {"detail": "Card not found."}
+    card.delete()
+    return 204, None

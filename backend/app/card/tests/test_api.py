@@ -167,3 +167,12 @@ class PrivateCardsApiTests(TestCase):
         self.assertNotEqual(card.id, payload['id'])
         self.assertNotEqual(card.created_at.isoformat(), payload['created_at'])
         self.assertNotEqual(card.updated_at.isoformat(), payload['updated_at'])
+
+    def test_delete_card(self):
+        """Test deleting a card."""
+        card = Card.objects.create(
+            title='Card to Delete', body='Body', column=self.column)
+        url = card_detail_url(card.id)
+        res = self.client.delete(url)
+        self.assertEqual(res.status_code, 204)
+        self.assertFalse(Card.objects.filter(id=card.id).exists())
