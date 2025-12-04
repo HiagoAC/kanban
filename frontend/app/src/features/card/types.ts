@@ -4,14 +4,14 @@ export type Priority = (typeof PRIORITY_OPTIONS)[number];
 export type CreateCardSchema = {
 	columnId: string;
 	title: string;
-	body: string | null;
+	body: string;
 	priority: Priority | null;
 };
 
 export interface Card {
 	id: string;
 	title: string;
-	body: string | null;
+	body: string;
 	priority: Priority;
 	createdAt: Date;
 	updatedAt: Date;

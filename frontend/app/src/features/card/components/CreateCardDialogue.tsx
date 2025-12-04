@@ -33,7 +33,7 @@ export function CreateCardDialogue({
 }: CreateCardDialogueProps) {
 	const [title, setTitle] = useState<string>("");
 	const [priority, setPriority] = useState<Priority | null>("medium");
-	const [body, setBody] = useState<string | null>(null);
+	const [body, setBody] = useState<string>("");
 
 	const formId = useId();
 	const titleFieldId = useId();
