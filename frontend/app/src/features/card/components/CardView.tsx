@@ -1,8 +1,6 @@
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import {
 	Box,
 	Button,
-	ButtonBase,
 	Divider,
 	MenuItem,
 	Stack,
@@ -12,10 +10,12 @@ import {
 import { useEffect, useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetBoard } from "../../board/hooks/useGetBoard";
+import type { Board } from "../../board/types";
 import { useGetCard } from "../hooks/useGetCard";
 import { useUpdateCard } from "../hooks/useUpdateCard";
 import type { Card, Priority } from "../types";
 import { PRIORITY_OPTIONS } from "../types";
+import { CardActionBar } from "./CardActionBar";
 import { PrioritySelectDisplay } from "./PrioritySelectDisplay";
 
 export function CardView({ id }: { id: string }) {
@@ -81,27 +81,11 @@ export function CardView({ id }: { id: string }) {
 				minHeight: "100vh",
 			}}
 		>
-			<ButtonBase
-				onClick={() => navigate(`/boards/${card?.boardId}`)}
-				sx={{
-					height: "auto",
-					boxSizing: "border-box",
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "flex-start",
-					alignSelf: "flex-start",
-					width: "auto",
-				}}
-			>
-				<KeyboardDoubleArrowLeftIcon />
-				<Typography variant="body2" sx={{ alignSelf: "center", ml: 1 }}>
-					{board?.title} /{" "}
-					{
-						board?.columns.find((column) => column.id === cardData?.columnId)
-							?.title
-					}
-				</Typography>
-			</ButtonBase>
+			<CardActionBar
+				card={card as Card}
+				cardData={cardData}
+				board={board as Board}
+			/>
 			<TextField
 				id={titleInputId}
 				variant="standard"
