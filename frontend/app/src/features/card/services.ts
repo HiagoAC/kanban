@@ -44,3 +44,7 @@ export const updateCard = async ({
 	card.updatedAt = new Date(card.updatedAt);
 	return card;
 };
+
+export const deleteCard = async (cardId: string): Promise<void> => {
+	await apiClient.delete(`${CARD_URL}${cardId}/`);
+};
