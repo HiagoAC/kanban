@@ -13,7 +13,7 @@ export function useDeleteCard(columnId?: string) {
 				(old) => {
 					if (!old) return old;
 					return old.filter((card) => card.id !== cardId);
-				}
+				},
 			);
 		},
 		onError: (error, cardId) => {
