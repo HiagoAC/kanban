@@ -15,7 +15,7 @@ class Card(OrderedModel):
         Column, on_delete=models.CASCADE, related_name="cards"
     )
     title = models.CharField(max_length=255)
-    body = models.TextField(blank=True)
+    body = models.TextField(blank=True, default='')
     priority = models.CharField(
         max_length=10,
         choices=PriorityChoices.choices,

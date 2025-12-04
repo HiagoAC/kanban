@@ -6,7 +6,7 @@ from card.models import Card
 class CardIn(Schema):
     """Base schema for Card."""
     title: str
-    body: str | None = None
+    body: str = ''
     priority: str | None = None
     column_id: int
 
