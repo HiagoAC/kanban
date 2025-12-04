@@ -7,6 +7,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetBoard } from "../../board/hooks/useGetBoard";
@@ -17,6 +18,7 @@ import type { Card, Priority } from "../types";
 import { PRIORITY_OPTIONS } from "../types";
 import { CardActionBar } from "./CardActionBar";
 import { PrioritySelectDisplay } from "./PrioritySelectDisplay";
+import { useDeleteCard } from "../hooks/useDeleteCard";
 
 export function CardView({ id }: { id: string }) {
 	const { data: card, isLoading } = useGetCard(id);
@@ -26,6 +28,7 @@ export function CardView({ id }: { id: string }) {
 		Partial<Omit<Card, "id" | "createdAt" | "updatedAt">>
 	>({});
 	const { mutate: updateCard } = useUpdateCard();
+	const { mutate: deleteCard } = useDeleteCard(card?.columnId);
 
 	const titleInputId = useId();
 	const columnSelectId = useId();
@@ -71,6 +74,11 @@ export function CardView({ id }: { id: string }) {
 		}
 	};
 
+	const handleDelete = () => {
+		deleteCard(id);
+		navigate(`/boards/${card?.boardId}`);
+	}
+
 	return (
 		<Box
 			sx={{
@@ -107,68 +115,86 @@ export function CardView({ id }: { id: string }) {
 				}}
 			/>
 			<Divider sx={{ ml: -leftEdgeOffset }} />
-			{board && cardData.columnId && (
-				<Stack direction="row">
-					<Typography variant="body1" sx={{ alignSelf: "center", mr: 2 }}>
-						Priority:
+			<Stack
+				direction="row"
+				spacing={4}
+				sx={{
+					flexWrap: "wrap",
+				}}
+			>
+				{board && cardData.columnId && (
+					<Stack direction="row">
+						<Typography variant="body1" sx={{ alignSelf: "center", mr: 2 }}>
+							Priority:
+						</Typography>
+						<TextField
+							id={prioritySelectId}
+							select
+							variant="standard"
+							value={cardData.priority}
+							onChange={(e) =>
+								setCardData((prev) => ({
+									...prev,
+									priority: e.target.value as Priority,
+								}))
+							}
+							sx={{
+								"& .MuiSelect-select": {
+									display: "flex",
+									alignItems: "center",
+									gap: 1,
+								},
+							}}
+							slotProps={{
+								select: {
+									renderValue: (value) =>
+										value ? (
+											<PrioritySelectDisplay priority={value as Priority} />
+										) : null,
+								},
+							}}
+						>
+							{PRIORITY_OPTIONS.map((option) => (
+								<MenuItem key={option} value={option}>
+									<PrioritySelectDisplay priority={option} />
+								</MenuItem>
+							))}
+						</TextField>
+					</Stack>
+				)}
+				{board && cardData.columnId && (
+					<Stack direction="row">
+						<Typography variant="body1" sx={{ alignSelf: "center", mr: 2 }}>
+							Column:
+						</Typography>
+						<TextField
+							id={columnSelectId}
+							select
+							variant="standard"
+							value={cardData.columnId}
+							onChange={(e) =>
+								setCardData((prev) => ({ ...prev, columnId: e.target.value }))
+							}
+						>
+							{board?.columns.map((column) => (
+								<MenuItem key={column.id} value={column.id}>
+									{column.title}
+								</MenuItem>
+							))}
+						</TextField>
+					</Stack>
+				)}
+				{cardData.columnId && <Button
+					onClick={handleDelete}
+					startIcon={<DeleteIcon />}
+					variant="outlined"
+					color="error"
+				>
+					<Typography variant="body2">
+						Delete Card
 					</Typography>
-					<TextField
-						id={prioritySelectId}
-						select
-						variant="standard"
-						value={cardData.priority}
-						onChange={(e) =>
-							setCardData((prev) => ({
-								...prev,
-								priority: e.target.value as Priority,
-							}))
-						}
-						sx={{
-							"& .MuiSelect-select": {
-								display: "flex",
-								alignItems: "center",
-								gap: 1,
-							},
-						}}
-						slotProps={{
-							select: {
-								renderValue: (value) =>
-									value ? (
-										<PrioritySelectDisplay priority={value as Priority} />
-									) : null,
-							},
-						}}
-					>
-						{PRIORITY_OPTIONS.map((option) => (
-							<MenuItem key={option} value={option}>
-								<PrioritySelectDisplay priority={option} />
-							</MenuItem>
-						))}
-					</TextField>
-				</Stack>
-			)}
-			{board && cardData.columnId && (
-				<Stack direction="row">
-					<Typography variant="body1" sx={{ alignSelf: "center", mr: 2 }}>
-						Column:
-					</Typography>
-					<TextField
-						id={columnSelectId}
-						select
-						variant="standard"
-						value={cardData.columnId}
-						onChange={(e) =>
-							setCardData((prev) => ({ ...prev, columnId: e.target.value }))
-						}
-					>
-						{board?.columns.map((column) => (
-							<MenuItem key={column.id} value={column.id}>
-								{column.title}
-							</MenuItem>
-						))}
-					</TextField>
-				</Stack>
-			)}
+				</Button>}
+			</Stack>
 			<Divider sx={{ ml: -leftEdgeOffset }} />
 			<Box
 				sx={{
