@@ -1,10 +1,4 @@
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-} from "@mui/material";
+import { DeleteDialogue } from "../../../components/DeleteDialogue";
 import { useDeleteBoard } from "../hooks/useDeleteBoard";
 import type { Board } from "../types";
 
@@ -27,18 +21,15 @@ export function DeleteBoardDialogue({
 	};
 
 	return (
-		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>Delete {board.title}</DialogTitle>
-			<DialogContent>
-				Are you sure you want to delete this board? This action cannot be
-				undone.
-			</DialogContent>
-			<DialogActions>
-				<Button onClick={onClose}>Cancel</Button>
-				<Button onClick={handleDelete} color="error">
-					Delete
-				</Button>
-			</DialogActions>
-		</Dialog>
+		<DeleteDialogue
+			open={open}
+			onClose={onClose}
+			dialogueTitle="Delete Board"
+			onDelete={handleDelete}
+			content={`Are you sure you want to delete the board "${board.title}"? 
+				This action cannot be undone.`}
+			deleteButtonText="Delete Board"
+			cancelButtonText="Cancel"
+		/>
 	);
 }
