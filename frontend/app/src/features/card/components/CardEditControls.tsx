@@ -1,8 +1,10 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import type { Board } from "../../board/types";
 import type { Card, Priority } from "../types";
 import { PRIORITY_OPTIONS } from "../types";
+import { DeleteCardDialogue } from "./DeleteCardDialogue";
 import { PrioritySelectDisplay } from "./PrioritySelectDisplay";
 
 interface CardEditControlsProps {
@@ -24,6 +26,8 @@ export function CardEditControls({
 	columnSelectId,
 	handleDelete,
 }: CardEditControlsProps) {
+	const [openDelete, setOpenDelete] = useState(false);
+
 	return (
 		<Stack
 			direction="row"
@@ -96,7 +100,7 @@ export function CardEditControls({
 			)}
 			{cardData.columnId && (
 				<Button
-					onClick={handleDelete}
+					onClick={() => setOpenDelete(true)}
 					startIcon={<DeleteIcon />}
 					variant="outlined"
 					color="error"
@@ -104,6 +108,12 @@ export function CardEditControls({
 					<Typography variant="body2">Delete Card</Typography>
 				</Button>
 			)}
+			<DeleteCardDialogue
+				open={openDelete}
+				onClose={() => setOpenDelete(false)}
+				cardData={cardData}
+				handleDelete={handleDelete}
+			/>
 		</Stack>
 	);
 }
