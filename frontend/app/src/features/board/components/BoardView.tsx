@@ -50,8 +50,18 @@ export function BoardView({ id }: { id: string }) {
 					p: 2,
 				}}
 			>
-				{board?.columns.map((column) => (
-					<ColumnView key={column.id} column={column} board={board} />
+				{board?.columns.map((column, index) => (
+					<ColumnView
+						key={column.id}
+						column={column}
+						board={board}
+						prevColumnId={index > 0 ? board.columns[index - 1].id : undefined}
+						nextColumnId={
+							index < board.columns.length - 1
+								? board.columns[index + 1].id
+								: undefined
+						}
+					/>
 				))}
 			</Stack>
 		</Box>

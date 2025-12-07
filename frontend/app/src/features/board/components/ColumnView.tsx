@@ -12,9 +12,11 @@ import { ColumnOptionsMenu } from "./ColumnOptionsMenu";
 interface ColumnViewProps {
 	column: Column;
 	board: Board;
+	prevColumnId?: string;
+	nextColumnId?: string;
 }
 
-export function ColumnView({ column, board }: ColumnViewProps) {
+export function ColumnView({ column, board, prevColumnId, nextColumnId }: ColumnViewProps) {
 	const [createCardOpen, setCreateCardOpen] = useState(false);
 	const addButtonId = useId();
 
@@ -59,7 +61,11 @@ export function ColumnView({ column, board }: ColumnViewProps) {
 					)}
 				</Stack>
 			</Stack>
-			<CardStack columnId={column.id} />
+			<CardStack
+				columnId={column.id}
+				prevColumnId={prevColumnId}
+				nextColumnId={nextColumnId}
+			/>
 		</Stack>
 	);
 }
