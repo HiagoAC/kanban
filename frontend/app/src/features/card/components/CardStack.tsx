@@ -8,7 +8,11 @@ export interface CardStackProps {
 	nextColumnId?: string;
 }
 
-export function CardStack({ columnId, prevColumnId, nextColumnId }: CardStackProps) {
+export function CardStack({
+	columnId,
+	prevColumnId,
+	nextColumnId,
+}: CardStackProps) {
 	const { data: cards } = useFetchCards({ column_id: columnId });
 
 	return (

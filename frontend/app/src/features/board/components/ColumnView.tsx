@@ -16,7 +16,12 @@ interface ColumnViewProps {
 	nextColumnId?: string;
 }
 
-export function ColumnView({ column, board, prevColumnId, nextColumnId }: ColumnViewProps) {
+export function ColumnView({
+	column,
+	board,
+	prevColumnId,
+	nextColumnId,
+}: ColumnViewProps) {
 	const [createCardOpen, setCreateCardOpen] = useState(false);
 	const addButtonId = useId();
 

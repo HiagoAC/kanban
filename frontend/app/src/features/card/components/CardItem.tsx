@@ -1,10 +1,18 @@
-import { Box, ButtonBase, Grid, IconButton, Paper, Stack, Typography } from "@mui/material";
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import {
+	Box,
+	ButtonBase,
+	Grid,
+	IconButton,
+	Paper,
+	Stack,
+	Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useUpdateCard } from "../hooks/useUpdateCard";
 import type { CardListItem } from "../types";
 import { PriorityDot } from "./PriorityDot";
-import { useUpdateCard } from "../hooks/useUpdateCard";
 
 interface CardItemProps {
 	card: CardListItem;
@@ -13,7 +21,12 @@ interface CardItemProps {
 	prevColumnId?: string;
 }
 
-export function CardItem({ card, columnId, nextColumnId, prevColumnId }: CardItemProps) {
+export function CardItem({
+	card,
+	columnId,
+	nextColumnId,
+	prevColumnId,
+}: CardItemProps) {
 	const navigate = useNavigate();
 	const { mutate: updateCard } = useUpdateCard({ originalColumnId: columnId });
 
@@ -37,14 +50,19 @@ export function CardItem({ card, columnId, nextColumnId, prevColumnId }: CardIte
 				sx={{ width: "100%" }}
 			>
 				<Grid size={2} alignContent="center">
-					{prevColumnId && <IconButton
-						onClick={(e) => {
-							e.stopPropagation();
-							updateCard({ id: card.id, cardData: { columnId: prevColumnId } });
-						}}
-					>
-						<ArrowLeftIcon />
-					</IconButton>}
+					{prevColumnId && (
+						<IconButton
+							onClick={(e) => {
+								e.stopPropagation();
+								updateCard({
+									id: card.id,
+									cardData: { columnId: prevColumnId },
+								});
+							}}
+						>
+							<ArrowLeftIcon />
+						</IconButton>
+					)}
 				</Grid>
 				<Grid size={8}>
 					<Stack alignItems="center">
@@ -60,14 +78,19 @@ export function CardItem({ card, columnId, nextColumnId, prevColumnId }: CardIte
 					</Stack>
 				</Grid>
 				<Grid size={2} alignContent="center">
-					{nextColumnId && <IconButton
-						onClick={(e) => {
-							e.stopPropagation();
-							updateCard({ id: card.id, cardData: { columnId: nextColumnId } });
-						}}
-					>
-						<ArrowRightIcon />
-					</IconButton>}
+					{nextColumnId && (
+						<IconButton
+							onClick={(e) => {
+								e.stopPropagation();
+								updateCard({
+									id: card.id,
+									cardData: { columnId: nextColumnId },
+								});
+							}}
+						>
+							<ArrowRightIcon />
+						</IconButton>
+					)}
 				</Grid>
 			</Grid>
 		</Paper>
