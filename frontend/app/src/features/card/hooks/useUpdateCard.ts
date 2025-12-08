@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCard } from "../services";
 
-export function useUpdateCard({
-	originalColumnId,
-}: {
+interface useUpdateCardProps {
 	originalColumnId?: string;
-}) {
+}
+
+export function useUpdateCard({ originalColumnId }: useUpdateCardProps = {}) {
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
