@@ -1,5 +1,7 @@
+import type { DraggableSyntheticListeners } from "@dnd-kit/core/dist/hooks/useDraggable";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
 	Box,
 	ButtonBase,
@@ -19,6 +21,7 @@ interface CardItemProps {
 	columnId: string;
 	nextColumnId?: string;
 	prevColumnId?: string;
+	dragListeners: DraggableSyntheticListeners;
 }
 
 export function CardItem({
@@ -26,6 +29,7 @@ export function CardItem({
 	columnId,
 	nextColumnId,
 	prevColumnId,
+	dragListeners,
 }: CardItemProps) {
 	const navigate = useNavigate();
 	const { mutate: updateCard } = useUpdateCard({ originalColumnId: columnId });
@@ -36,18 +40,30 @@ export function CardItem({
 			onClick={() => navigate(`/cards/${card.id}`)}
 			elevation={3}
 			sx={{
-				py: 2,
 				mt: 2,
-				mx: 2,
 				bgcolor: "lightgrey",
+				width: "100%",
+				display: "flex",
+				flexDirection: "column",
 			}}
 		>
+			<Box
+				sx={{ display: "flex", justifyContent: "flex-start", width: "100%" }}
+			>
+				<IconButton
+					{...dragListeners}
+					sx={{ cursor: "grab" }}
+					aria-label="Drag card"
+				>
+					<DragIndicatorIcon fontSize="small" />
+				</IconButton>
+			</Box>
 			<Grid
 				container
 				alignItems="center"
 				justifyContent="space-between"
 				wrap="nowrap"
-				sx={{ width: "100%" }}
+				sx={{ width: "100%", pb: 2 }}
 			>
 				<Grid size={2} alignContent="center">
 					{prevColumnId && (
