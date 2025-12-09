@@ -5,6 +5,7 @@ from card.schemas import (
     CardFilter,
     CardListSchema,
     CardIn,
+    CardMoveAboveIn,
     CardOut,
 )
 from card.models import Card
@@ -69,3 +70,34 @@ def delete_card(request, card_id: int):
         return 404, {"detail": "Card not found."}
     card.delete()
     return 204, None
+
+
+@card_router.post('/{card_id}/move-above/', response={200: None, 404: dict},
+                  url_name='card-move-above')
+def move_card_above(request, card_id: int, payload: CardMoveAboveIn):
+    """Move a card above another card."""
+    target_card_id = payload.target_card_id
+    try:
+        card = Card.objects.get(
+            id=card_id, column__board__user=request.auth)
+        target_card = Card.objects.get(
+            id=target_card_id, column__board__user=request.auth)
+        if card.column != target_card.column:
+            return 404, {"detail": "Target card must be in the same column."}
+    except Card.DoesNotExist:
+        return 404, {"detail": "Card not found."}
+    card.above(target_card)
+    return 200, None
+
+
+@card_router.post('/{card_id}/move-bottom/', response={200: None, 404: dict},
+                  url_name='card-move-bottom')
+def move_card_to_bottom(request, card_id: int):
+    """Move a card to the bottom of its column."""
+    try:
+        card = Card.objects.get(
+            id=card_id, column__board__user=request.auth)
+    except Card.DoesNotExist:
+        return 404, {"detail": "Card not found."}
+    card.bottom()
+    return 200, None

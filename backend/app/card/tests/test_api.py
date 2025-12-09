@@ -17,6 +17,16 @@ def card_detail_url(card_id: int) -> str:
     return reverse('api:card-detail', args=[card_id])
 
 
+def card_move_above_url(card_id: int) -> str:
+    """Return the URL to move a card above another card."""
+    return reverse('api:card-move-above', args=[card_id])
+
+
+def card_move_bottom_url(card_id: int) -> str:
+    """Return the URL to move a card to the bottom of its column."""
+    return reverse('api:card-move-bottom', args=[card_id])
+
+
 class PublicCardsApiTests(TestCase):
     """Test unauthenticated requests to the cards API."""
 
@@ -176,3 +186,59 @@ class PrivateCardsApiTests(TestCase):
         res = self.client.delete(url)
         self.assertEqual(res.status_code, 204)
         self.assertFalse(Card.objects.filter(id=card.id).exists())
+
+    def test_move_card_above(self):
+        """Test moving a card above another card."""
+        card1 = Card.objects.create(title='Card 1', column=self.column)
+        card2 = Card.objects.create(title='Card 2', column=self.column)
+        url = card_move_above_url(card2.id)
+        payload = {'target_card_id': card1.id}
+        res = self.client.post(
+            url,
+            json.dumps(payload),
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 200)
+        card1.refresh_from_db()
+        card2.refresh_from_db()
+        self.assertLess(card2.order, card1.order)
+
+    def test_move_card_above_different_column(self):
+        """
+        Test that moving a card above another card in a different column
+        fails.
+        """
+        another_column = Column.objects.create(board=self.board, title='Done')
+        card1 = Card.objects.create(title='Card 1', column=self.column)
+        card2 = Card.objects.create(title='Card 2', column=another_column)
+        card1_order = card1.order
+        card2_order = card2.order
+        url = card_move_above_url(card2.id)
+        payload = {'target_card_id': card1.id}
+        res = self.client.post(
+            url,
+            json.dumps(payload),
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 404)
+        card1.refresh_from_db()
+        card2.refresh_from_db()
+        self.assertEqual(card1.order, card1_order)
+        self.assertEqual(card2.order, card2_order)
+
+    def test_move_card_to_bottom(self):
+        """Test moving a card to the bottom of its column."""
+        card1 = Card.objects.create(title='Card 1', column=self.column)
+        card2 = Card.objects.create(title='Card 2', column=self.column)
+        card3 = Card.objects.create(title='Card 3', column=self.column)
+        url = card_move_bottom_url(card1.id)
+        res = self.client.post(
+            url,
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 200)
+        card1.refresh_from_db()
+        card2.refresh_from_db()
+        card3.refresh_from_db()
+        self.assertGreater(card1.order, card2.order)
+        self.assertGreater(card1.order, card3.order)

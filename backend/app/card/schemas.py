@@ -45,3 +45,8 @@ class CardOut(ModelSchema):
 class CardFilter(FilterSchema):
     """Schema for card filters."""
     column_id: int | None = Field(None, q='column__id')
+
+
+class CardMoveAboveIn(Schema):
+    """Schema for moving a card above another card."""
+    target_card_id: int
