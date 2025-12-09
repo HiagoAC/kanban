@@ -1,10 +1,13 @@
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { SortableItem } from "../../../components/SortableItem";
 import { useFetchCards } from "../hooks/useFetchCards";
+import { useMoveCardAbove } from "../hooks/useMoveCardAbove";
+import { useMoveCardBottom } from "../hooks/useMoveCardBottom";
 import type { CardListItem } from "../types";
+import { executeCardMove, updateCardsOrder } from "../utils";
 import { CardItem } from "./CardItem";
 
 export interface CardStackProps {
@@ -20,23 +23,25 @@ export function CardStack({
 }: CardStackProps) {
 	const { data: CardsData = [] } = useFetchCards({ column_id: columnId });
 	const [cards, setCards] = useState<CardListItem[]>([]);
+	const { mutate: moveCardAbove } = useMoveCardAbove();
+	const { mutate: moveCardBottom } = useMoveCardBottom();
 
 	useEffect(() => {
 		setCards(CardsData);
 	}, [CardsData]);
 
 	const handleDragEnd = (event: DragEndEvent) => {
-		const { active, over } = event;
-
-		if (!over || active.id === over.id) return;
-
-		setCards((items) => {
-			const oldIndex = items.findIndex((c) => c.id === active.id);
-			const newIndex = items.findIndex((c) => c.id === over.id);
-			if (oldIndex === -1 || newIndex === -1) return items;
-			return arrayMove(items, oldIndex, newIndex);
+		const shouldUpdate = executeCardMove(event, cards, {
+			moveCardAbove,
+			moveCardBottom,
 		});
+		if (shouldUpdate) {
+			setCards((items) =>
+				updateCardsOrder(items, event.active.id, event.over?.id),
+			);
+		}
 	};
+
 	return (
 		<DndContext onDragEnd={handleDragEnd}>
 			<SortableContext items={cards || []}>
