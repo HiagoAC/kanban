@@ -48,3 +48,23 @@ export const updateCard = async ({
 export const deleteCard = async (cardId: string): Promise<void> => {
 	await apiClient.delete(`${CARD_URL}${cardId}/`);
 };
+
+export const moveCardAbove = async ({
+	cardId,
+	targetCardId,
+}: {
+	cardId: string;
+	targetCardId: string;
+}): Promise<void> => {
+	await apiClient.post(`${CARD_URL}${cardId}/move-above/`, {
+		target_card_id: targetCardId,
+	});
+};
+
+export const moveCardBottom = async ({
+	cardId,
+}: {
+	cardId: string;
+}): Promise<void> => {
+	await apiClient.post(`${CARD_URL}${cardId}/move-bottom/`);
+};
