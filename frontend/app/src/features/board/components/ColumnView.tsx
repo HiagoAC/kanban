@@ -2,7 +2,7 @@ import {
 	Add as AddIcon,
 	DragIndicator as DragIndicatorIcon,
 } from "@mui/icons-material";
-import { IconButton, Stack, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { useId, useState } from "react";
 import { CardStack } from "../../card/components/CardStack";
 import { CreateCardDialogue } from "../../card/components/CreateCardDialogue";
@@ -34,6 +34,9 @@ export function ColumnView({
 				minWidth: 300,
 				alignSelf: "stretch",
 				mr: 2,
+				minHeight: 0,
+				display: "flex",
+				flexDirection: "column",
 			}}
 		>
 			<Stack
@@ -41,6 +44,7 @@ export function ColumnView({
 				justifyContent="space-between"
 				alignItems="flex-start"
 				mb={2}
+				sx={{ position: "sticky", top: 0 }}
 			>
 				<Stack direction="row">
 					<IconButton>
@@ -66,11 +70,22 @@ export function ColumnView({
 					)}
 				</Stack>
 			</Stack>
-			<CardStack
-				columnId={column.id}
-				prevColumnId={prevColumnId}
-				nextColumnId={nextColumnId}
-			/>
+			<Box
+				className="auto-hide-scrollbar"
+				sx={{
+					flex: 1,
+					overflow: "auto",
+					px: 2,
+					py: 1,
+					pb: 2,
+				}}
+			>
+				<CardStack
+					columnId={column.id}
+					prevColumnId={prevColumnId}
+					nextColumnId={nextColumnId}
+				/>
+			</Box>
 		</Stack>
 	);
 }

@@ -15,13 +15,17 @@ export function BoardView({ id }: { id: string }) {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				minHeight: "100%",
+				height: "100vh",
 			}}
 		>
 			<Stack
 				direction="row"
 				justifyContent="space-between"
 				sx={{
+					position: "sticky",
+					top: 0,
+					zIndex: 100,
+					backgroundColor: "background.default",
 					width: "100%",
 					height: "auto",
 					boxSizing: "border-box",
@@ -41,10 +45,11 @@ export function BoardView({ id }: { id: string }) {
 				</Box>
 			</Stack>
 			<Stack
+				className="auto-hide-scrollbar"
 				direction="row"
 				sx={{
 					overflow: "auto",
-					flexGrow: 1,
+					flex: 1,
 					minWidth: "100%",
 					boxSizing: "border-box",
 					p: 2,

@@ -45,7 +45,7 @@ export function CardStack({
 	return (
 		<DndContext onDragEnd={handleDragEnd}>
 			<SortableContext items={cards || []}>
-				<Stack spacing={0} sx={{ px: 2 }}>
+				<Stack spacing={1} sx={{ py: 1 }}>
 					{cards?.map((card) => (
 						<SortableItem id={card.id} key={card.id}>
 							{({ dragListeners }) => (
