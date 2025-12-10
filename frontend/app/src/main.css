@@ -4,3 +4,12 @@ html, body, #root {
   height: 100%;
   width: 100%;
 }
+
+.auto-hide-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.auto-hide-scrollbar:hover {
+  scrollbar-color: rgba(0,0,0,0.3) transparent;
+}
