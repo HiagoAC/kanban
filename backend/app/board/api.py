@@ -7,6 +7,7 @@ from board.schemas import (
     BoardOut,
     BoardListSchema,
     BoardUpdate,
+    ColumnMoveBeforeIn,
 )
 from board.models import Board, Column
 
@@ -93,3 +94,37 @@ def update_column(request, board_id: int, column_id: int, payload: ColumnBase):
     column.save()
     board_out = BoardOut.from_orm_with_columns(board)
     return board_out
+
+
+@board_router.post('/{board_id}/columns/{column_id}/move-before/',
+                   response={200: None, 404: dict},
+                   url_name='column-move-before')
+def move_column_before(
+        request, board_id: int, column_id: int, payload: ColumnMoveBeforeIn):
+    """Move a column before another column."""
+    target_column_id = payload.target_column_id
+    try:
+        column = Column.objects.get(
+            id=column_id, board__id=board_id, board__user=request.auth)
+        target_column = Column.objects.get(
+            id=target_column_id, board__id=board_id, board__user=request.auth)
+        if column.board != target_column.board:
+            return 404, {"detail": "Target column must be in the same board."}
+    except Column.DoesNotExist:
+        return 404, {"detail": "Column not found."}
+    column.above(target_column)
+    return 200, None
+
+
+@board_router.post('/{board_id}/columns/{column_id}/move-end/',
+                   response={200: None, 404: dict},
+                   url_name='column-move-end')
+def move_column_to_end(request, board_id: int, column_id: int):
+    """Move a column to the end of its board."""
+    try:
+        column = Column.objects.get(
+            id=column_id, board__user=request.auth)
+    except Column.DoesNotExist:
+        return 404, {"detail": "Column not found."}
+    column.bottom()
+    return 200, None

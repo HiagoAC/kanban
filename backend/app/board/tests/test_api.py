@@ -23,6 +23,16 @@ def column_detail_url(board_id: int, column_id: int) -> str:
     return reverse('api:column-detail', args=[board_id, column_id])
 
 
+def column_move_before_url(board_id: int, column_id: int) -> str:
+    """Return the URL to move a column before another column."""
+    return reverse('api:column-move-before', args=[board_id, column_id])
+
+
+def column_move_end_url(board_id: int, column_id: int) -> str:
+    """Return the URL to move a column to the end of its board."""
+    return reverse('api:column-move-end', args=[board_id, column_id])
+
+
 class PublicBoardsApiTests(TestCase):
     """Test unauthenticated requests to the boards API."""
 
@@ -177,3 +187,63 @@ class PrivateBoardsApiTests(TestCase):
 
         column.refresh_from_db()
         self.assertEqual(column.title, payload['title'])
+
+    def test_move_column_before(self):
+        """Test moving a column before another column."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        column1 = Column.objects.create(board=board, title='Column 1')
+        column2 = Column.objects.create(board=board, title='Column 2')
+        url = column_move_before_url(board.id, column2.id)
+        payload = {'target_column_id': column1.id}
+        res = self.client.post(
+            url,
+            json.dumps(payload),
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 200)
+        column1.refresh_from_db()
+        column2.refresh_from_db()
+        self.assertLess(column2.order, column1.order)
+
+    def test_move_column_before_different_board(self):
+        """
+        Test that moving a column before another column in a different board
+        fails.
+        """
+        board = Board.objects.create(user=self.user, title='A Board')
+        another_board = Board.objects.create(
+            user=self.user, title='Another Board')
+        column1 = Column.objects.create(board=board, title='Column 1')
+        column2 = Column.objects.create(board=another_board, title='Column 2')
+        column1_order = column1.order
+        column2_order = column2.order
+        url = column_move_before_url(another_board.id, column2.id)
+        payload = {'target_column_id': column1.id}
+        res = self.client.post(
+            url,
+            json.dumps(payload),
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 404)
+        column1.refresh_from_db()
+        column2.refresh_from_db()
+        self.assertEqual(column1.order, column1_order)
+        self.assertEqual(column2.order, column2_order)
+
+    def test_move_column_to_end(self):
+        """Test moving a column to the end of its board."""
+        board = Board.objects.create(user=self.user, title='A Board')
+        column1 = Column.objects.create(board=board, title='Column 1')
+        column2 = Column.objects.create(board=board, title='Column 2')
+        column3 = Column.objects.create(board=board, title='Column 3')
+        url = column_move_end_url(board.id, column1.id)
+        res = self.client.post(
+            url,
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 200)
+        column1.refresh_from_db()
+        column2.refresh_from_db()
+        column3.refresh_from_db()
+        self.assertGreater(column1.order, column2.order)
+        self.assertGreater(column1.order, column3.order)

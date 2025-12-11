@@ -44,3 +44,8 @@ class BoardOut(ModelSchema):
         obj.columns = [ColumnSchema(
             id=c.id, title=c.title) for c in board.columns.all()]
         return obj
+
+
+class ColumnMoveBeforeIn(Schema):
+    """Schema for moving a column before another column."""
+    target_column_id: int
