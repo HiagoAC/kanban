@@ -85,3 +85,27 @@ export const deleteColumnFromBoard = async ({
 }): Promise<void> => {
 	await apiClient.delete(`${BOARD_URL}${boardId}/columns/${columnId}/`);
 };
+
+export const moveColumnBefore = async ({
+	columnId,
+	boardId,
+	targetColumnId,
+}: {
+	columnId: string;
+	boardId: string;
+	targetColumnId: string;
+}): Promise<void> => {
+	await apiClient.post(`${BOARD_URL}${boardId}/columns/${columnId}/move-before/`, {
+		target_column_id: targetColumnId,
+	});
+};
+
+export const moveColumnEnd = async ({
+	columnId,
+	boardId,
+}: {
+	columnId: string;
+	boardId: string;
+}): Promise<void> => {
+	await apiClient.post(`${BOARD_URL}${boardId}/columns/${columnId}/move-end/`);
+};
