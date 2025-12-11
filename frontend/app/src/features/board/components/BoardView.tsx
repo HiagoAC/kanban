@@ -35,7 +35,11 @@ export function BoardView({ id }: { id: string }) {
 
 		const shouldUpdate = executeDragMove(event, columns, {
 			moveItemAbove: ({ itemId, targetItemId }) =>
-				moveColumnBefore({ columnId: itemId, boardId, targetColumnId: targetItemId }),
+				moveColumnBefore({
+					columnId: itemId,
+					boardId,
+					targetColumnId: targetItemId,
+				}),
 			moveItemBottom: ({ itemId }) =>
 				moveColumnEnd({ columnId: itemId, boardId }),
 		});

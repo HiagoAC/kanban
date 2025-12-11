@@ -95,9 +95,12 @@ export const moveColumnBefore = async ({
 	boardId: string;
 	targetColumnId: string;
 }): Promise<void> => {
-	await apiClient.post(`${BOARD_URL}${boardId}/columns/${columnId}/move-before/`, {
-		target_column_id: targetColumnId,
-	});
+	await apiClient.post(
+		`${BOARD_URL}${boardId}/columns/${columnId}/move-before/`,
+		{
+			target_column_id: targetColumnId,
+		},
+	);
 };
 
 export const moveColumnEnd = async ({
