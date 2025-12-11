@@ -1,3 +1,4 @@
+import type { DraggableSyntheticListeners } from "@dnd-kit/core/dist/hooks/useDraggable";
 import {
 	Add as AddIcon,
 	DragIndicator as DragIndicatorIcon,
@@ -14,6 +15,7 @@ interface ColumnViewProps {
 	board: Board;
 	prevColumnId?: string;
 	nextColumnId?: string;
+	dragListeners?: DraggableSyntheticListeners;
 }
 
 export function ColumnView({
@@ -21,6 +23,7 @@ export function ColumnView({
 	board,
 	prevColumnId,
 	nextColumnId,
+	dragListeners,
 }: ColumnViewProps) {
 	const [createCardOpen, setCreateCardOpen] = useState(false);
 	const addButtonId = useId();
@@ -31,12 +34,10 @@ export function ColumnView({
 			sx={{
 				border: "2px solid black",
 				borderRadius: 2,
-				minWidth: 300,
-				alignSelf: "stretch",
-				mr: 2,
 				minHeight: 0,
 				display: "flex",
 				flexDirection: "column",
+				height: "100%",
 			}}
 		>
 			<Stack
@@ -47,7 +48,7 @@ export function ColumnView({
 				sx={{ position: "sticky", top: 0 }}
 			>
 				<Stack direction="row">
-					<IconButton>
+					<IconButton {...dragListeners} sx={{ cursor: "grab" }}>
 						<DragIndicatorIcon fontSize="small" />
 					</IconButton>
 					<Typography variant="subtitle1" fontWeight="bold" mb={1} pt={1}>
