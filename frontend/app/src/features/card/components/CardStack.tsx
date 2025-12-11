@@ -3,11 +3,14 @@ import { SortableContext } from "@dnd-kit/sortable";
 import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { SortableItem } from "../../../components/SortableItem";
+import {
+	executeDragMove,
+	updateItemsOrder,
+} from "../../../utils/drag-and-drop";
 import { useFetchCards } from "../hooks/useFetchCards";
 import { useMoveCardAbove } from "../hooks/useMoveCardAbove";
 import { useMoveCardBottom } from "../hooks/useMoveCardBottom";
 import type { CardListItem } from "../types";
-import { executeCardMove, updateCardsOrder } from "../utils";
 import { CardItem } from "./CardItem";
 
 export interface CardStackProps {
@@ -31,13 +34,15 @@ export function CardStack({
 	}, [CardsData]);
 
 	const handleDragEnd = (event: DragEndEvent) => {
-		const shouldUpdate = executeCardMove(event, cards, {
-			moveCardAbove,
-			moveCardBottom,
+		const shouldUpdate = executeDragMove(event, cards, {
+			moveItemAbove: ({ itemId, targetItemId }) =>
+				moveCardAbove({ cardId: itemId, targetCardId: targetItemId }),
+			moveItemBottom: ({ itemId }) => moveCardBottom({ cardId: itemId }),
 		});
+
 		if (shouldUpdate) {
 			setCards((items) =>
-				updateCardsOrder(items, event.active.id, event.over?.id),
+				updateItemsOrder(items, event.active.id, event.over?.id),
 			);
 		}
 	};
