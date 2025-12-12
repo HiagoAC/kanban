@@ -20,11 +20,13 @@ class BoardListSchema(Schema):
 
 class BoardIn(Schema):
     title: str
+    starred: bool | None = None
     columns: List[str]
 
 
 class BoardUpdate(Schema):
     title: str | None = None
+    starred: bool | None = None
 
 
 class BoardOut(ModelSchema):
@@ -32,11 +34,12 @@ class BoardOut(ModelSchema):
     title: str
     created_at: datetime
     updated_at: datetime
+    starred: bool
     columns: List[ColumnSchema]
 
     class Meta:
         model = Board
-        fields = ("id", "title", "created_at", "updated_at")
+        fields = ("id", "title", "created_at", "updated_at", "starred")
 
     @classmethod
     def from_orm_with_columns(cls, board: Board):

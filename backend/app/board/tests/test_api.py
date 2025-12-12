@@ -110,6 +110,9 @@ class PrivateBoardsApiTests(TestCase):
         self.assertEqual(content['title'], board.title)
         column_titles = {col['title'] for col in content['columns']}
         self.assertEqual(column_titles, {'To Do', 'Done'})
+        self.assertIn('created_at', content)
+        self.assertIn('updated_at', content)
+        self.assertIn('starred', content)
 
     def test_update_board(self):
         """Test updating a board."""
@@ -124,6 +127,21 @@ class PrivateBoardsApiTests(TestCase):
         self.assertEqual(res.status_code, 200)
         board.refresh_from_db()
         self.assertEqual(board.title, payload['title'])
+
+    def test_update_board_starred(self):
+        """Test updating the starred field of a board."""
+        board = Board.objects.create(
+            user=self.user, title='A Board', starred=False)
+        url = board_detail_url(board.id)
+        payload = {'starred': True}
+        res = self.client.patch(
+            url,
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 200)
+        board.refresh_from_db()
+        self.assertTrue(board.starred)
 
     def test_delete_board(self):
         """Test deleting a board."""
