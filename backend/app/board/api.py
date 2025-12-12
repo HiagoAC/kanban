@@ -19,7 +19,7 @@ board_router = Router()
                   url_name='boards')
 def list_boards(request):
     """Retrieve list of user's boards."""
-    queryset = Board.objects.filter(user=request.auth).order_by('title')
+    queryset = Board.objects.filter(user=request.auth)
     return queryset
 
 
