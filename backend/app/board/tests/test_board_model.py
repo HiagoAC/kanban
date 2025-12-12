@@ -80,3 +80,11 @@ class BoardModelTests(TestCase):
         )
         self.assertEqual(board1.title, board2.title)
         self.assertNotEqual(board1.user, board2.user)
+
+    def test_starred_defaults_to_false(self):
+        """Test that starred defaults to False when creating a board."""
+        board = Board.objects.create(
+            user=self.user,
+            title='Test Board'
+        )
+        self.assertFalse(board.starred)
