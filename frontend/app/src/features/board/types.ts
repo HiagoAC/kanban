@@ -12,6 +12,7 @@ export interface UpdateColumnSchema {
 export interface BoardListItem {
 	id: string;
 	title: string;
+	starred: boolean;
 }
 
 export interface Board extends BoardListItem {
