@@ -31,7 +31,7 @@ export function SideBar() {
 			</Link>
 			<SideBarButtonList />
 			<Divider />
-			<Box sx={{ flexGrow: 1, overflowY: "auto", m: 2 }}>
+			<Box sx={{ flexGrow: 1, overflowY: "auto" }}>
 				<SideBarBoardList />
 			</Box>
 			<Divider />
