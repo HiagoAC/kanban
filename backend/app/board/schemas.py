@@ -17,6 +17,7 @@ class BoardListSchema(Schema):
     id: int
     title: str
     starred: bool
+    updated_at: datetime
 
 
 class BoardIn(Schema):

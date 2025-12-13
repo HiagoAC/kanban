@@ -13,11 +13,11 @@ export interface BoardListItem {
 	id: string;
 	title: string;
 	starred: boolean;
+	updatedAt: Date;
 }
 
 export interface Board extends BoardListItem {
 	createdAt: Date;
-	updatedAt: Date;
 	columns: Column[];
 }
 

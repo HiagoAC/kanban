@@ -62,11 +62,18 @@ class PrivateBoardsApiTests(TestCase):
         res = self.client.get(BOARD_URL)
         content = json.loads(res.content.decode('utf-8'))
         self.assertEqual(res.status_code, 200)
-        expected = [
-            {'id': b.id, 'title': b.title}
-            for b in (board1, board2)
-        ]
-        self.assertEqual(content, expected)
+        self.assertEqual(len(content), 2)
+
+        expected_boards = {board1.id: board1, board2.id: board2}
+
+        for board_data in content:
+            board_id = board_data['id']
+            self.assertIn(board_id, expected_boards)
+
+            expected_board = expected_boards[board_id]
+            self.assertEqual(board_data['title'], expected_board.title)
+            self.assertEqual(board_data['starred'], expected_board.starred)
+            self.assertIn('updated_at', board_data)
 
     def test_create_board(self):
         """Test creating a new board with columns."""

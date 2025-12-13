@@ -15,7 +15,11 @@ interface CreateBoardPayload {
 
 export const fetchBoards = async (): Promise<BoardListItem[]> => {
 	const res = await apiClient.get(BOARD_URL);
-	return res.data;
+	const boards = res.data as BoardListItem[];
+	boards.forEach((board) => {
+		board.updatedAt = new Date(board.updatedAt);
+	});
+	return boards;
 };
 
 export const createBoard = async (
