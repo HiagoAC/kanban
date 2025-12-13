@@ -16,6 +16,7 @@ class ColumnSchema(ColumnBase):
 class BoardListSchema(Schema):
     id: int
     title: str
+    starred: bool
 
 
 class BoardIn(Schema):
