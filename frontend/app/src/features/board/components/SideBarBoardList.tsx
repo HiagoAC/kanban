@@ -1,5 +1,5 @@
 import StarIcon from "@mui/icons-material/Star";
-import { List, ListItem } from "@mui/material";
+import { Box, List, ListItem, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SideBarListButton } from "../../../components/SideBarListButton";
@@ -24,16 +24,26 @@ export function SideBarBoardList() {
 	}
 
 	return (
-		<List>
-			{sortedBoards?.map((board) => (
-				<ListItem key={board.id} disablePadding>
-					<SideBarListButton
-						onClick={() => navigate(`/boards/${board.id}`)}
-						text={board.title}
-						icon={board.starred ? <StarIcon fontSize="small" /> : null}
-					/>
-				</ListItem>
-			))}
-		</List>
+		<Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+			<Typography
+				variant="subtitle1"
+				sx={{ m: 2, fontWeight: "bold", flexShrink: 0 }}
+			>
+				Boards
+			</Typography>
+			<Box sx={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+				<List sx={{ py: 0 }}>
+					{sortedBoards?.map((board) => (
+						<ListItem key={board.id} disablePadding sx={{ my: -1.5 }}>
+							<SideBarListButton
+								onClick={() => navigate(`/boards/${board.id}`)}
+								text={board.title}
+								icon={board.starred ? <StarIcon fontSize="small" /> : null}
+							/>
+						</ListItem>
+					))}
+				</List>
+			</Box>
+		</Box>
 	);
 }
