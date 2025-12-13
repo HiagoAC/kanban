@@ -13,11 +13,9 @@ export function SideBarListButton({
 }: SideBarListButtonProps) {
 	return (
 		<ListItemButton onClick={onClick}>
-			{icon && (
-				<ListItemIcon sx={{ minWidth: "32px", marginRight: "4px" }}>
-					{icon}
-				</ListItemIcon>
-			)}
+			<ListItemIcon sx={{ minWidth: "32px", marginRight: "4px" }}>
+				{icon || <div />}
+			</ListItemIcon>
 			<ListItemText
 				primary={text}
 				slotProps={{
