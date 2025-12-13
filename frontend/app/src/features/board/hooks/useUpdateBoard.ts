@@ -14,7 +14,11 @@ export function useUpdateBoard() {
 					if (!old) return old;
 					return old.map((board) =>
 						board.id === updated.id
-							? { id: updated.id, title: updated.title }
+							? {
+									id: updated.id,
+									title: updated.title,
+									starred: updated.starred,
+								}
 							: board,
 					);
 				},
