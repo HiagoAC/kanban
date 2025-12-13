@@ -14,8 +14,9 @@ class CardModelTests(TestCase):
         user = User.objects.create_user(
             username='testuser', password='testpass'
         )
-        board = Board.objects.create(user=user, title='Test Board')
-        self.column = Column.objects.create(board=board, title='Test Column')
+        self.board = Board.objects.create(user=user, title='Test Board')
+        self.column = Column.objects.create(
+            board=self.board, title='Test Column')
 
     def test_create_card(self):
         """Test creating a Card instance."""
@@ -89,3 +90,43 @@ class CardModelTests(TestCase):
             column=self.column
         )
         self.assertEqual(str(card), title)
+
+    def test_board_updated_at_on_card_creation(self):
+        """Test that creating a card updates the board's updated_at field."""
+        original_updated_at = self.board.updated_at
+        Card.objects.create(
+            title='New Card',
+            column=self.column,
+        )
+        self.board.refresh_from_db()
+
+        self.assertGreater(self.board.updated_at, original_updated_at)
+
+    def test_board_updated_at_on_card_modification(self):
+        """Test that updating a card updates the board's updated_at field."""
+        card = Card.objects.create(
+            title='Initial Title',
+            column=self.column,
+        )
+        self.board.refresh_from_db()
+        original_updated_at = self.board.updated_at
+
+        card.title = 'Updated Title'
+        card.save()
+        self.board.refresh_from_db()
+
+        self.assertGreater(self.board.updated_at, original_updated_at)
+
+    def test_board_updated_at_on_card_deletion(self):
+        """Test that deleting a card updates the board's updated_at field."""
+        card = Card.objects.create(
+            title='To Be Deleted',
+            column=self.column,
+        )
+        self.board.refresh_from_db()
+        original_updated_at = self.board.updated_at
+
+        card.delete()
+        self.board.refresh_from_db()
+
+        self.assertGreater(self.board.updated_at, original_updated_at)

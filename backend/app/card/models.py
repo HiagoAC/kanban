@@ -25,6 +25,17 @@ class Card(OrderedModel):
     updated_at = models.DateTimeField(auto_now=True)
     order_with_respect_to = 'column'
 
+    def _touch_board(self):
+        self.column.board.save(update_fields=['updated_at'])
+
+    def save(self, *args, **kwargs):
+        self._touch_board()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self._touch_board()
+        super().delete(*args, **kwargs)
+
     class Meta(OrderedModel.Meta):
         constraints = [
             models.CheckConstraint(
