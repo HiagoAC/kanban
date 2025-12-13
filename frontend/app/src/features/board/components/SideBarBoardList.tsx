@@ -10,9 +10,13 @@ export function SideBarBoardList() {
 	const query = useFetchBoards();
 
 	const sortedBoards = useMemo(() => {
-		return query.data
-			?.slice()
-			.sort((a, b) => Number(b.starred) - Number(a.starred));
+		return query.data?.slice().sort((a, b) => {
+			const starredDiff = Number(b.starred) - Number(a.starred);
+			if (starredDiff !== 0) {
+				return starredDiff;
+			}
+			return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+		});
 	}, [query.data]);
 
 	if (query.isLoading) {
