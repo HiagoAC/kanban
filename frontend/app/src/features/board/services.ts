@@ -116,3 +116,14 @@ export const moveColumnEnd = async ({
 }): Promise<void> => {
 	await apiClient.post(`${BOARD_URL}${boardId}/columns/${columnId}/move-end/`);
 };
+
+export const getLatestBoard = async (): Promise<Board | null> => {
+	const res = await apiClient.get(`${BOARD_URL}latest/`);
+	if (res.status === 404) {
+		return null;
+	}
+	const board = res.data;
+	board.createdAt = new Date(board.createdAt);
+	board.updatedAt = new Date(board.updatedAt);
+	return board;
+};
