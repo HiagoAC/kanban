@@ -36,6 +36,17 @@ def create_board(request, payload: BoardIn):
     return 201, board_out
 
 
+@board_router.get('/latest/', response=BoardOut, url_name='latest-board')
+def retrieve_latest_board(request):
+    """Retrieve the latest updated board."""
+    board_model = Board.objects.filter(
+        user=request.auth).order_by('-updated_at').first()
+    if not board_model:
+        return 404, {"detail": "No boards found."}
+    board_out = BoardOut.from_orm_with_columns(board_model)
+    return board_out
+
+
 @board_router.get('/{board_id}/', response=BoardOut, url_name='board-detail')
 def retrieve_board(request, board_id: int):
     """Retrieve a board."""

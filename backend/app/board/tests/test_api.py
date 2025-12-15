@@ -8,6 +8,7 @@ from board.models import Board, Column
 
 User = get_user_model()
 BOARD_URL = reverse('api:boards')
+LATEST_BOARD_URL = reverse('api:latest-board')
 
 
 def board_detail_url(board_id: int) -> str:
@@ -120,6 +121,23 @@ class PrivateBoardsApiTests(TestCase):
         self.assertIn('created_at', content)
         self.assertIn('updated_at', content)
         self.assertIn('starred', content)
+
+    def test_retrieve_latest_updated_board(self):
+        """Test retrieving the latest updated board."""
+        Board.objects.create(
+            user=self.user, title='A Board')
+        latest_updated_board = Board.objects.create(
+            user=self.user, title='Another Board')
+        Board.objects.create(
+            user=self.user, title='Board 3')
+        latest_updated_board.title = 'Board Updated'
+        latest_updated_board.save()
+
+        res = self.client.get(LATEST_BOARD_URL)
+        self.assertEqual(res.status_code, 200)
+        content = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(content['id'], latest_updated_board.id)
+        self.assertEqual(content['title'], latest_updated_board.title)
 
     def test_update_board(self):
         """Test updating a board."""
