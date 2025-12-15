@@ -6,29 +6,23 @@ import {
 	executeDragMove,
 	updateItemsOrder,
 } from "../../../utils/drag-and-drop";
-import { useGetBoard } from "../hooks/useGetBoard";
 import { useMoveColumnBefore } from "../hooks/useMoveColumnBefore";
 import { useMoveColumnEnd } from "../hooks/useMoveColumnEnd";
-import type { Column } from "../types";
+import type { Board, Column } from "../types";
 import { BoardActionBar } from "./BoardActionBar";
 import { ColumnView } from "./ColumnView";
 import { SortableColumn } from "./SortableColumn";
 
-export function BoardView({ id }: { id: string }) {
-	const { data: board, isLoading } = useGetBoard(id);
+export function BoardView({ board }: { board: Board }) {
 	const [columns, setColumns] = useState<Column[]>([]);
 	const { mutate: moveColumnBefore } = useMoveColumnBefore();
 	const { mutate: moveColumnEnd } = useMoveColumnEnd();
 
 	useEffect(() => {
-		if (board?.columns) {
+		if (board.columns) {
 			setColumns(board.columns);
 		}
-	}, [board?.columns]);
-
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
+	}, [board.columns]);
 
 	const handleDragEnd = (event: DragEndEvent) => {
 		const boardId = board?.id || "";
@@ -79,14 +73,14 @@ export function BoardView({ id }: { id: string }) {
 					fontWeight="bold"
 					sx={{ flex: 1, minWidth: 0, alignSelf: "end" }}
 				>
-					{board?.title}
+					{board.title}
 				</Typography>
 				<Box sx={{ flexShrink: 0 }}>
-					{board && <BoardActionBar board={board} />}
+					<BoardActionBar board={board} />
 				</Box>
 			</Stack>
 			<DndContext onDragEnd={handleDragEnd}>
-				<SortableContext items={board?.columns || []}>
+				<SortableContext items={board.columns}>
 					<Stack
 						className="auto-hide-scrollbar"
 						direction="row"
@@ -98,26 +92,23 @@ export function BoardView({ id }: { id: string }) {
 							p: 2,
 						}}
 					>
-						{board &&
-							columns.map((column, index) => (
-								<SortableColumn key={column.id} id={column.id}>
-									{({ dragListeners }) => (
-										<ColumnView
-											column={column}
-											board={board}
-											prevColumnId={
-												index > 0 ? columns[index - 1].id : undefined
-											}
-											nextColumnId={
-												index < columns.length - 1
-													? columns[index + 1].id
-													: undefined
-											}
-											dragListeners={dragListeners}
-										/>
-									)}
-								</SortableColumn>
-							))}
+						{columns.map((column, index) => (
+							<SortableColumn key={column.id} id={column.id}>
+								{({ dragListeners }) => (
+									<ColumnView
+										column={column}
+										board={board}
+										prevColumnId={index > 0 ? columns[index - 1].id : undefined}
+										nextColumnId={
+											index < columns.length - 1
+												? columns[index + 1].id
+												: undefined
+										}
+										dragListeners={dragListeners}
+									/>
+								)}
+							</SortableColumn>
+						))}
 					</Stack>
 				</SortableContext>
 			</DndContext>
