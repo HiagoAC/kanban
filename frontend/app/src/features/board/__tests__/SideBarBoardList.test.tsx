@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { renderWithProviders } from "../../../utils/test-utils";
 import { SideBarBoardList } from "../components/SideBarBoardList";
 import { useFetchBoards } from "../hooks/useFetchBoards";
 
@@ -26,11 +26,7 @@ describe("SideBarBoardList", () => {
 			isError: false,
 		} as unknown as ReturnType<typeof useFetchBoards>);
 
-		render(
-			<MemoryRouter>
-				<SideBarBoardList />
-			</MemoryRouter>,
-		);
+		renderWithProviders(<SideBarBoardList />);
 
 		expect(screen.getByText("Board 1")).not.toBeNull();
 		expect(screen.getByText("Board 2")).not.toBeNull();
@@ -46,11 +42,7 @@ describe("SideBarBoardList", () => {
 			isError: false,
 		} as unknown as ReturnType<typeof useFetchBoards>);
 
-		render(
-			<MemoryRouter>
-				<SideBarBoardList />
-			</MemoryRouter>,
-		);
+		renderWithProviders(<SideBarBoardList />);
 
 		expect(screen.getByTestId("loading")).not.toBeNull();
 	});
@@ -62,11 +54,7 @@ describe("SideBarBoardList", () => {
 			isError: true,
 		} as unknown as ReturnType<typeof useFetchBoards>);
 
-		render(
-			<MemoryRouter>
-				<SideBarBoardList />
-			</MemoryRouter>,
-		);
+		renderWithProviders(<SideBarBoardList />);
 
 		expect(screen.getByTestId("error")).not.toBeNull();
 	});
