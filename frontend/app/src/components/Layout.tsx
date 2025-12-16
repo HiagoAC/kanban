@@ -1,4 +1,5 @@
 import { Box, Grid } from "@mui/material";
+import { ActiveBoardProvider } from "../features/board/contexts/ActiveBoardContext";
 import { SideBar } from "./SideBar";
 
 export interface Props {
@@ -21,23 +22,25 @@ export function Layout({ children, isHomePage = false }: Props) {
 	const contentXsSize = isHomePage ? 12 : 12;
 
 	return (
-		<Box sx={{ flexGrow: 1, m: 0, p: 0 }}>
-			<Grid container spacing={2}>
-				<Grid
-					size={{ md: 3, lg: 2.5, xs: sideBarXsSize }}
-					sx={sideBarStyle}
-					data-testid="sidebar-grid"
-				>
-					<SideBar />
+		<ActiveBoardProvider>
+			<Box sx={{ flexGrow: 1, m: 0, p: 0 }}>
+				<Grid container spacing={2}>
+					<Grid
+						size={{ md: 3, lg: 2.5, xs: sideBarXsSize }}
+						sx={sideBarStyle}
+						data-testid="sidebar-grid"
+					>
+						<SideBar />
+					</Grid>
+					<Grid
+						size={{ md: 9, lg: 9.5, xs: contentXsSize }}
+						sx={contentStyle}
+						data-testid="content-grid"
+					>
+						{children}
+					</Grid>
 				</Grid>
-				<Grid
-					size={{ md: 9, lg: 9.5, xs: contentXsSize }}
-					sx={contentStyle}
-					data-testid="content-grid"
-				>
-					{children}
-				</Grid>
-			</Grid>
-		</Box>
+			</Box>
+		</ActiveBoardProvider>
 	);
 }

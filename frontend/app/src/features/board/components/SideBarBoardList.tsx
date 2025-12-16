@@ -3,12 +3,13 @@ import { Box, List, ListItem, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SideBarListButton } from "../../../components/SideBarListButton";
+import { useActiveBoard } from "../contexts/ActiveBoardContext";
 import { useFetchBoards } from "../hooks/useFetchBoards";
 
 export function SideBarBoardList() {
 	const navigate = useNavigate();
 	const query = useFetchBoards();
-
+	const { activeBoardId } = useActiveBoard();
 	const sortedBoards = useMemo(() => {
 		return query.data?.slice().sort((a, b) => {
 			const starredDiff = Number(b.starred) - Number(a.starred);
@@ -38,11 +39,12 @@ export function SideBarBoardList() {
 			<Box sx={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
 				<List sx={{ py: 0 }}>
 					{sortedBoards?.map((board) => (
-						<ListItem key={board.id} disablePadding sx={{ my: -1.5 }}>
+						<ListItem key={board.id} disablePadding sx={{ my: 0 }}>
 							<SideBarListButton
 								onClick={() => navigate(`/boards/${board.id}`)}
 								text={board.title}
 								icon={board.starred ? <StarIcon fontSize="small" /> : null}
+								selected={activeBoardId === board.id}
 							/>
 						</ListItem>
 					))}

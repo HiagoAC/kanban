@@ -1,6 +1,7 @@
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { useEffect, useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useActiveBoard } from "../../board/contexts/ActiveBoardContext";
 import { useGetBoard } from "../../board/hooks/useGetBoard";
 import type { Board } from "../../board/types";
 import { useDeleteCard } from "../hooks/useDeleteCard";
@@ -19,6 +20,7 @@ export function CardView({ id }: { id: string }) {
 	>({});
 	const { mutate: updateCard } = useUpdateCard();
 	const { mutate: deleteCard } = useDeleteCard(card?.columnId);
+	const { setActiveBoardId } = useActiveBoard();
 
 	const titleInputId = useId();
 	const columnSelectId = useId();
@@ -28,6 +30,12 @@ export function CardView({ id }: { id: string }) {
 	const leftEdgeOffset = 4;
 
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (board) {
+			setActiveBoardId(board.id);
+		}
+	}, [board, setActiveBoardId]);
 
 	useEffect(() => {
 		if (card) {
