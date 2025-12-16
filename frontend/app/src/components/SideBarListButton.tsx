@@ -4,15 +4,20 @@ interface SideBarListButtonProps {
 	onClick: () => void;
 	text: string;
 	icon?: React.ReactNode;
+	selected?: boolean;
 }
 
 export function SideBarListButton({
 	onClick,
 	text,
 	icon,
+	selected,
 }: SideBarListButtonProps) {
 	return (
-		<ListItemButton onClick={onClick}>
+		<ListItemButton
+			onClick={onClick}
+			sx={{ py: 0, bgcolor: selected ? "#e0e0e0" : "inherit" }}
+		>
 			<ListItemIcon sx={{ minWidth: "32px", marginRight: "4px" }}>
 				{icon || <div />}
 			</ListItemIcon>
@@ -22,7 +27,7 @@ export function SideBarListButton({
 					primary: {
 						style: {
 							fontSize: "14px",
-							fontWeight: 500,
+							fontWeight: selected ? 600 : 500,
 							color: "#333",
 						},
 					},
