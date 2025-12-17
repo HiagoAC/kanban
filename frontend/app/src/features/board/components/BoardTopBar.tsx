@@ -1,5 +1,6 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import type { Board } from "../types";
 import { BoardTopActions } from "./BoardTopActions";
 
@@ -8,6 +9,8 @@ interface BoardTopBarProps {
 }
 
 export function BoardTopBar({ board }: BoardTopBarProps) {
+	const navigate = useNavigate();
+
 	return (
 		<Stack
 			sx={{
@@ -24,6 +27,7 @@ export function BoardTopBar({ board }: BoardTopBarProps) {
 		>
 			<Stack direction="row" justifyContent="space-between" alignItems="center">
 				<IconButton
+					onClick={() => navigate("/")}
 					sx={{
 						mr: 2,
 						display: { xs: "flex", md: "none" },
