@@ -9,7 +9,7 @@ import {
 import { useMoveColumnBefore } from "../hooks/useMoveColumnBefore";
 import { useMoveColumnEnd } from "../hooks/useMoveColumnEnd";
 import type { Board, Column } from "../types";
-import { BoardActionBar } from "./BoardActionBar";
+import { BoardTopActions } from "./BoardTopActions";
 import { ColumnView } from "./ColumnView";
 import { SortableColumn } from "./SortableColumn";
 
@@ -76,7 +76,7 @@ export function BoardView({ board }: { board: Board }) {
 					{board.title}
 				</Typography>
 				<Box sx={{ flexShrink: 0 }}>
-					<BoardActionBar board={board} />
+					<BoardTopActions board={board} />
 				</Box>
 			</Stack>
 			<DndContext onDragEnd={handleDragEnd}>
