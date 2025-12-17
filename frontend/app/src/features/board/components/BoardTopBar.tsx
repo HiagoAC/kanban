@@ -1,4 +1,5 @@
-import { Box, Stack, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import type { Board } from "../types";
 import { BoardTopActions } from "./BoardTopActions";
 
@@ -9,8 +10,6 @@ interface BoardTopBarProps {
 export function BoardTopBar({ board }: BoardTopBarProps) {
 	return (
 		<Stack
-			direction="row"
-			justifyContent="space-between"
 			sx={{
 				position: "sticky",
 				top: 0,
@@ -20,19 +19,45 @@ export function BoardTopBar({ board }: BoardTopBarProps) {
 				height: "auto",
 				boxSizing: "border-box",
 				pl: 2,
-				py: 1,
+				py: { xs: 0.5, md: 1 },
 			}}
 		>
+			<Stack direction="row" justifyContent="space-between" alignItems="center">
+				<IconButton
+					sx={{
+						mr: 2,
+						display: { xs: "flex", md: "none" },
+					}}
+				>
+					<MenuIcon />
+				</IconButton>
+				<Typography
+					variant="h4"
+					fontWeight="bold"
+					sx={{
+						flex: 1,
+						minWidth: 0,
+						display: { xs: "none", md: "block" },
+					}}
+				>
+					{board.title}
+				</Typography>
+				<Box sx={{ flexShrink: 0 }}>
+					<BoardTopActions board={board} />
+				</Box>
+			</Stack>
+			{/* Mobile Title */}
 			<Typography
-				variant="h4"
+				variant="h6"
 				fontWeight="bold"
-				sx={{ flex: 1, minWidth: 0, alignSelf: "end" }}
+				sx={{
+					pl: 1,
+					wordBreak: "break-word",
+					display: { xs: "block", md: "none" },
+				}}
 			>
 				{board.title}
 			</Typography>
-			<Box sx={{ flexShrink: 0 }}>
-				<BoardTopActions board={board} />
-			</Box>
 		</Stack>
 	);
 }
