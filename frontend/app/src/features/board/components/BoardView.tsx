@@ -1,6 +1,6 @@
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
 	executeDragMove,
@@ -9,7 +9,7 @@ import {
 import { useMoveColumnBefore } from "../hooks/useMoveColumnBefore";
 import { useMoveColumnEnd } from "../hooks/useMoveColumnEnd";
 import type { Board, Column } from "../types";
-import { BoardTopActions } from "./BoardTopActions";
+import { BoardTopBar } from "./BoardTopBar";
 import { ColumnView } from "./ColumnView";
 import { SortableColumn } from "./SortableColumn";
 
@@ -53,32 +53,7 @@ export function BoardView({ board }: { board: Board }) {
 				height: "100vh",
 			}}
 		>
-			<Stack
-				direction="row"
-				justifyContent="space-between"
-				sx={{
-					position: "sticky",
-					top: 0,
-					zIndex: 100,
-					backgroundColor: "background.default",
-					width: "100%",
-					height: "auto",
-					boxSizing: "border-box",
-					pl: 2,
-					py: 1,
-				}}
-			>
-				<Typography
-					variant="h4"
-					fontWeight="bold"
-					sx={{ flex: 1, minWidth: 0, alignSelf: "end" }}
-				>
-					{board.title}
-				</Typography>
-				<Box sx={{ flexShrink: 0 }}>
-					<BoardTopActions board={board} />
-				</Box>
-			</Stack>
+			<BoardTopBar board={board} />
 			<DndContext onDragEnd={handleDragEnd}>
 				<SortableContext items={board.columns}>
 					<Stack
