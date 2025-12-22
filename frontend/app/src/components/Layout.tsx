@@ -26,14 +26,14 @@ export function Layout({ children, isHomePage = false }: Props) {
 			<Box sx={{ flexGrow: 1, m: 0, p: 0 }}>
 				<Grid container spacing={2}>
 					<Grid
-						size={{ md: 3, lg: 2.5, xs: sideBarXsSize }}
+						size={{ md: 2.5, lg: 2, xs: sideBarXsSize }}
 						sx={sideBarStyle}
 						data-testid="sidebar-grid"
 					>
 						<SideBar />
 					</Grid>
 					<Grid
-						size={{ md: 9, lg: 9.5, xs: contentXsSize }}
+						size={{ md: 9.5, lg: 10, xs: contentXsSize }}
 						sx={contentStyle}
 						data-testid="content-grid"
 					>

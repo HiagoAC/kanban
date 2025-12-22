@@ -1,8 +1,5 @@
-import {
-	Add as AddIcon,
-	Home as HomeIcon,
-	Search as SearchIcon,
-} from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
+import LoginIcon from "@mui/icons-material/Login";
 import { List, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { SideBarListButton } from "./SideBarListButton";
@@ -14,23 +11,16 @@ export function SideBarButtonList() {
 		<List>
 			<ListItem disablePadding>
 				<SideBarListButton
-					onClick={() => navigate("/new-board")}
-					text="Create New Board"
-					icon={<AddIcon />}
-				/>
-			</ListItem>
-			<ListItem disablePadding>
-				<SideBarListButton
 					onClick={() => {}}
-					text="Search"
-					icon={<SearchIcon />}
+					text="Sign In"
+					icon={<LoginIcon />}
 				/>
 			</ListItem>
 			<ListItem disablePadding>
 				<SideBarListButton
-					onClick={() => navigate("/")}
-					text="Home"
-					icon={<HomeIcon />}
+					onClick={() => navigate("/new-board")}
+					text="Create Board"
+					icon={<AddIcon />}
 				/>
 			</ListItem>
 		</List>
