@@ -14,10 +14,7 @@ export function SideBarListButton({
 	selected,
 }: SideBarListButtonProps) {
 	return (
-		<ListItemButton
-			onClick={onClick}
-			sx={{ py: 0, bgcolor: selected ? "#e0e0e0" : "inherit" }}
-		>
+		<ListItemButton onClick={onClick} sx={{ py: 0 }} selected={selected}>
 			<ListItemIcon sx={{ minWidth: "32px", marginRight: "4px" }}>
 				{icon || <div />}
 			</ListItemIcon>
@@ -28,7 +25,6 @@ export function SideBarListButton({
 						style: {
 							fontSize: "14px",
 							fontWeight: selected ? 600 : 500,
-							color: "#333",
 						},
 					},
 				}}

@@ -5,6 +5,7 @@ import {
 } from "@mui/icons-material";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { useId, useState } from "react";
+import { columnBg } from "../../../theme";
 import { CardStack } from "../../card/components/CardStack";
 import { CreateCardDialogue } from "../../card/components/CreateCardDialogue";
 import type { Board, Column } from "../types";
@@ -33,8 +34,10 @@ export function ColumnView({
 		<Stack
 			direction="column"
 			sx={{
-				border: "2px solid black",
+				border: "1px solid",
+				borderColor: "divider",
 				borderRadius: 2,
+				backgroundColor: columnBg,
 				minHeight: 0,
 				display: "flex",
 				flexDirection: "column",
@@ -62,7 +65,6 @@ export function ColumnView({
 						fontWeight="bold"
 						color="textSecondary"
 						sx={{
-							bgcolor: "#f0f0f0",
 							alignSelf: "center",
 							p: 0.5,
 							mr: 0.5,

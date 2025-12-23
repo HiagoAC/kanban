@@ -10,7 +10,8 @@ export function SideBar() {
 				height: "100vh",
 				display: "flex",
 				flexDirection: "column",
-				borderRight: "1px solid #ddd",
+				borderRight: "1px solid",
+				borderColor: "divider",
 			}}
 		>
 			<Link component={RouterLink} to="/" underline="none" color="inherit">
