@@ -40,30 +40,55 @@ export function CardItem({
 			onClick={() => navigate(`/cards/${card.id}`)}
 			elevation={3}
 			sx={{
-				mt: 2,
-				bgcolor: "lightgrey",
+				mt: 1,
 				width: "100%",
 				display: "flex",
 				flexDirection: "column",
 			}}
 		>
 			<Box
-				sx={{ display: "flex", justifyContent: "flex-start", width: "100%" }}
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					width: "100%",
+					pt: 1,
+				}}
 			>
-				<IconButton
-					{...dragListeners}
-					sx={{ cursor: "grab" }}
-					aria-label="Drag card"
+				<Box
+					sx={{
+						minWidth: "fit-content",
+						display: "flex",
+						justifyContent: "flex-start",
+					}}
 				>
-					<DragIndicatorIcon fontSize="small" />
-				</IconButton>
+					<IconButton
+						{...dragListeners}
+						sx={{ cursor: "grab" }}
+						aria-label="Drag card"
+					>
+						<DragIndicatorIcon fontSize="small" />
+					</IconButton>
+				</Box>
+				<Box
+					sx={{ flexGrow: 1, display: "flex", justifyContent: "center", px: 1 }}
+				>
+					<Typography variant="subtitle1" fontWeight="bold">
+						{card.title}
+					</Typography>
+				</Box>
+				<Box sx={{ minWidth: "fit-content", visibility: "hidden" }}>
+					{/* Invisible duplicate button to balance layout */}
+					<IconButton aria-hidden="true">
+						<DragIndicatorIcon fontSize="small" />
+					</IconButton>
+				</Box>
 			</Box>
 			<Grid
 				container
 				alignItems="center"
 				justifyContent="space-between"
 				wrap="nowrap"
-				sx={{ width: "100%", pb: 2 }}
+				sx={{ width: "100%", pb: 1 }}
 			>
 				<Grid size={2} alignContent="center">
 					{prevColumnId && (
@@ -82,9 +107,6 @@ export function CardItem({
 				</Grid>
 				<Grid size={8}>
 					<Stack alignItems="center">
-						<Typography variant="subtitle1" fontWeight="bold">
-							{card.title}
-						</Typography>
 						<Stack direction="row" spacing={0.2} my={1} alignItems="center">
 							<PriorityDot priority={card.priority} />
 							<Typography sx={{ fontSize: 12, color: "text.secondary" }}>
