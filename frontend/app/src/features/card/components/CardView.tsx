@@ -95,7 +95,7 @@ export function CardView({ id }: { id: string }) {
 			<TextField
 				id={titleInputId}
 				variant="standard"
-				value={cardData.title}
+				value={cardData.title ?? ""}
 				onChange={(e) =>
 					setCardData((prev) => ({ ...prev, title: e.target.value }))
 				}
@@ -142,7 +142,7 @@ export function CardView({ id }: { id: string }) {
 					<TextField
 						id={bodyInputId}
 						label="Notes"
-						value={cardData.body}
+						value={cardData.body ?? ""}
 						onChange={(e) =>
 							setCardData((prev) => ({ ...prev, body: e.target.value }))
 						}
