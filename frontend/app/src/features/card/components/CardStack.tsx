@@ -15,12 +15,14 @@ import { CardItem } from "./CardItem";
 
 export interface CardStackProps {
 	columnId: string;
+	onCardCountChange: (count: number) => void;
 	prevColumnId?: string;
 	nextColumnId?: string;
 }
 
 export function CardStack({
 	columnId,
+	onCardCountChange,
 	prevColumnId,
 	nextColumnId,
 }: CardStackProps) {
@@ -32,6 +34,10 @@ export function CardStack({
 	useEffect(() => {
 		setCards(CardsData);
 	}, [CardsData]);
+
+	useEffect(() => {
+		onCardCountChange?.(cards.length);
+	}, [cards.length, onCardCountChange]);
 
 	const handleDragEnd = (event: DragEndEvent) => {
 		const shouldUpdate = executeDragMove(event, cards, {

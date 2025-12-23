@@ -26,6 +26,7 @@ export function ColumnView({
 	dragListeners,
 }: ColumnViewProps) {
 	const [createCardOpen, setCreateCardOpen] = useState(false);
+	const [cardCount, setCardCount] = useState(0);
 	const addButtonId = useId();
 
 	return (
@@ -56,6 +57,20 @@ export function ColumnView({
 					</Typography>
 				</Stack>
 				<Stack direction="row" alignSelf="center">
+					<Typography
+						variant="body2"
+						fontWeight="bold"
+						color="textSecondary"
+						sx={{
+							bgcolor: "#f0f0f0",
+							alignSelf: "center",
+							p: 0.5,
+							mr: 0.5,
+							borderRadius: 1,
+						}}
+					>
+						{cardCount}
+					</Typography>
 					<IconButton id={addButtonId} onClick={() => setCreateCardOpen(true)}>
 						<AddIcon fontSize="small" />
 					</IconButton>
@@ -85,6 +100,7 @@ export function ColumnView({
 					columnId={column.id}
 					prevColumnId={prevColumnId}
 					nextColumnId={nextColumnId}
+					onCardCountChange={setCardCount}
 				/>
 			</Box>
 		</Stack>
