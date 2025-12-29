@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'ordered_model',
     'board',
     'card',
+    'user',
 ]
 
 MIDDLEWARE = [
