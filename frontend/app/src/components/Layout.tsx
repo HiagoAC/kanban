@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { ActiveBoardProvider } from "../features/board/contexts/ActiveBoardContext";
-import { sidebarBg } from "../theme";
+import { backgroundSecondary } from "../theme";
 import { SideBar } from "./SideBar";
 
 export interface Props {
@@ -12,7 +12,7 @@ export function Layout({ children, isHomePage = false }: Props) {
 	const collapseStyle = { display: { xs: "none", md: "block" } };
 	const sideBarStyle = {
 		...(isHomePage ? {} : collapseStyle),
-		backgroundColor: sidebarBg,
+		backgroundColor: backgroundSecondary,
 		minHeight: "100vh",
 	};
 	const contentStyle = {

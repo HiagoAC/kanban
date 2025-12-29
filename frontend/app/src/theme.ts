@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
 export const pageBg = "#FAFBFC";
-export const sidebarBg = "#E7EBF0";
+export const backgroundSecondary = "#E7EBF0";
 export const sidebarHover = "#D1D5DB";
 
 export const columnBg = "#D1D5DB";
