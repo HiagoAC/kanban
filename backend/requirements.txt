@@ -4,3 +4,4 @@ psycopg>=3.2.10,<3.3
 wait-for-it>=2.3.0,<2.4
 django-cors-headers>=4.9.0,<4.10
 django-ordered-model>=3.7.4,<3.8
+social-auth-app-django>=5.7.0,<5.8
