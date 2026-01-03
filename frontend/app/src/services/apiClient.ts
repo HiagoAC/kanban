@@ -2,9 +2,12 @@ import axios from "axios";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
 
+export const BASE_URL = "http://localhost:8000/";
+
 const apiClient = axios.create({
-	baseURL: "http://localhost:8000/api/",
+	baseURL: `${BASE_URL}api/`,
 	headers: { "Content-Type": "application/json" },
+	withCredentials: true,
 });
 
 // --- Request: camelCase → snake_case ---
