@@ -6,6 +6,7 @@ import { BoardPage } from "./pages/BoardPage";
 import { CardPage } from "./pages/CardPage";
 import { HomePage } from "./pages/HomePage";
 import { NewBoardPage } from "./pages/NewBoardPage";
+import { SignInPage } from "./pages/SignInPage";
 import { theme } from "./theme";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ export default function App() {
 				<Router>
 					<Routes>
 						<Route path="/" element={<HomePage />} />
+						<Route path="/sign-in" element={<SignInPage />} />
 						<Route path="/boards/:id" element={<BoardPage />} />
 						<Route path="/new-board" element={<NewBoardPage />} />
 						<Route path="/cards/:id" element={<CardPage />} />
