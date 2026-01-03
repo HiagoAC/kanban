@@ -11,7 +11,7 @@ export function SideBarButtonList() {
 		<List>
 			<ListItem disablePadding>
 				<SideBarListButton
-					onClick={() => {}}
+					onClick={() => navigate("/sign-in")}
 					text="Sign In"
 					icon={<LoginIcon />}
 				/>
