@@ -25,6 +25,8 @@ jobs:
         run: |
           cat > .env <<EOF
           DJANGO_SECRET=${{ secrets.DJANGO_SECRET }}
+          SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=${{ secrets.GOOGLE_OAUTH2_CLIENT_ID }}
+          SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${{ secrets.GOOGLE_OAUTH2_CLIENT_SECRET }}
           EOF
 
       - name: Test
