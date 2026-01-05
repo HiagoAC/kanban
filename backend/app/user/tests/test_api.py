@@ -44,6 +44,7 @@ class GetUserProfileTests(TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json(), {
+            'id': self.user.id,
             'username': self.user.username,
             'email': self.user.email,
             'first_name': self.user.first_name,

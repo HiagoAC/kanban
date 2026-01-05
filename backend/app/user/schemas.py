@@ -10,4 +10,11 @@ class UserSchema(ModelSchema):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_url']
+        fields = [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'avatar_url'
+        ]
