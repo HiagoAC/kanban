@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from user.pipeline import create_user_with_board_pipeline
+from user.pipeline import create_user_with_board_pipeline, sync_user_details
 
 User = get_user_model()
 
@@ -61,3 +61,26 @@ class CreateUserWithBoardPipelineTests(TestCase):
             user=None
         )
         self.assertIsNone(result)
+
+
+class SyncUserDetailsPipelineTests(TestCase):
+    def test_sync_user_details_google_oauth2(self):
+        """Test syncing user details from Google OAuth2 response."""
+        user = User.objects.create_user(username='testuser')
+        response = {
+            'given_name': 'John',
+            'family_name': 'Doe',
+            'email': 'john.doe@example.com',
+            'picture': 'http://example.com/avatar.jpg'
+        }
+        backend = type('Backend', (), {'name': 'google-oauth2'})()
+        sync_user_details(
+            backend=backend,
+            user=user,
+            response=response
+        )
+        user.refresh_from_db()
+        self.assertEqual(user.first_name, response['given_name'])
+        self.assertEqual(user.last_name, response['family_name'])
+        self.assertEqual(user.email, response['email'])
+        self.assertEqual(user.avatar_url, response['picture'])
