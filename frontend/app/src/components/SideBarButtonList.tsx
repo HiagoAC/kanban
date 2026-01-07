@@ -9,7 +9,11 @@ import { SideBarListButton } from "./SideBarListButton";
 
 export function SideBarButtonList() {
 	const navigate = useNavigate();
-	const { user, isAuthenticated } = useAuth();
+	const { user, isAuthenticated, logout } = useAuth();
+	const handleLogout = async () => {
+		await logout();
+		navigate("/sign-in");
+	};
 
 	return (
 		<List>
@@ -20,7 +24,7 @@ export function SideBarButtonList() {
 					</ListItem>
 					<ListItem disablePadding>
 						<SideBarListButton
-							onClick={() => {}}
+							onClick={handleLogout}
 							text="Sign Out"
 							icon={<LogoutIcon />}
 						/>
