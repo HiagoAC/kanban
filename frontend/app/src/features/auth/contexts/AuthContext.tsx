@@ -9,7 +9,11 @@ interface AuthContextType {
 	isLoading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType>({
+	user: undefined,
+	isAuthenticated: false,
+	isLoading: true,
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const { data: user, isLoading } = useGetMe();
