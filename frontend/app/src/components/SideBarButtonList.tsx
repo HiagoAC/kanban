@@ -1,21 +1,40 @@
 import AddIcon from "@mui/icons-material/Add";
-import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Login";
+import LoginIcon from "@mui/icons-material/Logout";
 import { List, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { UserInfo } from "../features/auth/components/AccountButton";
+import { useAuth } from "../features/auth/hooks/useAuth";
 import { SideBarListButton } from "./SideBarListButton";
 
 export function SideBarButtonList() {
 	const navigate = useNavigate();
+	const { user, isAuthenticated } = useAuth();
 
 	return (
 		<List>
-			<ListItem disablePadding>
-				<SideBarListButton
-					onClick={() => navigate("/sign-in")}
-					text="Sign In"
-					icon={<LoginIcon />}
-				/>
-			</ListItem>
+			{isAuthenticated && user ? (
+				<>
+					<ListItem disablePadding>
+						<UserInfo user={user} />
+					</ListItem>
+					<ListItem disablePadding>
+						<SideBarListButton
+							onClick={() => {}}
+							text="Sign Out"
+							icon={<LogoutIcon />}
+						/>
+					</ListItem>
+				</>
+			) : (
+				<ListItem disablePadding>
+					<SideBarListButton
+						onClick={() => navigate("/sign-in")}
+						text="Sign In"
+						icon={<LoginIcon />}
+					/>
+				</ListItem>
+			)}
 			<ListItem disablePadding>
 				<SideBarListButton
 					onClick={() => navigate("/new-board")}
