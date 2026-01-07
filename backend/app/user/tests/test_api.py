@@ -7,6 +7,7 @@ from user.pipeline import sync_user_details
 
 User = get_user_model()
 ME_URL = reverse('api:me')
+LOGOUT_URL = reverse('api:logout')
 
 
 class GetUserProfileTests(TestCase):
@@ -51,3 +52,38 @@ class GetUserProfileTests(TestCase):
             'last_name': self.user.last_name,
             'avatar_url': self.user.avatar_url,
         })
+
+
+class LogoutTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            email='testuser@gmail.com'
+        )
+        self.client = Client()
+
+    def test_logout_authenticated_user(self):
+        """Test that authenticated user can logout successfully."""
+        self.client.force_login(self.user)
+        res = self.client.get(ME_URL)
+        self.assertEqual(res.status_code, 200)
+        res = self.client.post(LOGOUT_URL)
+        self.assertEqual(res.status_code, 204)
+        res = self.client.get(ME_URL)
+        self.assertEqual(res.status_code, 401)
+
+    def test_logout_unauthenticated_user(self):
+        """Test that unauthenticated user gets 401 when trying to logout."""
+        res = self.client.post(LOGOUT_URL)
+        self.assertEqual(res.status_code, 401)
+
+    def test_logout_clears_session(self):
+        """Test that logout properly clears the session."""
+        self.client.force_login(self.user)
+
+        self.assertIn('_auth_user_id', self.client.session)
+
+        res = self.client.post(LOGOUT_URL)
+        self.assertEqual(res.status_code, 204)
+        self.assertNotIn('_auth_user_id', self.client.session)
