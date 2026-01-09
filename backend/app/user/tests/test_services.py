@@ -11,15 +11,12 @@ class UserServicesTests(TestCase):
     def test_create_user_with_board(self):
         """Test"""
         username = 'newuser'
-        password = 'newpass'
         user = create_user_with_board(
-            username=username,
-            password=password
+            username=username
         )
 
         self.assertIsInstance(user, User)
         self.assertEqual(user.username, username)
-        self.assertTrue(user.check_password(password))
 
         self.assertEqual(Board.objects.filter(user=user).count(), 1)
 

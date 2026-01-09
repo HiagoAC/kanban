@@ -4,9 +4,11 @@ from board.models import Board, Column
 User = get_user_model()
 
 
-def create_user_with_board(username: str, password: str):
+def create_user_with_board(username: str):
     """ Create a new user and initialize a default Kanban board for them."""
-    user = User.objects.create_user(username=username, password=password)
+    user = User.objects.create_user(username=username)
+    user.set_unusable_password()
+    user.save()
     title = "Kanban Board"
     column_titles = ['To Do', 'In Progress', 'Done']
 

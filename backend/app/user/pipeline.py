@@ -22,7 +22,7 @@ def create_user_with_board_pipeline(
             return
         if User.objects.filter(username=username).exists():
             return
-        user = create_user_with_board(username=username, password=None)
+        user = create_user_with_board(username=username)
         return {
             'is_new': True,
             'user': user
