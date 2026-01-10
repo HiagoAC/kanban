@@ -8,6 +8,7 @@ export function useUpdateColumnInBoard() {
 		mutationFn: updateColumnInBoard,
 		onSuccess: (updated) => {
 			queryClient.setQueryData(["board", String(updated.id)], updated);
+			queryClient.invalidateQueries({ queryKey: ["latestBoard"] });
 		},
 	});
 

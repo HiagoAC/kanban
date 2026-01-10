@@ -20,6 +20,7 @@ export function useDeleteColumnFromBoard() {
 					};
 				},
 			);
+			queryClient.invalidateQueries({ queryKey: ["latestBoard"] });
 		},
 		onError: (error, variables) => {
 			console.log(`Delete column with id ${variables.columnId} failed:`, error);

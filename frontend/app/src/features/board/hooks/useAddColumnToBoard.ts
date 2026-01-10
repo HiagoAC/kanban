@@ -14,6 +14,7 @@ export function useAddColumnToBoard() {
 			addColumnToBoard(boardId, columnTitle),
 		onSuccess: (data) => {
 			queryClient.setQueryData(["board", String(data.id)], data);
+			queryClient.invalidateQueries({ queryKey: ["latestBoard"] });
 		},
 	});
 

@@ -14,6 +14,7 @@ export function useDeleteBoard() {
 				if (!old) return old;
 				return old.filter((board) => board.id !== boardId);
 			});
+			queryClient.invalidateQueries({ queryKey: ["latestBoard"] });
 			navigate("/");
 		},
 		onError: (error, boardId) => {

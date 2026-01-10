@@ -10,6 +10,7 @@ export function useCreateBoards() {
 		mutationFn: createBoard,
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ["boards"] });
+			queryClient.invalidateQueries({ queryKey: ["latestBoard"] });
 			navigate(`/boards/${data.id}`);
 		},
 	});

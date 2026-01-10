@@ -24,6 +24,7 @@ export function useUpdateBoard() {
 				},
 			);
 			queryClient.setQueryData(["board", String(updated.id)], updated);
+			queryClient.invalidateQueries({ queryKey: ["latestBoard"] });
 		},
 	});
 
