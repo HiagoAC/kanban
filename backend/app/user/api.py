@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from ninja import Router
+from ninja.security import django_auth
 
 from user.schemas import UserSchema
 
@@ -15,7 +16,7 @@ def get_current_user(request):
     return user
 
 
-@logout_router.post('/', url_name='logout')
+@logout_router.post('/', url_name='logout', auth=django_auth)
 def logout_user(request):
     """Log out the currently authenticated user."""
     logout(request)
