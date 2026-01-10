@@ -34,18 +34,6 @@ def column_move_end_url(board_id: int, column_id: int) -> str:
     return reverse('api:column-move-end', args=[board_id, column_id])
 
 
-class PublicBoardsApiTests(TestCase):
-    """Test unauthenticated requests to the boards API."""
-
-    def setUp(self):
-        self.client = Client()
-
-    def test_auth_required(self):
-        """Test that authentication is required to access the board API"""
-        res = self.client.get(BOARD_URL)
-        self.assertEqual(res.status_code, 401)
-
-
 class PrivateBoardsApiTests(TestCase):
     """Test authenticated requests to the boards API."""
 

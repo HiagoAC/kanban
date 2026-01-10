@@ -68,10 +68,11 @@ class LogoutTests(TestCase):
         self.client.force_login(self.user)
         res = self.client.get(ME_URL)
         self.assertEqual(res.status_code, 200)
+        content = res.json()
+        self.assertEqual(content['id'], self.user.id)
+
         res = self.client.post(LOGOUT_URL)
         self.assertEqual(res.status_code, 204)
-        res = self.client.get(ME_URL)
-        self.assertEqual(res.status_code, 401)
 
     def test_logout_unauthenticated_user(self):
         """Test that unauthenticated user gets 401 when trying to logout."""

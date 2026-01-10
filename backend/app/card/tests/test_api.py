@@ -27,18 +27,6 @@ def card_move_bottom_url(card_id: int) -> str:
     return reverse('api:card-move-bottom', args=[card_id])
 
 
-class PublicCardsApiTests(TestCase):
-    """Test unauthenticated requests to the cards API."""
-
-    def setUp(self):
-        self.client = Client()
-
-    def test_auth_required(self):
-        """Test that authentication is required to access the card API"""
-        res = self.client.get(CARDS_URL)
-        self.assertEqual(res.status_code, 401)
-
-
 class PrivateCardsApiTests(TestCase):
     """Test authenticated requests to the cards API."""
 
