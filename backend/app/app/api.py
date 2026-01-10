@@ -3,14 +3,14 @@ from ninja import NinjaAPI
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from ninja.security import django_auth
 from board.api import board_router
 from card.api import card_router
 from user.api import me_router
 from user.api import logout_router
+from user.auth import AuthHandler
 
 
-api = NinjaAPI(urls_namespace='api', auth=django_auth)
+api = NinjaAPI(urls_namespace='api', auth=AuthHandler())
 
 
 api.add_router('boards/', board_router)
@@ -19,7 +19,7 @@ api.add_router('me/', me_router)
 api.add_router('logout/', logout_router)
 
 
-@api.get("/csrf", auth=None)
+@api.get("csrf/", auth=None)
 @ensure_csrf_cookie
 def get_csrf_token(request):
     return HttpResponse(status=204)
