@@ -27,3 +27,12 @@ def create_guest_user():
     user.is_guest = True
     user.save()
     return user
+
+
+def merge_guest_user(guest_user, registered_user):
+    """ Merge the data from a guest user into a registered user. """
+    guest_boards = Board.objects.filter(user=guest_user)
+    for board in guest_boards:
+        board.user = registered_user
+        board.save()
+    guest_user.delete()
