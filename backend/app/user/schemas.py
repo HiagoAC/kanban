@@ -1,4 +1,5 @@
-from ninja import ModelSchema
+from ninja import ModelSchema, Schema
+from typing import Literal
 
 from django.contrib.auth import get_user_model
 
@@ -18,3 +19,8 @@ class UserSchema(ModelSchema):
             'last_name',
             'avatar_url'
         ]
+
+
+class GuestActionSchema(Schema):
+    """Schema for guest migration action."""
+    guest_action: Literal['merge', 'discard']

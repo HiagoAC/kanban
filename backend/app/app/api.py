@@ -5,8 +5,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from board.api import board_router
 from card.api import card_router
-from user.api import me_router
-from user.api import logout_router
+from user.api import me_router, logout_router, session_router
 from user.auth import AuthHandler
 
 
@@ -17,6 +16,7 @@ api.add_router('boards/', board_router)
 api.add_router('cards/', card_router)
 api.add_router('me/', me_router)
 api.add_router('logout/', logout_router)
+api.add_router('session/', session_router)
 
 
 @api.get("csrf/", auth=None)
