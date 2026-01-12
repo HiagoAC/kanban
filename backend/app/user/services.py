@@ -29,6 +29,17 @@ def create_guest_user():
     return user
 
 
+def create_default_board(user):
+    """ Create a default Kanban board for the given user. """
+    title = "Kanban Board"
+    column_titles = ['To Do', 'In Progress', 'Done']
+
+    board = Board.objects.create(user=user, title=title)
+    for column_title in column_titles:
+        Column.objects.create(board=board, title=column_title)
+    return board
+
+
 def merge_guest_user(guest_user, registered_user):
     """ Merge the data from a guest user into a registered user. """
     guest_boards = Board.objects.filter(user=guest_user)

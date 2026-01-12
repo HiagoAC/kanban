@@ -5,6 +5,7 @@ from board.models import Board, Column
 from user.services import (
     create_guest_user,
     create_user_with_board,
+    create_default_board,
     merge_guest_user
 )
 
@@ -44,6 +45,22 @@ class UserServicesTests(TestCase):
         self.assertEqual(Board.objects.filter(user=user).count(), 1)
 
         board = Board.objects.filter(user=user).first()
+        self.assertEqual(board.title, "Kanban Board")
+        self.assertEqual(Column.objects.filter(board=board).count(), 3)
+
+        expected_column_titles = {'To Do', 'In Progress', 'Done'}
+        actual_column_titles = set(
+            Column.objects.filter(board=board).values_list('title', flat=True)
+        )
+        self.assertEqual(actual_column_titles, expected_column_titles)
+
+    def test_create_default_board(self):
+        """Test creating a default board for an existing user."""
+        user = User.objects.create_user(username='testuser')
+        board = create_default_board(user)
+
+        self.assertIsInstance(board, Board)
+        self.assertEqual(board.user, user)
         self.assertEqual(board.title, "Kanban Board")
         self.assertEqual(Column.objects.filter(board=board).count(), 3)
 
