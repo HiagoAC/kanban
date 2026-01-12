@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from .services import create_user_with_board
+from .services import create_default_board, merge_guest_user
 
 User = get_user_model()
 
@@ -13,22 +13,37 @@ PROVIDER_FIELD_MAP = {
 }
 
 
-def create_user_with_board_pipeline(
-        strategy, details, backend, user=None, *args, **kwargs):
-    """Custom social auth pipeline step to create user with default board."""
-    if user is None:
-        username = details.get('username') or details.get('email')
-        if not username:
-            return
-        if User.objects.filter(username=username).exists():
-            return
-        user = create_user_with_board(username=username)
-        return {
-            'is_new': True,
-            'user': user
-        }
+def handle_guest_user(strategy, backend, user=None, *args, **kwargs):
+    request = strategy.request
+    action = request.session.get("guest_migration_action")
+    if not action or not user:
+        return
 
-    return {'is_new': False, 'user': user}
+    guest_user_id = request.session.get("guest_user_id")
+    if not guest_user_id:
+        return
+    try:
+        guest_user = User.objects.get(id=guest_user_id, is_guest=True)
+    except User.DoesNotExist:
+        return
+
+    if action == "merge":
+        merge_guest_user(guest_user, user)
+    elif action == "discard":
+        guest_user.delete()
+
+
+def create_default_board_pipeline(
+        strategy, user=None, is_new=False, *args, **kwargs):
+    action = strategy.request.session.get("guest_migration_action")
+    if is_new and action != "merge":
+        create_default_board(user)
+
+
+def clear_guest_migration_action(strategy, *args, **kwargs):
+    request = strategy.request
+    if "guest_migration_action" in request.session:
+        request.session.pop("guest_migration_action", None)
 
 
 def sync_user_details(backend, user, response, *args, **kwargs):

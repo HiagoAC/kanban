@@ -1,66 +1,55 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-
-from user.pipeline import create_user_with_board_pipeline, sync_user_details
+from unittest.mock import Mock
+from board.models import Board
+from user.pipeline import (
+    create_default_board_pipeline,
+    sync_user_details,
+    handle_guest_user,
+    clear_guest_migration_action
+)
 
 User = get_user_model()
 
 
-class CreateUserWithBoardPipelineTests(TestCase):
-    def test_create_user_with_board_pipeline_new_user(self):
-        """Test creating a new user with default board via pipeline."""
-        username = 'testuser'
-        details = {'username': username}
-        result = create_user_with_board_pipeline(
-            strategy=None,
-            details=details,
-            backend=None,
-            user=None
-        )
-        self.assertTrue(result['is_new'])
-        self.assertIsInstance(result['user'], User)
-        self.assertEqual(result['user'].username, username)
+class CreateDefaultBoardPipelineTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser')
+        self.strategy = Mock()
 
-    def test_create_user_with_board_pipeline_new_user_with_email(self):
+    def test_create_default_board_pipeline_new_user(self):
+        """Test creating a default board for a new user via pipeline."""
+        self.strategy.request.session.get.return_value = None
+        create_default_board_pipeline(
+            strategy=self.strategy,
+            user=self.user,
+            is_new=True
+        )
+        self.assertEqual(Board.objects.filter(user=self.user).count(), 1)
+
+    def test_create_default_board_pipeline_existing_user(self):
         """
-        Test creating a new user with default board via pipeline with email.
+        Test that no board is created for existing users.
         """
-        email = 'testuser@example.com'
-        details = {'email': email}
-        result = create_user_with_board_pipeline(
-            strategy=None,
-            details=details,
-            backend=None,
-            user=None
+        self.strategy.request.session.get.return_value = None
+        create_default_board_pipeline(
+            strategy=self.strategy,
+            user=self.user,
+            is_new=False
         )
-        self.assertTrue(result['is_new'])
-        self.assertIsInstance(result['user'], User)
-        self.assertEqual(result['user'].username, email)
+        self.assertEqual(Board.objects.filter(user=self.user).count(), 0)
 
-    def test_create_user_with_board_pipeline_existing_user(self):
-        """Test pipeline with an existing user."""
-        username = 'existinguser'
-        existing_user = User.objects.create_user(username=username)
-        details = {'username': username}
-        result = create_user_with_board_pipeline(
-            strategy=None,
-            details=details,
-            backend=None,
-            user=existing_user
+    def test_create_default_board_pipeline_with_merge_action(self):
+        """
+        Test that no board is created when guest migration action is merge.
+        """
+        self.strategy.request.session.get.return_value = 'merge'
+        create_default_board_pipeline(
+            strategy=self.strategy,
+            user=self.user,
+            is_new=True
         )
-        self.assertFalse(result['is_new'])
-        self.assertEqual(result['user'], existing_user)
-
-    def test_create_user_with_board_pipeline_no_username(self):
-        """Test pipeline when no username or email is provided."""
-        details = {}
-        result = create_user_with_board_pipeline(
-            strategy=None,
-            details=details,
-            backend=None,
-            user=None
-        )
-        self.assertIsNone(result)
+        self.assertEqual(Board.objects.filter(user=self.user).count(), 0)
 
 
 class SyncUserDetailsPipelineTests(TestCase):
@@ -84,3 +73,120 @@ class SyncUserDetailsPipelineTests(TestCase):
         self.assertEqual(user.last_name, response['family_name'])
         self.assertEqual(user.email, response['email'])
         self.assertEqual(user.avatar_url, response['picture'])
+
+
+class HandleGuestUserTests(TestCase):
+    def setUp(self):
+        self.registered_user = User.objects.create_user(
+            username='registered_user',
+            email='registered@example.com'
+        )
+        self.guest_user = User.objects.create_user(
+            username='guest_user',
+            email='guest@example.com',
+            is_guest=True
+        )
+        self.strategy = Mock()
+        self.backend = Mock()
+
+    def test_handle_guest_user_merge_action(self):
+        """Test merging guest user data when action is 'merge'."""
+        Board.objects.create(user=self.guest_user, title="Guest Board")
+        Board.objects.create(
+            user=self.registered_user, title="Registered Board")
+        self.strategy.request.session.get.side_effect = lambda key: {
+            'guest_migration_action': 'merge',
+            'guest_user_id': self.guest_user.id
+        }.get(key)
+
+        handle_guest_user(
+            strategy=self.strategy,
+            backend=self.backend,
+            user=self.registered_user
+        )
+        self.assertEqual(
+            Board.objects.filter(user=self.registered_user).count(), 2)
+        self.assertFalse(
+            User.objects.filter(id=self.guest_user.id).exists())
+
+    def test_handle_guest_user_discard_action(self):
+        """Test discarding guest user when action is 'discard'."""
+        self.strategy.request.session.get.side_effect = lambda key: {
+            'guest_migration_action': 'discard',
+            'guest_user_id': self.guest_user.id
+        }.get(key)
+
+        handle_guest_user(
+            strategy=self.strategy,
+            backend=self.backend,
+            user=self.registered_user
+        )
+
+        self.assertFalse(User.objects.filter(id=self.guest_user.id).exists())
+
+    def test_handle_guest_user_no_action(self):
+        """Test that nothing happens when no action is set."""
+        self.strategy.request.session.get.return_value = None
+
+        handle_guest_user(
+            strategy=self.strategy,
+            backend=self.backend,
+            user=self.registered_user
+        )
+
+        self.assertTrue(User.objects.filter(id=self.guest_user.id).exists())
+
+    def test_handle_guest_user_non_guest_user(self):
+        """Test that nothing happens when user is not a guest user."""
+        regular_user = User.objects.create_user(
+            username='regular_user',
+            is_guest=False
+        )
+        self.strategy.request.session.get.side_effect = lambda key: {
+            'guest_migration_action': 'merge',
+            'guest_user_id': regular_user.id
+        }.get(key)
+
+        handle_guest_user(
+            strategy=self.strategy,
+            backend=self.backend,
+            user=self.registered_user
+        )
+
+        self.assertTrue(User.objects.filter(id=regular_user.id).exists())
+
+
+class ClearGuestMigrationActionTests(TestCase):
+    def setUp(self):
+        self.strategy = Mock()
+        self.strategy.request.session = {'guest_migration_action': 'merge'}
+
+    def test_clear_guest_migration_action_removes_action(self):
+        """
+        Test that clear_guest_migration_action removes the action from
+        session.
+        """
+        clear_guest_migration_action(strategy=self.strategy)
+        self.assertNotIn(
+            'guest_migration_action', self.strategy.request.session)
+
+    def test_clear_guest_migration_action_no_action_in_session(self):
+        """Test that function handles case when no action is in session."""
+        strategy = Mock()
+        strategy.request.session = {}
+        clear_guest_migration_action(strategy=strategy)
+        self.assertEqual(len(strategy.request.session), 0)
+
+    def test_clear_guest_migration_action_preserves_other_session_data(self):
+        """Test that function only removes guest_migration_action."""
+        strategy = Mock()
+        strategy.request.session = {
+            'guest_migration_action': 'merge',
+            'other_data': 'should_remain'
+        }
+        clear_guest_migration_action(strategy=strategy)
+
+        self.assertNotIn('guest_migration_action', strategy.request.session)
+        self.assertIn('other_data', strategy.request.session)
+        self.assertEqual(
+            strategy.request.session['other_data'], 'should_remain')
