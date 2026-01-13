@@ -156,7 +156,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
     'user.pipeline.handle_guest_user',
-    'user.pipeline.create_default_board',
+    'user.pipeline.create_default_board_pipeline',
     'user.pipeline.clear_guest_migration_action',
     'social_core.pipeline.social_auth.associate_user',
     'user.pipeline.sync_user_details',
