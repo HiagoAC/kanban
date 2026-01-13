@@ -1,7 +1,6 @@
 import GoogleIcon from "@mui/icons-material/Google";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { signInWithGoogle } from "../services";
-import { SignInButton } from "./SignInButton";
+import { SignInWithGuestDialog } from "./SignInWithGuestDialog";
 
 export function SignInView() {
 	return (
@@ -21,11 +20,7 @@ export function SignInView() {
 						Welcome to Kanban
 					</Typography>
 				</Box>
-				<SignInButton
-					serviceName="Google"
-					onClick={signInWithGoogle}
-					icon={<GoogleIcon />}
-				/>
+				<SignInWithGuestDialog serviceName="Google" icon={<GoogleIcon />} />
 				<Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: "divider" }}>
 					<Typography
 						variant="caption"
