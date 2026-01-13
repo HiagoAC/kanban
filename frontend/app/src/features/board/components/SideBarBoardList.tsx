@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { SideBarListButton } from "../../../components/SideBarListButton";
 import { useActiveBoard } from "../contexts/ActiveBoardContext";
 import { useFetchBoards } from "../hooks/useFetchBoards";
+import { generateDisplayTitles } from "../utils/displayTitleUtils";
 
 export function SideBarBoardList() {
 	const navigate = useNavigate();
@@ -18,6 +19,10 @@ export function SideBarBoardList() {
 			}
 			return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
 		});
+	}, [query.data]);
+
+	const displayTitles = useMemo(() => {
+		return query.data ? generateDisplayTitles(query.data) : new Map();
 	}, [query.data]);
 
 	if (query.isLoading) {
@@ -42,7 +47,7 @@ export function SideBarBoardList() {
 						<ListItem key={board.id} disablePadding sx={{ my: 0 }}>
 							<SideBarListButton
 								onClick={() => navigate(`/boards/${board.id}`)}
-								text={board.title}
+								text={displayTitles.get(Number(board.id)) || board.title}
 								icon={board.starred ? <StarIcon fontSize="small" /> : null}
 								selected={activeBoardId === board.id}
 							/>
