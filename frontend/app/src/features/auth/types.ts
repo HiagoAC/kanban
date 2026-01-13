@@ -1,3 +1,5 @@
+export type GuestAction = "merge" | "discard";
+
 export interface User {
 	id: string;
 	username: string;
@@ -5,4 +7,5 @@ export interface User {
 	firstName: string;
 	lastName: string;
 	avatarUrl?: string;
+	isGuest: boolean;
 }

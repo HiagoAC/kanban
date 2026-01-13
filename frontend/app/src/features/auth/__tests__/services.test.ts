@@ -1,12 +1,22 @@
 // @vitest-environment jsdom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { BASE_URL } from "../../../services/apiClient";
-import { signInWithGoogle } from "../services";
+import apiClient, { BASE_URL } from "../../../services/apiClient";
+import * as authServices from "../services";
+
+vi.mock("../../../services/apiClient", () => ({
+	default: {
+		post: vi.fn(),
+		get: vi.fn(),
+	},
+	BASE_URL: "http://localhost:8000/",
+}));
 
 describe("signInWithGoogle", () => {
 	let assignMock: ReturnType<typeof vi.fn>;
 	let originalLocation: Location;
+	let mockApiPost: ReturnType<typeof vi.fn>;
+	let mockApiGet: ReturnType<typeof vi.fn>;
 
 	beforeEach(() => {
 		assignMock = vi.fn();
@@ -18,6 +28,12 @@ describe("signInWithGoogle", () => {
 			},
 			writable: true,
 		});
+
+		mockApiPost = vi.mocked(apiClient.post);
+		mockApiGet = vi.mocked(apiClient.get);
+
+		mockApiPost.mockResolvedValue({ data: {} });
+		mockApiGet.mockResolvedValue({ data: { isGuest: false } });
 	});
 
 	afterEach(() => {
@@ -29,7 +45,7 @@ describe("signInWithGoogle", () => {
 	});
 
 	it("should call window.location.assign with Google OAuth URL", () => {
-		signInWithGoogle();
+		authServices.signInWithGoogle();
 
 		expect(assignMock).toHaveBeenCalledOnce();
 		expect(assignMock).toHaveBeenCalledWith(
@@ -37,7 +53,68 @@ describe("signInWithGoogle", () => {
 		);
 	});
 
-	it("should not throw any errors", () => {
-		expect(() => signInWithGoogle()).not.toThrow();
+	it("should not throw any errors when called without parameters", () => {
+		expect(() => authServices.signInWithGoogle()).not.toThrow();
+	});
+
+	it("should not set guest action when no guestAction parameter provided", async () => {
+		await authServices.signInWithGoogle();
+
+		expect(mockApiGet).not.toHaveBeenCalled();
+		expect(mockApiPost).not.toHaveBeenCalled();
+		expect(assignMock).toHaveBeenCalledOnce();
+	});
+
+	it("should not set guest action when guestAction provided but user is not a guest", async () => {
+		mockApiGet.mockResolvedValue({ data: { isGuest: false } });
+
+		await authServices.signInWithGoogle("merge");
+
+		expect(mockApiGet).toHaveBeenCalledWith("me/");
+		expect(mockApiPost).not.toHaveBeenCalled();
+		expect(assignMock).toHaveBeenCalledOnce();
+	});
+
+	it("should set guest action when guestAction provided and user is a guest", async () => {
+		mockApiGet.mockResolvedValue({ data: { isGuest: true } });
+
+		await authServices.signInWithGoogle("merge");
+
+		expect(mockApiGet).toHaveBeenCalledWith("me/");
+		expect(mockApiPost).toHaveBeenCalledWith("session/guest-action/", {
+			guest_action: "merge",
+		});
+		expect(assignMock).toHaveBeenCalledOnce();
+	});
+
+	it("should set guest action with 'discard' when specified", async () => {
+		mockApiGet.mockResolvedValue({ data: { isGuest: true } });
+
+		await authServices.signInWithGoogle("discard");
+
+		expect(mockApiGet).toHaveBeenCalledWith("me/");
+		expect(mockApiPost).toHaveBeenCalledWith("session/guest-action/", {
+			guest_action: "discard",
+		});
+		expect(assignMock).toHaveBeenCalledOnce();
+	});
+
+	it("should continue with sign-in even if setGuestAction fails", async () => {
+		mockApiGet.mockResolvedValue({ data: { isGuest: true } });
+		mockApiPost.mockRejectedValue(new Error("Network error"));
+		const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+		await authServices.signInWithGoogle("merge");
+
+		expect(mockApiPost).toHaveBeenCalledWith("session/guest-action/", {
+			guest_action: "merge",
+		});
+		expect(consoleSpy).toHaveBeenCalledWith(
+			"Failed to set guest action:",
+			expect.any(Error),
+		);
+		expect(assignMock).toHaveBeenCalledOnce();
+
+		consoleSpy.mockRestore();
 	});
 });
