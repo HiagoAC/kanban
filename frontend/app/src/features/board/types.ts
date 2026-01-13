@@ -13,6 +13,7 @@ export interface BoardListItem {
 	id: string;
 	title: string;
 	starred: boolean;
+	createdAt: Date;
 	updatedAt: Date;
 }
 
