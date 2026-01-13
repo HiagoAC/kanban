@@ -82,8 +82,8 @@ class PrivateBoardsApiTests(TestCase):
         )
         self.assertEqual(created_columns, set(payload['columns']))
 
-    def test_create_board_duplicate_title(self):
-        """Test creating a board with a duplicate title fails."""
+    def test_create_board_duplicate_title_allowed(self):
+        """Test creating a board with a duplicate title is now allowed."""
         Board.objects.create(user=self.user, title='Duplicate Title')
         payload = {'title': 'Duplicate Title', 'columns': ['To Do']}
         res = self.client.post(
@@ -91,7 +91,10 @@ class PrivateBoardsApiTests(TestCase):
             data=json.dumps(payload),
             content_type='application/json',
         )
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, 201)
+        duplicate_boards = Board.objects.filter(
+            user=self.user, title='Duplicate Title')
+        self.assertEqual(duplicate_boards.count(), 2)
 
     def test_retrieve_board(self):
         """Test retrieving a board."""
