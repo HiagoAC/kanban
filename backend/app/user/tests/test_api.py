@@ -51,6 +51,7 @@ class GetUserProfileTests(TestCase):
             'email': self.user.email,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
+            'is_guest': self.user.is_guest,
             'avatar_url': self.user.avatar_url,
         })
 
