@@ -17,7 +17,7 @@ export function SideBarButtonList() {
 
 	return (
 		<List>
-			{isAuthenticated && user ? (
+			{isAuthenticated && user && !user.isGuest ? (
 				<>
 					<ListItem disablePadding>
 						<UserInfo user={user} />
