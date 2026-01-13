@@ -17,6 +17,7 @@ class UserSchema(ModelSchema):
             'email',
             'first_name',
             'last_name',
+            'is_guest',
             'avatar_url'
         ]
 
