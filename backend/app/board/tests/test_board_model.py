@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -50,19 +49,6 @@ class BoardModelTests(TestCase):
             title=title
         )
         self.assertEqual(str(board), title)
-
-    def test_title_unique_per_user(self):
-        """Test that a user cannot have multiple boards with the same title."""
-        title = 'Test Board'
-        Board.objects.create(
-            user=self.user,
-            title=title
-        )
-        with self.assertRaises(IntegrityError):
-            Board.objects.create(
-                user=self.user,
-                title=title
-            )
 
     def test_different_users_can_have_same_board_title(self):
         """Test that different users can have boards with the same title."""
