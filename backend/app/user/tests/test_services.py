@@ -1,12 +1,15 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from datetime import timedelta
 
 from board.models import Board, Column
 from user.services import (
     create_guest_user,
     create_user_with_board,
     create_default_board,
-    merge_guest_user
+    merge_guest_user,
+    cleanup_stale_guests
 )
 
 User = get_user_model()
@@ -27,6 +30,7 @@ class UserServicesTests(TestCase):
 
         board = Board.objects.filter(user=user).first()
         self.assertEqual(board.title, "Kanban Board")
+        self.assertTrue(board.is_default)
         self.assertEqual(Column.objects.filter(board=board).count(), 3)
 
         expected_column_titles = {'To Do', 'In Progress', 'Done'}
@@ -46,6 +50,7 @@ class UserServicesTests(TestCase):
 
         board = Board.objects.filter(user=user).first()
         self.assertEqual(board.title, "Kanban Board")
+        self.assertTrue(board.is_default)
         self.assertEqual(Column.objects.filter(board=board).count(), 3)
 
         expected_column_titles = {'To Do', 'In Progress', 'Done'}
@@ -62,6 +67,7 @@ class UserServicesTests(TestCase):
         self.assertIsInstance(board, Board)
         self.assertEqual(board.user, user)
         self.assertEqual(board.title, "Kanban Board")
+        self.assertTrue(board.is_default)
         self.assertEqual(Column.objects.filter(board=board).count(), 3)
 
         expected_column_titles = {'To Do', 'In Progress', 'Done'}
@@ -130,3 +136,88 @@ class MergeGuestUserTests(TestCase):
 
         self.assertEqual(final_registered_boards, initial_registered_boards)
         self.assertFalse(User.objects.filter(id=guest_user_id).exists())
+
+
+class CleanupStaleGuestsTests(TestCase):
+    def setUp(self):
+        """Create test users with different last_login times."""
+        self.now = timezone.now()
+        self.cutoff = self.now - timedelta(days=30)
+        self.fresh_guest = User.objects.create_user(
+            username='fresh_guest',
+            is_guest=True,
+            last_login=self.now - timedelta(days=15)
+        )
+        self.stale_guest = User.objects.create_user(
+            username='stale_guest',
+            is_guest=True,
+            last_login=self.now - timedelta(days=45)
+        )
+        self.stale_guest_with_board = User.objects.create_user(
+            username='stale_guest_with_board',
+            is_guest=True,
+            last_login=self.now - timedelta(days=60)
+        )
+        Board.objects.create(
+            user=self.stale_guest_with_board,
+            title="Stale Board"
+        )
+        self.regular_user = User.objects.create_user(
+            username='regular_user',
+            is_guest=False,
+            last_login=self.now - timedelta(days=100)
+        )
+        self.never_logged_in_guest = User.objects.create_user(
+            username='never_logged_in',
+            is_guest=True,
+            last_login=None
+        )
+
+    def test_cleanup_stale_guests_dry_run(self):
+        """Test dry run mode doesn't delete anything."""
+        initial_count = User.objects.filter(is_guest=True).count()
+        deleted_count = cleanup_stale_guests(
+            cutoff=self.cutoff,
+            dry_run=True
+        )
+
+        self.assertEqual(deleted_count, 2)
+        self.assertEqual(
+            User.objects.filter(is_guest=True).count(),
+            initial_count
+        )
+
+    def test_cleanup_stale_guests_normal_run(self):
+        """Test normal run deletes only stale guests."""
+        deleted_count = cleanup_stale_guests(cutoff=self.cutoff)
+
+        self.assertEqual(deleted_count, 2)
+        self.assertTrue(User.objects.filter(id=self.fresh_guest.id).exists())
+        self.assertFalse(User.objects.filter(id=self.stale_guest.id).exists())
+        self.assertFalse(
+            User.objects.filter(id=self.stale_guest_with_board.id).exists()
+        )
+        self.assertTrue(User.objects.filter(id=self.regular_user.id).exists())
+        self.assertTrue(
+            User.objects.filter(id=self.never_logged_in_guest.id).exists()
+        )
+
+    def test_cleanup_stale_guests_cascades_deletion(self):
+        """Test that related boards are deleted when users are deleted."""
+        board_id = Board.objects.get(user=self.stale_guest_with_board).id
+        cleanup_stale_guests(cutoff=self.cutoff)
+
+        self.assertFalse(Board.objects.filter(id=board_id).exists())
+
+    def test_cleanup_stale_guests_edge_case_exact_cutoff(self):
+        """Test user with last_login exactly at cutoff is not deleted."""
+        exact_cutoff_guest = User.objects.create_user(
+            username='exact_cutoff',
+            is_guest=True,
+            last_login=self.cutoff
+        )
+
+        deleted_count = cleanup_stale_guests(cutoff=self.cutoff)
+
+        self.assertTrue(User.objects.filter(id=exact_cutoff_guest.id).exists())
+        self.assertEqual(deleted_count, 2)
