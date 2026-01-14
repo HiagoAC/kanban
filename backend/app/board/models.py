@@ -9,9 +9,18 @@ class Board(OrderedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     starred = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     order_with_respect_to = 'user'
+
+    class Meta(OrderedModel.Meta):
+        indexes = [
+            models.Index(
+                fields=['user', 'is_default'],
+                name='board_user_default_idx',
+            )
+        ]
 
     def __str__(self):
         return self.title
