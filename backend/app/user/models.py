@@ -7,5 +7,10 @@ class User(AbstractUser):
     avatar_url = models.URLField(blank=True, null=True, max_length=500)
     is_guest = models.BooleanField(default=False)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['is_guest', 'date_joined']),
+        ]
+
     def __str__(self):
         return self.username
