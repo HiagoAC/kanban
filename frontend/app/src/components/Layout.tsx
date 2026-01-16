@@ -1,4 +1,6 @@
 import { Box, Grid } from "@mui/material";
+import { SignInPrompt } from "../features/auth/components/SignInPrompt";
+import { useSignInPrompt } from "../features/auth/contexts/SignInPromptContext";
 import { ActiveBoardProvider } from "../features/board/contexts/ActiveBoardContext";
 import { backgroundSecondary } from "../theme";
 import { SideBar } from "./SideBar";
@@ -9,6 +11,7 @@ export interface Props {
 }
 
 export function Layout({ children, isHomePage = false }: Props) {
+	const { open, hidePrompt } = useSignInPrompt();
 	const collapseStyle = { display: { xs: "none", md: "block" } };
 	const sideBarStyle = {
 		...(isHomePage ? {} : collapseStyle),
@@ -38,6 +41,7 @@ export function Layout({ children, isHomePage = false }: Props) {
 						sx={contentStyle}
 						data-testid="content-grid"
 					>
+						<SignInPrompt open={open} handleClose={hidePrompt} />
 						{children}
 					</Grid>
 				</Grid>
