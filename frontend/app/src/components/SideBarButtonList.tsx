@@ -3,7 +3,7 @@ import LogoutIcon from "@mui/icons-material/Login";
 import LoginIcon from "@mui/icons-material/Logout";
 import { List, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { UserInfo } from "../features/auth/components/AccountButton";
+import { UserInfo } from "../features/auth/components/UserInfo";
 import { useAuth } from "../features/auth/hooks/useAuth";
 import { SideBarListButton } from "./SideBarListButton";
 
