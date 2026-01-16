@@ -1,6 +1,4 @@
-// @ts-expect-error
 import AddIcon from "@mui/icons-material/Add";
-// @ts-expect-error
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import {
 	Box,
@@ -16,7 +14,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useCreateBoards } from "../hooks/useCreateBoards";
 
 export function CreateBoardForm() {
@@ -28,6 +26,8 @@ export function CreateBoardForm() {
 		columns: ["To Do", "In Progress", "Done"],
 	});
 	const [columnInput, setColumnInput] = useState<string>("");
+	const titleInputId = useId();
+	const addColumnInputId = useId();
 	const { mutate: createBoard } = useCreateBoards();
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +77,7 @@ export function CreateBoardForm() {
 			}}
 		>
 			<TextField
+				id={titleInputId}
 				name="title"
 				label="Kanban Board Title"
 				placeholder="e.g. Project Launch Plan"
@@ -85,6 +86,7 @@ export function CreateBoardForm() {
 				required
 			/>
 			<TextField
+				id={addColumnInputId}
 				name="columns"
 				label="Add Column"
 				placeholder="e.g. To Review"
@@ -92,7 +94,9 @@ export function CreateBoardForm() {
 				onChange={(e) => setColumnInput(e.target.value)}
 				variant="outlined"
 				slotProps={{
-					htmlInput: { "data-testid": "column-input" },
+					htmlInput: {
+						"data-testid": "column-input",
+					},
 					input: {
 						endAdornment: (
 							<InputAdornment position="end">
