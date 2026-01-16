@@ -36,7 +36,7 @@ export function CardItem({
 
 	return (
 		<Paper
-			component={ButtonBase}
+			component="div"
 			onClick={() => navigate(`/cards/${card.id}`)}
 			elevation={3}
 			sx={{
@@ -44,6 +44,10 @@ export function CardItem({
 				width: "100%",
 				display: "flex",
 				flexDirection: "column",
+				cursor: "pointer",
+				"&:hover": {
+					boxShadow: 6,
+				},
 			}}
 		>
 			<Box
