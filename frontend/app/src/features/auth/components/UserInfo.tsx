@@ -1,11 +1,12 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import type { User } from "../types";
 
-interface UserInfoProps {
+export interface UserInfoProps {
 	user: User;
+	refreshUser?: () => void;
 }
 
-export function UserInfo({ user }: UserInfoProps) {
+export function UserInfo({ user, refreshUser }: UserInfoProps) {
 	const getInitials = () => {
 		return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
 	};
@@ -26,6 +27,7 @@ export function UserInfo({ user }: UserInfoProps) {
 				src={user.avatarUrl}
 				alt={`${user.firstName} ${user.lastName}`}
 				sx={{ width: 40, height: 40 }}
+				onError={refreshUser}
 			>
 				{!user.avatarUrl && getInitials()}
 			</Avatar>

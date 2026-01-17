@@ -9,7 +9,7 @@ import { SideBarListButton } from "./SideBarListButton";
 
 export function SideBarButtonList() {
 	const navigate = useNavigate();
-	const { user, isAuthenticated, logout } = useAuth();
+	const { user, isAuthenticated, logout, refreshUser } = useAuth();
 	const handleLogout = async () => {
 		await logout();
 		navigate("/sign-in");
@@ -20,7 +20,7 @@ export function SideBarButtonList() {
 			{isAuthenticated && user && !user.isGuest ? (
 				<>
 					<ListItem disablePadding>
-						<UserInfo user={user} />
+						<UserInfo user={user} refreshUser={refreshUser} />
 					</ListItem>
 					<ListItem disablePadding>
 						<SideBarListButton
