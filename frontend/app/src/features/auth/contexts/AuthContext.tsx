@@ -9,6 +9,7 @@ interface AuthContextType {
 	isAuthenticated: boolean;
 	isLoading: boolean;
 	logout: () => Promise<void>;
+	refreshUser: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -16,6 +17,7 @@ export const AuthContext = createContext<AuthContextType>({
 	isAuthenticated: false,
 	isLoading: true,
 	logout: async () => {},
+	refreshUser: () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -36,6 +38,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	};
 
+	const refreshUser = () => {
+		queryClient.invalidateQueries({ queryKey: ["me"] });
+	};
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -43,6 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				isAuthenticated: !!user,
 				isLoading,
 				logout: handleLogout,
+				refreshUser,
 			}}
 		>
 			{children}
