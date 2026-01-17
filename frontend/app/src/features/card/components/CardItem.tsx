@@ -2,15 +2,7 @@ import type { DraggableSyntheticListeners } from "@dnd-kit/core/dist/hooks/useDr
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import {
-	Box,
-	ButtonBase,
-	Grid,
-	IconButton,
-	Paper,
-	Stack,
-	Typography,
-} from "@mui/material";
+import { Box, Grid, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useUpdateCard } from "../hooks/useUpdateCard";
 import type { CardListItem } from "../types";
