@@ -13,7 +13,7 @@ LATEST_BOARD_URL = reverse('api:latest-board')
 
 def board_detail_url(board_id: int) -> str:
     """Return the detail URL for a board."""
-    return reverse('api:board-detail', args=[board_id])
+    return reverse('api:board-detail', args=[str(board_id)])
 
 
 def column_url(board_id: int) -> str:
@@ -53,10 +53,10 @@ class PrivateBoardsApiTests(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(content), 2)
 
-        expected_boards = {board1.id: board1, board2.id: board2}
+        expected_boards = {str(board1.id): board1, str(board2.id): board2}
 
         for board_data in content:
-            board_id = board_data['id']
+            board_id = str(board_data['id'])
             self.assertIn(board_id, expected_boards)
 
             expected_board = expected_boards[board_id]
@@ -101,11 +101,11 @@ class PrivateBoardsApiTests(TestCase):
         board = Board.objects.create(user=self.user, title='A Board')
         Column.objects.create(board=board, title='To Do')
         Column.objects.create(board=board, title='Done')
-        url = board_detail_url(board.id)
+        url = board_detail_url(str(board.id))
         res = self.client.get(url)
         self.assertEqual(res.status_code, 200)
         content = json.loads(res.content.decode('utf-8'))
-        self.assertEqual(content['id'], board.id)
+        self.assertEqual(str(content['id']), str(board.id))
         self.assertEqual(content['title'], board.title)
         column_titles = {col['title'] for col in content['columns']}
         self.assertEqual(column_titles, {'To Do', 'Done'})
@@ -127,13 +127,13 @@ class PrivateBoardsApiTests(TestCase):
         res = self.client.get(LATEST_BOARD_URL)
         self.assertEqual(res.status_code, 200)
         content = json.loads(res.content.decode('utf-8'))
-        self.assertEqual(content['id'], latest_updated_board.id)
+        self.assertEqual(str(content['id']), str(latest_updated_board.id))
         self.assertEqual(content['title'], latest_updated_board.title)
 
     def test_update_board(self):
         """Test updating a board."""
         board = Board.objects.create(user=self.user, title='A Board')
-        url = board_detail_url(board.id)
+        url = board_detail_url(str(board.id))
         payload = {'title': 'Updated Board'}
         res = self.client.patch(
             url,
@@ -148,7 +148,7 @@ class PrivateBoardsApiTests(TestCase):
         """Test updating the starred field of a board."""
         board = Board.objects.create(
             user=self.user, title='A Board', starred=False)
-        url = board_detail_url(board.id)
+        url = board_detail_url(str(board.id))
         payload = {'starred': True}
         res = self.client.patch(
             url,
@@ -162,10 +162,10 @@ class PrivateBoardsApiTests(TestCase):
     def test_delete_board(self):
         """Test deleting a board."""
         board = Board.objects.create(user=self.user, title='A Board')
-        url = board_detail_url(board.id)
+        url = board_detail_url(str(board.id))
         res = self.client.delete(url)
         self.assertEqual(res.status_code, 204)
-        exists = Board.objects.filter(id=board.id).exists()
+        exists = Board.objects.filter(id=str(board.id)).exists()
         self.assertFalse(exists)
 
     def test_add_column_to_board(self):
@@ -177,7 +177,7 @@ class PrivateBoardsApiTests(TestCase):
             'title': 'Done'
         }
         res = self.client.post(
-            column_url(board.id),
+            column_url(str(board.id)),
             data=json.dumps(payload),
             content_type='application/json',
         )
@@ -196,7 +196,7 @@ class PrivateBoardsApiTests(TestCase):
         col3 = Column.objects.create(board=board, title='Done')
 
         res = self.client.delete(
-            column_detail_url(board.id, col2.id)
+            column_detail_url(str(board.id), str(col2.id))
         )
         self.assertEqual(res.status_code, 204)
 
@@ -211,7 +211,7 @@ class PrivateBoardsApiTests(TestCase):
         payload = {
             'title': 'Updated To Do'
         }
-        url = column_detail_url(board.id, column.id)
+        url = column_detail_url(str(board.id), str(column.id))
         res = self.client.patch(
             url,
             data=json.dumps(payload),
@@ -227,8 +227,8 @@ class PrivateBoardsApiTests(TestCase):
         board = Board.objects.create(user=self.user, title='A Board')
         column1 = Column.objects.create(board=board, title='Column 1')
         column2 = Column.objects.create(board=board, title='Column 2')
-        url = column_move_before_url(board.id, column2.id)
-        payload = {'target_column_id': column1.id}
+        url = column_move_before_url(str(board.id), str(column2.id))
+        payload = {'target_column_id': str(column1.id)}
         res = self.client.post(
             url,
             json.dumps(payload),
@@ -251,8 +251,8 @@ class PrivateBoardsApiTests(TestCase):
         column2 = Column.objects.create(board=another_board, title='Column 2')
         column1_order = column1.order
         column2_order = column2.order
-        url = column_move_before_url(another_board.id, column2.id)
-        payload = {'target_column_id': column1.id}
+        url = column_move_before_url(str(another_board.id), str(column2.id))
+        payload = {'target_column_id': str(column1.id)}
         res = self.client.post(
             url,
             json.dumps(payload),
@@ -270,7 +270,7 @@ class PrivateBoardsApiTests(TestCase):
         column1 = Column.objects.create(board=board, title='Column 1')
         column2 = Column.objects.create(board=board, title='Column 2')
         column3 = Column.objects.create(board=board, title='Column 3')
-        url = column_move_end_url(board.id, column1.id)
+        url = column_move_end_url(str(board.id), str(column1.id))
         res = self.client.post(
             url,
             content_type='application/json'

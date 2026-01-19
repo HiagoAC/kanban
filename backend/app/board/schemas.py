@@ -1,4 +1,3 @@
-from datetime import datetime
 from ninja import ModelSchema, Schema
 from typing import List
 
@@ -10,15 +9,25 @@ class ColumnBase(Schema):
 
 
 class ColumnSchema(ColumnBase):
-    id: int
+    id: str
 
 
-class BoardListSchema(Schema):
-    id: int
-    title: str
-    starred: bool
-    created_at: datetime
-    updated_at: datetime
+class BoardListSchema(ModelSchema):
+    id: str
+
+    class Meta:
+        model = Board
+        fields = (
+            "id",
+            "title",
+            "starred",
+            "created_at",
+            "updated_at",
+        )
+
+    @staticmethod
+    def resolve_id(board):
+        return str(board.id)
 
 
 class BoardIn(Schema):
@@ -33,25 +42,28 @@ class BoardUpdate(Schema):
 
 
 class BoardOut(ModelSchema):
-    id: int
-    title: str
-    created_at: datetime
-    updated_at: datetime
-    starred: bool
+    id: str
     columns: List[ColumnSchema]
 
     class Meta:
         model = Board
         fields = ("id", "title", "created_at", "updated_at", "starred")
 
-    @classmethod
-    def from_orm_with_columns(cls, board: Board):
-        obj = cls.from_orm(board)
-        obj.columns = [ColumnSchema(
-            id=c.id, title=c.title) for c in board.columns.all()]
-        return obj
+    @staticmethod
+    def resolve_id(board):
+        return str(board.id)
+
+    @staticmethod
+    def resolve_columns(board):
+        return [
+            ColumnSchema(
+                id=str(c.id),
+                title=c.title,
+            )
+            for c in board.columns.all()
+        ]
 
 
 class ColumnMoveBeforeIn(Schema):
     """Schema for moving a column before another column."""
-    target_column_id: int
+    target_column_id: str

@@ -8,45 +8,55 @@ class CardIn(Schema):
     title: str
     body: str = ''
     priority: str | None = None
-    column_id: int
+    column_id: str
 
 
-class CardListSchema(Schema):
-    """Schema for listing cards."""
-    id: int
-    title: str
-    priority: str
+class CardListSchema(ModelSchema):
+    id: str
+
+    class Meta:
+        model = Card
+        fields = ["id", "title", "priority"]
+
+    @staticmethod
+    def resolve_id(card):
+        return str(card.id)
 
 
 class CardOut(ModelSchema):
-    """Base schema for Card model."""
-    board_id: int | None = None
-    column_id: int | None = None
+    id: str
+    board_id: str | None = None
+    column_id: str | None = None
 
     class Meta:
         model = Card
         fields = [
-            'id',
-            'title',
-            'body',
-            'priority',
-            'created_at',
-            'updated_at'
+            "id",
+            "title",
+            "body",
+            "priority",
+            "created_at",
+            "updated_at",
         ]
 
-    @classmethod
-    def from_card(cls, card: Card):
-        obj = cls.from_orm(card)
-        obj.board_id = card.column.board.id
-        obj.column_id = card.column.id
-        return obj
+    @staticmethod
+    def resolve_id(card):
+        return str(card.id)
+
+    @staticmethod
+    def resolve_column_id(card):
+        return str(card.column_id) if card.column_id else None
+
+    @staticmethod
+    def resolve_board_id(card):
+        return str(card.column.board_id) if card.column_id else None
 
 
 class CardFilter(FilterSchema):
     """Schema for card filters."""
-    column_id: int | None = Field(None, q='column__id')
+    column_id: str | None = Field(None, q='column__id')
 
 
 class CardMoveAboveIn(Schema):
     """Schema for moving a card above another card."""
-    target_card_id: int
+    target_card_id: str

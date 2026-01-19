@@ -12,19 +12,19 @@ User = get_user_model()
 CARDS_URL = reverse('api:cards')
 
 
-def card_detail_url(card_id: int) -> str:
+def card_detail_url(card_id) -> str:
     """Return the detail URL for a card."""
-    return reverse('api:card-detail', args=[card_id])
+    return reverse('api:card-detail', args=[str(card_id)])
 
 
-def card_move_above_url(card_id: int) -> str:
+def card_move_above_url(card_id) -> str:
     """Return the URL to move a card above another card."""
-    return reverse('api:card-move-above', args=[card_id])
+    return reverse('api:card-move-above', args=[str(card_id)])
 
 
-def card_move_bottom_url(card_id: int) -> str:
+def card_move_bottom_url(card_id) -> str:
     """Return the URL to move a card to the bottom of its column."""
-    return reverse('api:card-move-bottom', args=[card_id])
+    return reverse('api:card-move-bottom', args=[str(card_id)])
 
 
 class PrivateCardsApiTests(TestCase):
@@ -52,7 +52,7 @@ class PrivateCardsApiTests(TestCase):
         content = json.loads(res.content.decode('utf-8'))
         self.assertEqual(res.status_code, 200)
         expected = [
-            {'id': c.id, 'title': c.title, 'priority': c.priority.value}
+            {'id': str(c.id), 'title': c.title, 'priority': c.priority.value}
             for c in (card1, card2)
         ]
         self.assertEqual(content, expected)
@@ -67,7 +67,7 @@ class PrivateCardsApiTests(TestCase):
         content = json.loads(res.content.decode('utf-8'))
         self.assertEqual(res.status_code, 200)
         expected = [
-            {'id': c.id, 'title': c.title, 'priority': c.priority.value}
+            {'id': str(c.id), 'title': c.title, 'priority': c.priority.value}
             for c in (card1, card2)
         ]
         self.assertEqual(content, expected)
@@ -78,7 +78,7 @@ class PrivateCardsApiTests(TestCase):
             'title': 'New Card',
             'body': 'Card body content',
             'priority': 'high',
-            'column_id': self.column.id
+            'column_id': str(self.column.id)
         }
         res = self.client.post(
             CARDS_URL,
@@ -86,10 +86,10 @@ class PrivateCardsApiTests(TestCase):
             content_type='application/json'
         )
         self.assertEqual(res.status_code, 201)
-        card = Card.objects.get(id=res.json()['id'])
+        card = Card.objects.get(id=str(res.json()['id']))
         for key in payload:
             if key == 'column_id':
-                self.assertEqual(card.column.id, self.column.id)
+                self.assertEqual(str(card.column.id), str(self.column.id))
             else:
                 self.assertEqual(getattr(card, key), payload[key])
 
@@ -101,12 +101,12 @@ class PrivateCardsApiTests(TestCase):
         res = self.client.get(url)
         self.assertEqual(res.status_code, 200)
         content = json.loads(res.content.decode('utf-8'))
-        self.assertEqual(content['id'], card.id)
+        self.assertEqual(str(content['id']), str(card.id))
         self.assertEqual(content['title'], card.title)
         self.assertEqual(content['body'], card.body)
         self.assertEqual(content['priority'], card.priority.value)
-        self.assertEqual(content['column_id'], card.column.id)
-        self.assertEqual(content['board_id'], card.column.board.id)
+        self.assertEqual(str(content['column_id']), str(card.column.id))
+        self.assertEqual(str(content['board_id']), str(card.column.board.id))
 
     def test_retrieve_card_not_owned(self):
         """Test that retrieving a card not owned by the user fails."""
@@ -126,12 +126,12 @@ class PrivateCardsApiTests(TestCase):
         card = Card.objects.create(
             title='Old Title', body='Old Body', column=self.column)
         another_column = Column.objects.create(board=self.board, title='Done')
-        url = card_detail_url(card.id)
+        url = card_detail_url(str(card.id))
         payload = {
             'title': 'Updated Title',
             'body': 'Updated Body',
             'priority': 'low',
-            'column_id': another_column.id
+            'column_id': str(another_column.id)
         }
         res = self.client.patch(
             url,
@@ -180,7 +180,7 @@ class PrivateCardsApiTests(TestCase):
         card1 = Card.objects.create(title='Card 1', column=self.column)
         card2 = Card.objects.create(title='Card 2', column=self.column)
         url = card_move_above_url(card2.id)
-        payload = {'target_card_id': card1.id}
+        payload = {'target_card_id': str(card1.id)}
         res = self.client.post(
             url,
             json.dumps(payload),
@@ -202,7 +202,7 @@ class PrivateCardsApiTests(TestCase):
         card1_order = card1.order
         card2_order = card2.order
         url = card_move_above_url(card2.id)
-        payload = {'target_card_id': card1.id}
+        payload = {'target_card_id': str(card1.id)}
         res = self.client.post(
             url,
             json.dumps(payload),

@@ -32,7 +32,7 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 1)
         self.assertFalse(
-            User.objects.filter(id=old_unused_guest.id).exists()
+            User.objects.filter(id=str(old_unused_guest.id)).exists()
         )
 
     def test_cleanup_preserves_recent_guests(self):
@@ -48,7 +48,7 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 0)
         self.assertTrue(
-            User.objects.filter(id=recent_guest.id).exists()
+            User.objects.filter(id=str(recent_guest.id)).exists()
         )
 
     def test_cleanup_preserves_guests_with_cards(self):
@@ -67,7 +67,7 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 0)
         self.assertTrue(
-            User.objects.filter(id=old_guest_with_cards.id).exists()
+            User.objects.filter(id=str(old_guest_with_cards.id)).exists()
         )
 
     def test_cleanup_preserves_multiple_boards(self):
@@ -88,7 +88,7 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 0)
         self.assertTrue(
-            User.objects.filter(id=old_guest_multi_boards.id).exists()
+            User.objects.filter(id=str(old_guest_multi_boards.id)).exists()
         )
 
     def test_cleanup_preserves_regular_users(self):
@@ -104,7 +104,7 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 0)
         self.assertTrue(
-            User.objects.filter(id=old_regular_user.id).exists()
+            User.objects.filter(id=str(old_regular_user.id)).exists()
         )
 
     def test_cleanup_preserves_non_default_board(self):
@@ -125,7 +125,7 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 0)
         self.assertTrue(
-            User.objects.filter(id=old_guest_non_default.id).exists()
+            User.objects.filter(id=str(old_guest_non_default.id)).exists()
         )
 
     def test_cleanup_dry_run_mode(self):
@@ -144,5 +144,5 @@ class CleanUnusedGuestsTests(TestCase):
 
         self.assertEqual(deleted_count, 1)
         self.assertTrue(
-            User.objects.filter(id=old_unused_guest.id).exists()
+            User.objects.filter(id=str(old_unused_guest.id)).exists()
         )

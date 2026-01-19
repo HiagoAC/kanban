@@ -29,24 +29,24 @@ def list_cards(request, filters: CardFilter = Query(...)):
 def create_card(request, payload: CardIn):
     """Create a new card."""
     card = Card.objects.create(**payload.dict())
-    return 201, CardOut.from_card(card)
+    return 201, card
 
 
 @card_router.get('/{card_id}/', response={200: CardOut, 404: dict},
                  url_name='card-detail')
-def retrieve_card(request, card_id: int):
+def retrieve_card(request, card_id: str):
     """Retrieve a card by ID."""
     try:
         card = Card.objects.get(
             id=card_id, column__board__user=request.auth)
     except Card.DoesNotExist:
         return 404, {"detail": "Card not found."}
-    return CardOut.from_card(card)
+    return card
 
 
 @card_router.patch('/{card_id}/', response={200: CardOut, 404: dict},
                    url_name='card-detail')
-def update_card(request, card_id: int, payload: PatchDict[CardIn]):
+def update_card(request, card_id: str, payload: PatchDict[CardIn]):
     """Update a card by ID."""
     try:
         card = Card.objects.get(
@@ -56,12 +56,12 @@ def update_card(request, card_id: int, payload: PatchDict[CardIn]):
     for attr, value in payload.items():
         setattr(card, attr, value)
     card.save()
-    return CardOut.from_card(card)
+    return card
 
 
 @card_router.delete('/{card_id}/', response={204: None, 404: dict},
                     url_name='card-detail')
-def delete_card(request, card_id: int):
+def delete_card(request, card_id: str):
     """Delete a card by ID."""
     try:
         card = Card.objects.get(
@@ -74,7 +74,7 @@ def delete_card(request, card_id: int):
 
 @card_router.post('/{card_id}/move-above/', response={200: None, 404: dict},
                   url_name='card-move-above')
-def move_card_above(request, card_id: int, payload: CardMoveAboveIn):
+def move_card_above(request, card_id: str, payload: CardMoveAboveIn):
     """Move a card above another card."""
     target_card_id = payload.target_card_id
     try:
@@ -92,7 +92,7 @@ def move_card_above(request, card_id: int, payload: CardMoveAboveIn):
 
 @card_router.post('/{card_id}/move-bottom/', response={200: None, 404: dict},
                   url_name='card-move-bottom')
-def move_card_to_bottom(request, card_id: int):
+def move_card_to_bottom(request, card_id: str):
     """Move a card to the bottom of its column."""
     try:
         card = Card.objects.get(

@@ -26,48 +26,44 @@ def list_boards(request):
 @board_router.post('/', response={201: BoardOut})
 def create_board(request, payload: BoardIn):
     """Create a new board."""
-    board_model = Board.objects.create(
+    board = Board.objects.create(
         user=request.auth,
         title=payload.title,
     )
     for column_title in payload.columns:
-        Column.objects.create(board=board_model, title=column_title)
-    board_out = BoardOut.from_orm_with_columns(board_model)
-    return 201, board_out
+        Column.objects.create(board=board, title=column_title)
+    return 201, board
 
 
 @board_router.get('/latest/', response=BoardOut, url_name='latest-board')
 def retrieve_latest_board(request):
     """Retrieve the latest updated board."""
-    board_model = Board.objects.filter(
+    board = Board.objects.filter(
         user=request.auth).order_by('-updated_at').first()
-    if not board_model:
+    if not board:
         return 404, {"detail": "No boards found."}
-    board_out = BoardOut.from_orm_with_columns(board_model)
-    return board_out
+    return board
 
 
 @board_router.get('/{board_id}/', response=BoardOut, url_name='board-detail')
-def retrieve_board(request, board_id: int):
+def retrieve_board(request, board_id: str):
     """Retrieve a board."""
-    board_model = Board.objects.get(id=board_id, user=request.auth)
-    board_out = BoardOut.from_orm_with_columns(board_model)
-    return board_out
+    board = Board.objects.get(id=board_id, user=request.auth)
+    return board
 
 
 @board_router.patch('/{board_id}/', response=BoardOut)
-def update_board(request, board_id: int, payload: BoardUpdate):
+def update_board(request, board_id: str, payload: BoardUpdate):
     """Update a board."""
     board = Board.objects.get(id=board_id, user=request.auth)
     for field, value in payload.dict(exclude_unset=True).items():
         setattr(board, field, value)
     board.save()
-    board_out = BoardOut.from_orm_with_columns(board)
-    return board_out
+    return board
 
 
 @board_router.delete('/{board_id}/', response={204: None})
-def delete_board(request, board_id: int):
+def delete_board(request, board_id: str):
     """Delete a board."""
     board = Board.objects.get(id=board_id, user=request.auth)
     board.delete()
@@ -76,17 +72,16 @@ def delete_board(request, board_id: int):
 
 @board_router.post('/{board_id}/columns/', response=BoardOut,
                    url_name='columns')
-def add_column(request, board_id: int, payload: ColumnBase):
+def add_column(request, board_id: str, payload: ColumnBase):
     """Add a new column to a board."""
     board = Board.objects.get(id=board_id, user=request.auth)
     Column.objects.create(board=board, title=payload.title)
-    board_out = BoardOut.from_orm_with_columns(board)
-    return board_out
+    return board
 
 
 @board_router.delete('/{board_id}/columns/{column_id}/', response={204: None},
                      url_name='column-detail')
-def delete_column(request, board_id: int, column_id: int):
+def delete_column(request, board_id: str, column_id: str):
     """Delete a column from a board."""
     board = Board.objects.get(id=board_id, user=request.auth)
     column = Column.objects.get(id=column_id, board=board)
@@ -96,22 +91,21 @@ def delete_column(request, board_id: int, column_id: int):
 
 @board_router.patch('/{board_id}/columns/{column_id}/', response=BoardOut,
                     url_name='column-detail')
-def update_column(request, board_id: int, column_id: int, payload: ColumnBase):
+def update_column(request, board_id: str, column_id: str, payload: ColumnBase):
     """Update a column from a board."""
     board = Board.objects.get(id=board_id, user=request.auth)
     column = Column.objects.get(id=column_id, board=board)
     for field, value in payload.dict(exclude_unset=True).items():
         setattr(column, field, value)
     column.save()
-    board_out = BoardOut.from_orm_with_columns(board)
-    return board_out
+    return board
 
 
 @board_router.post('/{board_id}/columns/{column_id}/move-before/',
                    response={200: None, 404: dict},
                    url_name='column-move-before')
 def move_column_before(
-        request, board_id: int, column_id: int, payload: ColumnMoveBeforeIn):
+        request, board_id: str, column_id: str, payload: ColumnMoveBeforeIn):
     """Move a column before another column."""
     target_column_id = payload.target_column_id
     try:
@@ -130,7 +124,7 @@ def move_column_before(
 @board_router.post('/{board_id}/columns/{column_id}/move-end/',
                    response={200: None, 404: dict},
                    url_name='column-move-end')
-def move_column_to_end(request, board_id: int, column_id: int):
+def move_column_to_end(request, board_id: str, column_id: str):
     """Move a column to the end of its board."""
     try:
         column = Column.objects.get(

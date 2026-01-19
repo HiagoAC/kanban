@@ -46,7 +46,7 @@ class GetUserProfileTests(TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json(), {
-            'id': self.user.id,
+            'id': str(self.user.id),
             'username': self.user.username,
             'email': self.user.email,
             'first_name': self.user.first_name,
@@ -71,7 +71,7 @@ class LogoutTests(TestCase):
         res = self.client.get(ME_URL)
         self.assertEqual(res.status_code, 200)
         content = res.json()
-        self.assertEqual(content['id'], self.user.id)
+        self.assertEqual(content['id'], str(self.user.id))
 
         res = self.client.post(LOGOUT_URL)
         self.assertEqual(res.status_code, 204)

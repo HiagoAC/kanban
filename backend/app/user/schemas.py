@@ -8,6 +8,7 @@ User = get_user_model()
 
 class UserSchema(ModelSchema):
     """Base schema for User."""
+    id: str
 
     class Meta:
         model = User
@@ -20,6 +21,10 @@ class UserSchema(ModelSchema):
             'is_guest',
             'avatar_url'
         ]
+
+    @staticmethod
+    def resolve_id(user):
+        return str(user.id)
 
 
 class GuestActionSchema(Schema):

@@ -96,7 +96,7 @@ class HandleGuestUserTests(TestCase):
             user=self.registered_user, title="Registered Board")
         self.strategy.request.session.get.side_effect = lambda key: {
             'guest_migration_action': 'merge',
-            'guest_user_id': self.guest_user.id
+            'guest_user_id': str(self.guest_user.id)
         }.get(key)
 
         handle_guest_user(
@@ -107,13 +107,13 @@ class HandleGuestUserTests(TestCase):
         self.assertEqual(
             Board.objects.filter(user=self.registered_user).count(), 2)
         self.assertFalse(
-            User.objects.filter(id=self.guest_user.id).exists())
+            User.objects.filter(id=str(self.guest_user.id)).exists())
 
     def test_handle_guest_user_discard_action(self):
         """Test discarding guest user when action is 'discard'."""
         self.strategy.request.session.get.side_effect = lambda key: {
             'guest_migration_action': 'discard',
-            'guest_user_id': self.guest_user.id
+            'guest_user_id': str(self.guest_user.id)
         }.get(key)
 
         handle_guest_user(
@@ -122,7 +122,8 @@ class HandleGuestUserTests(TestCase):
             user=self.registered_user
         )
 
-        self.assertFalse(User.objects.filter(id=self.guest_user.id).exists())
+        self.assertFalse(User.objects.filter(
+            id=str(self.guest_user.id)).exists())
 
     def test_handle_guest_user_no_action(self):
         """Test that nothing happens when no action is set."""
@@ -134,7 +135,8 @@ class HandleGuestUserTests(TestCase):
             user=self.registered_user
         )
 
-        self.assertTrue(User.objects.filter(id=self.guest_user.id).exists())
+        self.assertTrue(User.objects.filter(
+            id=str(self.guest_user.id)).exists())
 
     def test_handle_guest_user_non_guest_user(self):
         """Test that nothing happens when user is not a guest user."""
@@ -144,7 +146,7 @@ class HandleGuestUserTests(TestCase):
         )
         self.strategy.request.session.get.side_effect = lambda key: {
             'guest_migration_action': 'merge',
-            'guest_user_id': regular_user.id
+            'guest_user_id': str(regular_user.id)
         }.get(key)
 
         handle_guest_user(
@@ -153,7 +155,7 @@ class HandleGuestUserTests(TestCase):
             user=self.registered_user
         )
 
-        self.assertTrue(User.objects.filter(id=regular_user.id).exists())
+        self.assertTrue(User.objects.filter(id=str(regular_user.id)).exists())
 
 
 class ClearGuestMigrationActionTests(TestCase):
