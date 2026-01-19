@@ -1,3 +1,4 @@
+import uuid
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.middleware import SessionMiddleware
@@ -57,7 +58,7 @@ class AuthHandlerTests(TestCase):
         res = self.auth_handler.authenticate(request)
 
         self.assertEqual(res, guest_user)
-        self.assertEqual(request.session['guest_user_id'], guest_user.id)
+        self.assertEqual(request.session['guest_user_id'], str(guest_user.id))
         mock_django_auth.assert_called_once_with(request)
         mock_create_guest.assert_called_once()
 
@@ -71,7 +72,7 @@ class AuthHandlerTests(TestCase):
         self._add_session_to_request(request)
 
         guest_user = create_guest_user()
-        request.session['guest_user_id'] = guest_user.id
+        request.session['guest_user_id'] = str(guest_user.id)
 
         mock_django_auth.return_value = None
 
@@ -91,7 +92,7 @@ class AuthHandlerTests(TestCase):
         """
         request = self.factory.get('/')
         self._add_session_to_request(request)
-        request.session['guest_user_id'] = 99999
+        request.session['guest_user_id'] = str(uuid.uuid4())
 
         mock_django_auth.return_value = None
         new_guest_user = User.objects.create_user(
@@ -102,7 +103,8 @@ class AuthHandlerTests(TestCase):
         result_user = self.auth_handler.authenticate(request)
 
         self.assertEqual(result_user, new_guest_user)
-        self.assertEqual(request.session['guest_user_id'], new_guest_user.id)
+        self.assertEqual(
+            request.session['guest_user_id'], str(new_guest_user.id))
         mock_create_guest.assert_called_once()
 
     @patch('user.auth.django_auth')
@@ -132,5 +134,6 @@ class AuthHandlerTests(TestCase):
         result_user = self.auth_handler.authenticate(request)
 
         self.assertEqual(result_user, new_guest_user)
-        self.assertEqual(request.session['guest_user_id'], new_guest_user.id)
+        self.assertEqual(
+            request.session['guest_user_id'], str(new_guest_user.id))
         mock_create_guest.assert_called_once()

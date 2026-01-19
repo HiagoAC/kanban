@@ -31,5 +31,5 @@ class AuthHandler(APIKeyCookie):
                 pass
 
         guest_user = create_guest_user()
-        request.session['guest_user_id'] = guest_user.id
+        request.session['guest_user_id'] = str(guest_user.id)
         return guest_user
