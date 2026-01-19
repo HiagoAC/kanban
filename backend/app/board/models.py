@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from ordered_model.models import OrderedModel  # type: ignore
 from django.contrib.auth import get_user_model
@@ -6,6 +7,9 @@ User = get_user_model()
 
 
 class Board(OrderedModel):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     starred = models.BooleanField(default=False)
@@ -27,6 +31,9 @@ class Board(OrderedModel):
 
 
 class Column(OrderedModel):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     board = models.ForeignKey(
         Board, on_delete=models.CASCADE, related_name="columns"
     )

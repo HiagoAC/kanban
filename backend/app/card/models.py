@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from ordered_model.models import OrderedModel
 
@@ -11,6 +12,9 @@ class PriorityChoices(models.TextChoices):
 
 
 class Card(OrderedModel):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     column = models.ForeignKey(
         Column, on_delete=models.CASCADE, related_name="cards"
     )
