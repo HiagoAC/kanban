@@ -9,6 +9,7 @@ EXPOSE 8000
 # Copy requirements files
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
+COPY ./scripts /scripts
 COPY ./app /app
 
 # Install dependencies
@@ -34,8 +35,11 @@ RUN adduser --disabled-password --gecos "" django-user \
     && groupmod -g ${GID} django-user && usermod -u ${UID} -g ${GID} django-user \
     && mkdir -p /vol/web/media /vol/web/static /app \
     && chown -R django-user:django-user /vol /app \
-    && chmod -R 755 /vol /app
+    && chmod -R 755 /vol /app \
+    && chmod -R +x /scripts
 
-ENV PATH="/py/bin:$PATH"
+ENV PATH="/scripts:/py/bin:$PATH"
 
 USER django-user
+
+CMD ["run.sh"]
