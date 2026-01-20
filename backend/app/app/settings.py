@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'social_django',
     'board',
     'card',
+    'core',
     'user',
 ]
 
