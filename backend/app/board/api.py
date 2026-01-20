@@ -35,7 +35,8 @@ def create_board(request, payload: BoardIn):
     return 201, board
 
 
-@board_router.get('/latest/', response=BoardOut, url_name='latest-board')
+@board_router.get('/latest/', response={200: BoardOut, 404: dict},
+                  url_name='latest-board')
 def retrieve_latest_board(request):
     """Retrieve the latest updated board."""
     board = Board.objects.filter(

@@ -130,6 +130,11 @@ class PrivateBoardsApiTests(TestCase):
         self.assertEqual(str(content['id']), str(latest_updated_board.id))
         self.assertEqual(content['title'], latest_updated_board.title)
 
+    def test_retrieve_latest_updated_board_no_boards(self):
+        """Test retrieving the latest updated board when no boards exist."""
+        res = self.client.get(LATEST_BOARD_URL)
+        self.assertEqual(res.status_code, 404)
+
     def test_update_board(self):
         """Test updating a board."""
         board = Board.objects.create(user=self.user, title='A Board')
