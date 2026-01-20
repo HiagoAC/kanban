@@ -17,6 +17,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends bash \
     gcc \
     libpq-dev \
+    libpcre2-dev \
     && pip install --upgrade pip \
     && pip install --no-cache-dir -r /tmp/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
