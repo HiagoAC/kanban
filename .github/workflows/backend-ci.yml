@@ -25,12 +25,17 @@ jobs:
         run: |
           cat > .env <<EOF
           DJANGO_SECRET=${{ secrets.DJANGO_SECRET }}
-          SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=${{ secrets.GOOGLE_OAUTH2_CLIENT_ID }}
-          SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${{ secrets.GOOGLE_OAUTH2_CLIENT_SECRET }}
+          GOOGLE_OAUTH2_CLIENT_ID=${{ secrets.GOOGLE_OAUTH2_CLIENT_ID }}
+          GOOGLE_OAUTH2_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH2_CLIENT_SECRET }}
+          ALLOWED_HOSTS=localhost,127.0.0.1
+          SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI=http://localhost:8000/social-auth/complete/google-oauth2/
+          SOCIAL_AUTH_LOGIN_REDIRECT_URL=http://localhost:5173/
+          CORS_ALLOWED_ORIGINS=http://localhost:5173
+          CSRF_TRUSTED_ORIGINS=http://localhost:5173
           EOF
 
       - name: Test
-        run: docker compose run -u root --rm backend sh -c "wait-for-it --service db:5432 --timeout 45 -- python manage.py test"
+        run: docker compose run -u root --rm backend sh -c "python manage.py test"
 
       - name: Lint
         run: docker compose run --rm backend sh -c "flake8"
