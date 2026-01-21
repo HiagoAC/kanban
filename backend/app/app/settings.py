@@ -24,14 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+if not ALLOWED_HOSTS or ALLOWED_HOSTS == [""]:
+    raise RuntimeError("ALLOWED_HOSTS must be set")
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,8 +53,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -127,11 +129,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -145,8 +142,8 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OAUTH2_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OAUTH2_CLIENT_SECRET')
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/social-auth/complete/google-oauth2/'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:5173/'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI')
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = os.environ.get('SOCIAL_AUTH_LOGIN_REDIRECT_URL')
 
 # Custom social auth pipeline
 SOCIAL_AUTH_PIPELINE = (
@@ -169,12 +166,15 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_HTTPONLY = True
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173'
-]
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = [] if CORS_ALLOWED_ORIGINS == [''] else CORS_ALLOWED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF settings
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173'
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = [] if CSRF_TRUSTED_ORIGINS == [''] else CSRF_TRUSTED_ORIGINS
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
