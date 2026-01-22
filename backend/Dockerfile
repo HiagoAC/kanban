@@ -34,9 +34,9 @@ ARG UID=1000
 ARG GID=1000
 RUN adduser --disabled-password --gecos "" django-user \
     && groupmod -g ${GID} django-user && usermod -u ${UID} -g ${GID} django-user \
-    && mkdir -p /app /vol/web/staticfiles \
-    && chown -R django-user:django-user /app /vol/web \
-    && chmod -R 755 /app /vol/web \
+    && mkdir -p /app/staticfiles \
+    && chown -R django-user:django-user /app \
+    && chmod -R 755 /app \
     && chmod -R +x /scripts
 
 ENV PATH="/scripts:/py/bin:$PATH"
