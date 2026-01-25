@@ -20,6 +20,12 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Create .env
+        run: |
+          cat > .env <<EOF
+          VITE_BASE_URL=http://localhost:8000/
+          EOF
 
       - name: Test
         run: docker compose run --rm frontend npm run test
