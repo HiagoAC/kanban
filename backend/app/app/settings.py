@@ -161,7 +161,9 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
-SESSION_COOKIE_SAMESITE = 'Lax'
+# Session Settings
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 
 # Reverse proxy HTTPS
@@ -175,6 +177,8 @@ CORS_ALLOW_CREDENTIALS = True
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
 CSRF_TRUSTED_ORIGINS = [] if CSRF_TRUSTED_ORIGINS == [''] else CSRF_TRUSTED_ORIGINS
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
