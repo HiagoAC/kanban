@@ -2,9 +2,9 @@ import type { BoardListItem } from "../types";
 
 export function generateDisplayTitles(
 	boards: BoardListItem[],
-): Map<number, string> {
+): Map<string, string> {
 	const titleGroups = new Map<string, BoardListItem[]>();
-	const displayTitles = new Map<number, string>();
+	const displayTitles = new Map<string, string>();
 
 	for (const board of boards) {
 		if (!titleGroups.has(board.title)) {
@@ -15,7 +15,7 @@ export function generateDisplayTitles(
 
 	for (const [title, boardsWithSameTitle] of titleGroups) {
 		if (boardsWithSameTitle.length === 1) {
-			displayTitles.set(Number(boardsWithSameTitle[0].id), title);
+			displayTitles.set(boardsWithSameTitle[0].id, title);
 		} else {
 			const sortedBoards = boardsWithSameTitle.sort(
 				(a, b) =>
@@ -23,9 +23,9 @@ export function generateDisplayTitles(
 			);
 			sortedBoards.forEach((board, index) => {
 				if (index === 0) {
-					displayTitles.set(Number(board.id), title);
+					displayTitles.set(board.id, title);
 				} else {
-					displayTitles.set(Number(board.id), `${title} (${index})`);
+					displayTitles.set(board.id, `${title} (${index})`);
 				}
 			});
 		}

@@ -47,7 +47,7 @@ export function SideBarBoardList() {
 						<ListItem key={board.id} disablePadding sx={{ my: 0 }}>
 							<SideBarListButton
 								onClick={() => navigate(`/boards/${board.id}`)}
-								text={displayTitles.get(Number(board.id)) || board.title}
+								text={displayTitles.get(board.id) || board.title}
 								icon={board.starred ? <StarIcon fontSize="small" /> : null}
 								selected={activeBoardId === board.id}
 							/>

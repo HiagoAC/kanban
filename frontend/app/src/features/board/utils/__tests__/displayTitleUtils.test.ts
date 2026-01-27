@@ -23,8 +23,8 @@ describe("generateDisplayTitles", () => {
 
 		const result = generateDisplayTitles(boards);
 
-		expect(result.get(1)).toBe("Project A");
-		expect(result.get(2)).toBe("Project B");
+		expect(result.get("1")).toBe("Project A");
+		expect(result.get("2")).toBe("Project B");
 	});
 
 	it("should add numbering for duplicate titles based on creation order", () => {
@@ -37,10 +37,10 @@ describe("generateDisplayTitles", () => {
 
 		const result = generateDisplayTitles(boards);
 
-		expect(result.get(1)).toBe("Project");
-		expect(result.get(2)).toBe("Project (1)");
-		expect(result.get(3)).toBe("Another Project");
-		expect(result.get(4)).toBe("Project (2)");
+		expect(result.get("1")).toBe("Project");
+		expect(result.get("2")).toBe("Project (1)");
+		expect(result.get("3")).toBe("Another Project");
+		expect(result.get("4")).toBe("Project (2)");
 	});
 
 	it("should sort duplicates by createdAt regardless of input order", () => {
@@ -52,8 +52,8 @@ describe("generateDisplayTitles", () => {
 
 		const result = generateDisplayTitles(boards);
 
-		expect(result.get(1)).toBe("Test");
-		expect(result.get(2)).toBe("Test (1)");
-		expect(result.get(3)).toBe("Test (2)");
+		expect(result.get("1")).toBe("Test");
+		expect(result.get("2")).toBe("Test (1)");
+		expect(result.get("3")).toBe("Test (2)");
 	});
 });
