@@ -1,0 +1,2 @@
+[bandit]
+exclude = tests,*/tests/*,**/tests/**,migrations,__pycache__,manage.py,settings.py

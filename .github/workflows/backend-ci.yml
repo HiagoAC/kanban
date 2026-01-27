@@ -39,3 +39,6 @@ jobs:
 
       - name: Lint
         run: docker compose run --rm backend sh -c "flake8"
+
+      - name: Security Check
+        run: docker compose run --rm backend sh -c "bandit -r ."
