@@ -28,7 +28,13 @@ jobs:
           EOF
 
       - name: Test
-        run: docker compose run --rm frontend npm run test
+        run: docker compose run --rm frontend npm run test:coverage
 
       - name: Lint
         run: docker compose run --rm frontend npm run lint
+
+      - name: Upload frontend coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: frontend/coverage/lcov.info
+          flags: frontend

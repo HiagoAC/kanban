@@ -11,6 +11,7 @@
     "format": "biome format --write .",
     "fix": "biome check --write .",
     "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
     "preview": "vite preview"
   },
   "dependencies": {

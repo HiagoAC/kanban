@@ -35,10 +35,16 @@ jobs:
           EOF
 
       - name: Test
-        run: docker compose run -u root --rm backend sh -c "python manage.py test"
+        run: docker compose run -u root --rm backend sh -c "coverage run manage.py test && coverage xml"
 
       - name: Lint
         run: docker compose run --rm backend sh -c "flake8"
+
+      - name: Upload backend coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: backend/coverage.xml
+          flags: backend
 
       - name: Security Check
         run: docker compose run --rm backend sh -c "bandit -r ."
