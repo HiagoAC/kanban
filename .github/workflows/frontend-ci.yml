@@ -28,7 +28,7 @@ jobs:
           EOF
 
       - name: Test
-        run: docker compose run --rm frontend npm run test:coverage
+        run: docker compose run --rm -u root frontend npm run test:coverage
 
       - name: Lint
         run: docker compose run --rm frontend npm run lint
