@@ -5,6 +5,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    isolate: true,
+    pool: 'forks',
 
     coverage: {
       provider: 'v8',
