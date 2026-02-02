@@ -1,14 +1,43 @@
 // @vitest-environment jsdom
 
 import { screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import apiClient from "../../../services/apiClient";
 import { renderWithProviders } from "../../../utils/test-utils";
 import { SideBarBoardList } from "../components/SideBarBoardList";
 import { useFetchBoards } from "../hooks/useFetchBoards";
 
 vi.mock("../hooks/useFetchBoards");
+vi.mock("../../../services/apiClient", () => ({
+	default: {
+		get: vi.fn(),
+	},
+	BASE_URL: "http://localhost:8000",
+}));
+
+// Set up API mocks
+(apiClient.get as vi.Mock).mockImplementation((url: string) => {
+	if (url === "me/" || url === "/me/") {
+		return Promise.resolve({
+			data: {
+				id: 1,
+				email: "test@example.com",
+				firstName: "Test",
+				lastName: "User",
+				isGuest: false,
+			},
+		});
+	}
+	if (url === "csrf/" || url === "/csrf/") {
+		return Promise.resolve({ data: {} });
+	}
+	return Promise.reject(new Error(`Unmocked GET: ${url}`));
+});
 
 describe("SideBarBoardList", () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
 	afterEach(() => {
 		vi.resetAllMocks();
 	});
