@@ -35,11 +35,12 @@ describe("CreateBoardForm", () => {
 		const addColumnButton = screen.getByTestId("add-column-button");
 		await user.click(addColumnButton);
 
-		await user.type(columnInput, "New Column 2");
-		await user.click(addColumnButton);
-
+		// Wait for first column to appear before adding second
 		const newColumn1 = await screen.findByText(/new column 1/i);
 		expect(newColumn1).not.toBeNull();
+
+		await user.type(columnInput, "New Column 2");
+		await user.click(addColumnButton);
 
 		const newColumn2 = await screen.findByText(/new column 2/i);
 		expect(newColumn2).not.toBeNull();
@@ -62,16 +63,16 @@ describe("CreateBoardForm", () => {
 		await user.type(columnInput, "Another Column");
 		await user.click(addColumnButton);
 
-		const columnToRemove = await screen.getByText(/column to be removed/i);
+		const columnToRemove = await screen.findByText(/column to be removed/i);
 		expect(columnToRemove).not.toBeNull();
 
-		const deleteButton = await screen.getByTestId(
+		const deleteButton = screen.getByTestId(
 			"delete-column-button-Column to be removed",
 		);
 		await user.click(deleteButton);
 
 		expect(screen.queryByText(/column to be removed/i)).toBeNull();
-		const anotherColumn = await screen.getByText(/another column/i);
+		const anotherColumn = screen.getByText(/another column/i);
 		expect(anotherColumn).not.toBeNull();
 	});
 
