@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import type React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -19,9 +19,12 @@ vi.mock("@dnd-kit/core", async () => {
 		...actual,
 		// biome-ignore lint/suspicious/noExplicitAny: Mocking requires any for simplified test component props
 		DndContext: ({ onDragEnd, children }: any) => {
-			onDragEnd?.({
-				active: { id: "col-1" },
-				over: { id: "col-2" },
+			// Defer onDragEnd to avoid state updates during render
+			queueMicrotask(() => {
+				onDragEnd?.({
+					active: { id: "col-1" },
+					over: { id: "col-2" },
+				});
 			});
 			return <div>{children}</div>;
 		},
@@ -118,22 +121,26 @@ describe("BoardView", () => {
 		expect(screen.queryByTestId(/column-/)).toBeNull();
 	});
 
-	it("does not update columns when executeDragMove returns false", () => {
+	it("does not update columns when executeDragMove returns false", async () => {
 		vi.mocked(executeDragMove).mockReturnValue(false);
 
 		renderBoard(board([column("col-1", "To Do"), column("col-2", "Done")]));
 
-		expect(executeDragMove).toHaveBeenCalled();
+		await waitFor(() => {
+			expect(executeDragMove).toHaveBeenCalled();
+		});
 		expect(updateItemsOrder).not.toHaveBeenCalled();
 	});
 
-	it("updates columns order when executeDragMove returns true", () => {
+	it("updates columns order when executeDragMove returns true", async () => {
 		vi.mocked(executeDragMove).mockReturnValue(true);
 		vi.mocked(updateItemsOrder).mockImplementation((items) => items);
 
 		renderBoard(board([column("col-1", "To Do"), column("col-2", "Done")]));
 
-		expect(executeDragMove).toHaveBeenCalled();
+		await waitFor(() => {
+			expect(executeDragMove).toHaveBeenCalled();
+		});
 		expect(updateItemsOrder).toHaveBeenCalled();
 	});
 });
