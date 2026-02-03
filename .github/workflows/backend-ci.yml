@@ -45,6 +45,7 @@ jobs:
         with:
           files: backend/coverage.xml
           flags: backend
+          name: backend
 
       - name: Security Check
         run: docker compose run --rm backend sh -c "bandit -r ."
