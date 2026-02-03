@@ -39,7 +39,9 @@ import { useAuth } from "../../features/auth/hooks/useAuth";
 describe("SideBarButtonList", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		(apiClient.get as any).mockResolvedValue({ data: {} });
+		(apiClient.get as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
+			data: {},
+		});
 	});
 
 	afterEach(() => {
@@ -50,9 +52,10 @@ describe("SideBarButtonList", () => {
 		vi.mocked(useAuth).mockReturnValue({
 			user: { id: "1", email: "test@test.com", isGuest: false },
 			isAuthenticated: true,
+			isLoading: false,
 			logout: mockLogout,
 			refreshUser: mockRefreshUser,
-		} as any);
+		});
 
 		renderWithProviders(<SideBarButtonList />);
 
@@ -62,11 +65,12 @@ describe("SideBarButtonList", () => {
 
 	it("renders sign in button for unauthenticated user", () => {
 		vi.mocked(useAuth).mockReturnValue({
-			user: null,
+			user: undefined,
 			isAuthenticated: false,
+			isLoading: false,
 			logout: mockLogout,
 			refreshUser: mockRefreshUser,
-		} as any);
+		});
 
 		renderWithProviders(<SideBarButtonList />);
 
@@ -78,9 +82,10 @@ describe("SideBarButtonList", () => {
 		vi.mocked(useAuth).mockReturnValue({
 			user: { id: "1", email: "test@test.com", isGuest: false },
 			isAuthenticated: true,
+			isLoading: false,
 			logout: mockLogout,
 			refreshUser: mockRefreshUser,
-		} as any);
+		});
 
 		renderWithProviders(<SideBarButtonList />);
 
@@ -93,11 +98,12 @@ describe("SideBarButtonList", () => {
 
 	it("navigates to sign in when sign in button clicked", async () => {
 		vi.mocked(useAuth).mockReturnValue({
-			user: null,
+			user: undefined,
 			isAuthenticated: false,
+			isLoading: false,
 			logout: mockLogout,
 			refreshUser: mockRefreshUser,
-		} as any);
+		});
 
 		renderWithProviders(<SideBarButtonList />);
 
@@ -109,11 +115,12 @@ describe("SideBarButtonList", () => {
 
 	it("navigates to new board when create board button clicked", async () => {
 		vi.mocked(useAuth).mockReturnValue({
-			user: null,
+			user: undefined,
 			isAuthenticated: false,
+			isLoading: false,
 			logout: mockLogout,
 			refreshUser: mockRefreshUser,
-		} as any);
+		});
 
 		renderWithProviders(<SideBarButtonList />);
 

@@ -154,27 +154,23 @@ describe("CardView", () => {
 		expect(mockSetActiveBoardId).not.toHaveBeenCalled();
 	});
 
-	it(
-		"updates title and body",
-		async () => {
-			const user = userEvent.setup();
-			mockGetCard.mockReturnValue({ data: card(), isLoading: false });
-			mockGetBoard.mockReturnValue({ data: board() });
-			render_();
+	it("updates title and body", async () => {
+		const user = userEvent.setup();
+		mockGetCard.mockReturnValue({ data: card(), isLoading: false });
+		mockGetBoard.mockReturnValue({ data: board() });
+		render_();
 
-			const titleInput = screen.getByDisplayValue("Test Card");
-			await user.clear(titleInput);
-			await user.type(titleInput, "New Title");
+		const titleInput = screen.getByDisplayValue("Test Card");
+		await user.clear(titleInput);
+		await user.type(titleInput, "New Title");
 
-			const bodyInput = screen.getByLabelText("Notes");
-			await user.clear(bodyInput);
-			await user.type(bodyInput, "New body");
+		const bodyInput = screen.getByLabelText("Notes");
+		await user.clear(bodyInput);
+		await user.type(bodyInput, "New body");
 
-			expect(screen.getByDisplayValue("New Title")).toBeTruthy();
-			expect(screen.getByDisplayValue("New body")).toBeTruthy();
-		},
-		10000,
-	);
+		expect(screen.getByDisplayValue("New Title")).toBeTruthy();
+		expect(screen.getByDisplayValue("New body")).toBeTruthy();
+	}, 10000);
 
 	it("saves changes and navigates", async () => {
 		const user = userEvent.setup();

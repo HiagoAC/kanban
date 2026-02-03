@@ -1,14 +1,15 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import apiClient from "../../../services/apiClient";
 import {
-	fetchCards,
 	createCard,
-	getCard,
-	updateCard,
 	deleteCard,
+	fetchCards,
+	getCard,
 	moveCardAbove,
 	moveCardBottom,
+	updateCard,
 } from "../services";
+import type { CreateCardSchema } from "../types";
 
 vi.mock("../../../services/apiClient");
 
@@ -60,7 +61,7 @@ describe("createCard", () => {
 
 		(apiClient.post as vi.Mock).mockResolvedValue({ data: mockResponse });
 
-		const res = await createCard(cardData as any);
+		const res = await createCard(cardData as CreateCardSchema);
 
 		expect(apiClient.post).toHaveBeenCalledWith("cards/", cardData);
 		expect(res.createdAt).toBeInstanceOf(Date);
@@ -101,12 +102,11 @@ describe("updateCard", () => {
 		const res = await updateCard({
 			id: "1",
 			cardData: { title: "Updated Card" },
-		} as any);
+		});
 
-		expect(apiClient.patch).toHaveBeenCalledWith(
-			"cards/1/",
-			{ title: "Updated Card" },
-		);
+		expect(apiClient.patch).toHaveBeenCalledWith("cards/1/", {
+			title: "Updated Card",
+		});
 		expect(res.createdAt).toBeInstanceOf(Date);
 		expect(res.updatedAt).toBeInstanceOf(Date);
 	});
@@ -131,10 +131,9 @@ describe("moveCardAbove", () => {
 			targetCardId: "2",
 		});
 
-		expect(apiClient.post).toHaveBeenCalledWith(
-			"cards/1/move-above/",
-			{ target_card_id: "2" },
-		);
+		expect(apiClient.post).toHaveBeenCalledWith("cards/1/move-above/", {
+			target_card_id: "2",
+		});
 	});
 });
 
@@ -146,8 +145,6 @@ describe("moveCardBottom", () => {
 			cardId: "1",
 		});
 
-		expect(apiClient.post).toHaveBeenCalledWith(
-			"cards/1/move-bottom/",
-		);
+		expect(apiClient.post).toHaveBeenCalledWith("cards/1/move-bottom/");
 	});
 });

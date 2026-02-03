@@ -1,17 +1,17 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import apiClient from "../../../services/apiClient";
 import {
-	fetchBoards,
-	createBoard,
-	getBoard,
-	updateBoard,
-	deleteBoard,
 	addColumnToBoard,
-	updateColumnInBoard,
+	createBoard,
+	deleteBoard,
 	deleteColumnFromBoard,
+	fetchBoards,
+	getBoard,
+	getLatestBoard,
 	moveColumnBefore,
 	moveColumnEnd,
-	getLatestBoard,
+	updateBoard,
+	updateColumnInBoard,
 } from "../services";
 
 vi.mock("../../../services/apiClient");
@@ -96,10 +96,9 @@ describe("updateBoard", () => {
 			boardData: { title: "Updated Board" },
 		});
 
-		expect(apiClient.patch).toHaveBeenCalledWith(
-			"boards/1/",
-			{ title: "Updated Board" },
-		);
+		expect(apiClient.patch).toHaveBeenCalledWith("boards/1/", {
+			title: "Updated Board",
+		});
 		expect(res.createdAt).toBeInstanceOf(Date);
 		expect(res.updatedAt).toBeInstanceOf(Date);
 	});
@@ -129,10 +128,9 @@ describe("addColumnToBoard", () => {
 
 		const res = await addColumnToBoard("1", "New Column");
 
-		expect(apiClient.post).toHaveBeenCalledWith(
-			"boards/1/columns/",
-			{ title: "New Column" },
-		);
+		expect(apiClient.post).toHaveBeenCalledWith("boards/1/columns/", {
+			title: "New Column",
+		});
 		expect(res.createdAt).toBeInstanceOf(Date);
 		expect(res.updatedAt).toBeInstanceOf(Date);
 	});
@@ -156,10 +154,9 @@ describe("updateColumnInBoard", () => {
 			columnData: { title: "Updated Column" },
 		});
 
-		expect(apiClient.patch).toHaveBeenCalledWith(
-			"boards/1/columns/2/",
-			{ title: "Updated Column" },
-		);
+		expect(apiClient.patch).toHaveBeenCalledWith("boards/1/columns/2/", {
+			title: "Updated Column",
+		});
 		expect(res.createdAt).toBeInstanceOf(Date);
 		expect(res.updatedAt).toBeInstanceOf(Date);
 	});
@@ -174,9 +171,7 @@ describe("deleteColumnFromBoard", () => {
 			columnId: "2",
 		});
 
-		expect(apiClient.delete).toHaveBeenCalledWith(
-			"boards/1/columns/2/",
-		);
+		expect(apiClient.delete).toHaveBeenCalledWith("boards/1/columns/2/");
 	});
 });
 
@@ -206,9 +201,7 @@ describe("moveColumnEnd", () => {
 			columnId: "2",
 		});
 
-		expect(apiClient.post).toHaveBeenCalledWith(
-			"boards/1/columns/2/move-end/",
-		);
+		expect(apiClient.post).toHaveBeenCalledWith("boards/1/columns/2/move-end/");
 	});
 });
 
