@@ -4,3 +4,5 @@ omit =
     */tests/*
     manage.py
     */settings.py
+    */asgi.py
+    */wsgi.py
