@@ -1,0 +1,9 @@
+coverage:
+  status:
+    project:
+      backend:
+        flags:
+          - backend
+      frontend:
+        flags:
+          - frontend
