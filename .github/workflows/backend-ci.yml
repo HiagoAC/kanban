@@ -35,7 +35,7 @@ jobs:
           EOF
 
       - name: Test
-        run: docker compose run -u root --rm backend sh -c "coverage run manage.py test && coverage xml"
+        run: docker compose run -u root --rm backend sh -c "coverage run --source='.' manage.py test && coverage xml"
 
       - name: Lint
         run: docker compose run --rm backend sh -c "flake8"
