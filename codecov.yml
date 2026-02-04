@@ -7,9 +7,3 @@ coverage:
       frontend:
         flags:
           - frontend
-
-flags:
-  backend:
-    carryforward: true
-  frontend:
-    carryforward: true
