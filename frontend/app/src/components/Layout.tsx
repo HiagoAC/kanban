@@ -23,7 +23,7 @@ export function Layout({ children, isHomePage = false }: Props) {
 		minHeight: "100vh",
 	};
 	const sideBarXsSize = isHomePage ? 12 : 0;
-	const contentXsSize = isHomePage ? 12 : 12;
+	const contentXsSize = isHomePage ? 0 : 12;
 
 	return (
 		<ActiveBoardProvider>
