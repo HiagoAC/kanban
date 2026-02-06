@@ -1,6 +1,5 @@
 ![Codecov](https://img.shields.io/codecov/c/github/HiagoAC/kanli?flag=backend&label=backend%20coverage)
 ![Codecov](https://img.shields.io/codecov/c/github/HiagoAC/kanli?flag=frontend&label=frontend%20coverage)
-
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanli&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanli)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanli&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanli)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanli&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanli)
