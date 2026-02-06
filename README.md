@@ -1,9 +1,9 @@
-![Codecov](https://img.shields.io/codecov/c/github/HiagoAC/kanban?flag=backend&label=backend%20coverage)
-![Codecov](https://img.shields.io/codecov/c/github/HiagoAC/kanban?flag=frontend&label=frontend%20coverage)
+![Codecov](https://img.shields.io/codecov/c/github/HiagoAC/kanli?flag=backend&label=backend%20coverage)
+![Codecov](https://img.shields.io/codecov/c/github/HiagoAC/kanli?flag=frontend&label=frontend%20coverage)
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanban&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanban)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanban&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanban)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanban&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanban)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanli&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanli)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanli&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanli)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=HiagoAC_kanli&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=HiagoAC_kanli)
 
 # Kanli
 A [kanban board](https://en.wikipedia.org/wiki/Kanban_board) application designed to help teams and individuals organize work efficiently. Users can create boards, define columns, and organize tasks as cards to reflect their workflow. Cards can be moved across columns to clearly visualize progress from start to completion.
